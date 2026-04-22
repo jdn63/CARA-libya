@@ -338,3 +338,31 @@ def get_historical_risk_data(jurisdiction_id: str,
 def get_em_jurisdictions() -> List[Dict[str, Any]]:
     """Alias for get_wi_jurisdictions for EM comparison exports."""
     return get_wi_jurisdictions()
+
+
+def get_county_for_jurisdiction(jurisdiction_id: str) -> str:
+    """Return a county name string for a given jurisdiction ID."""
+    try:
+        jconfig = load_jurisdiction_config()
+        subdivisions = jconfig.get("jurisdiction", {}).get("subdivisions", [])
+        for sub in subdivisions:
+            if str(sub.get("id")) == str(jurisdiction_id):
+                return sub.get("name", jurisdiction_id)
+    except Exception:
+        pass
+    return jurisdiction_id
+
+
+def load_nri_data() -> Dict[str, Any]:
+    """Return National Risk Index data keyed by county name. Stub — populate with real NRI data."""
+    return {}
+
+
+def get_mobile_home_percentage(county_name: str) -> Optional[float]:
+    """Return mobile home percentage for a county. Stub — populate with real data."""
+    return None
+
+
+def get_elderly_population_pct(county_name: str) -> Optional[float]:
+    """Return elderly population percentage for a county. Stub — populate with real data."""
+    return None

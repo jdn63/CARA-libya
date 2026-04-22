@@ -21,7 +21,7 @@ if not database_url:
 
 config.set_main_option("sqlalchemy.url", database_url)
 
-from core import db, create_app
+from app import db, create_app
 import models  # noqa: F401 — ensure all mapped tables are registered
 
 _flask_app = create_app()

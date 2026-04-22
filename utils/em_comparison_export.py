@@ -46,7 +46,7 @@ SCORES_MAX_AGE = 86400
 
 def _get_cached_scores_from_db():
     try:
-        from core import db
+        from app import db
         from models import DataSourceCache
         from sqlalchemy import desc
         entry = db.session.query(DataSourceCache).filter(
@@ -64,7 +64,7 @@ def _get_cached_scores_from_db():
 
 def _save_scores_to_db(result):
     try:
-        from core import db
+        from app import db
         from models import DataSourceCache
         db.session.query(DataSourceCache).filter(
             DataSourceCache.source_type == SCORES_CACHE_KEY

@@ -104,7 +104,7 @@ def get_db_session():
     if not has_app_context():
         return None
     try:
-        from core import db
+        from app import db
         return db.session
     except Exception as e:
         logger.error(f"Failed to get database session: {e}")

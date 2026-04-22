@@ -601,3 +601,13 @@ def clear_weather_cache() -> int:
     
     logger.info(f"Weather cache cleared: {entries_cleared} entries removed")
     return entries_cleared
+
+
+def get_weather_alerts(county_name: str) -> Dict:
+    """
+    Return active weather alerts for a county.
+
+    This is a stub — populate with real NWS alert retrieval logic.
+    """
+    logger.debug(f"get_weather_alerts called for {county_name} (stub)")
+    return {"available": False, "alerts": [], "county": county_name}

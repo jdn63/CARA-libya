@@ -17,7 +17,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy.exc import SQLAlchemyError
 
-from core import db, create_app
+from app import db, create_app
 from models import ExportJob
 from utils.gis_export import CARAGISExporter
 from utils.data_processor import process_risk_data

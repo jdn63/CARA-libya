@@ -352,7 +352,7 @@ def get_cached_herc_risk(herc_id: str, max_age_hours: int = 4) -> Optional[Dict[
         Cached risk data if available and fresh, None otherwise
     """
     try:
-        from core import db
+        from app import db
         from models import HERCRiskCache
         from flask import has_app_context
         
@@ -401,7 +401,7 @@ def save_herc_risk_to_cache(herc_id: str, risk_data: Dict[str, Any],
         True if saved successfully, False otherwise
     """
     try:
-        from core import db
+        from app import db
         from models import HERCRiskCache
         from flask import has_app_context
         

@@ -108,7 +108,7 @@ def get_data_confidence(risk_data):
 def get_data_freshness_summary():
     try:
         from models import DataSourceCache
-        from core import db
+        from app import db
 
         freshness = {}
         for domain, info in DOMAIN_SOURCE_MAP.items():

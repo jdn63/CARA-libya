@@ -28,7 +28,7 @@ def setup_monitoring_endpoints(app):
         """Basic health check endpoint."""
         try:
             # Test database connectivity
-            from core import db
+            from app import db
             with db.engine.connect() as connection:
                 connection.execute(db.text('SELECT 1'))
             
@@ -54,7 +54,7 @@ def setup_monitoring_endpoints(app):
             start_time = time.time()
             
             # Database check
-            from core import db
+            from app import db
             with db.engine.connect() as connection:
                 connection.execute(db.text('SELECT 1'))
             db_status = 'connected'

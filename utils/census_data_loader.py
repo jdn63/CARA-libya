@@ -221,3 +221,8 @@ class WisconsinCensusDataLoader:
 
 # Global instance for easy access
 wisconsin_census = WisconsinCensusDataLoader()
+
+
+def get_elderly_population_pct(county_name: str):
+    """Module-level helper: return elderly population percentage for a county."""
+    return wisconsin_census.get_elderly_population_percentage(county_name)

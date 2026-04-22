@@ -427,3 +427,13 @@ def clear_dhs_cache() -> int:
     count = clear_cache_by_prefix(DHS_CACHE_PREFIX)
     logger.info(f"Cleared DHS data cache: {count} entries removed")
     return count
+
+
+def get_dhs_health_metrics(county_name: str) -> Dict[str, Any]:
+    """
+    Return DHS health metrics for a county.
+
+    This is a stub — populate with real DHS data retrieval logic.
+    """
+    logger.debug(f"get_dhs_health_metrics called for {county_name} (stub)")
+    return {"available": False, "county": county_name}
