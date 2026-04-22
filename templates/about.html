@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About CARA - {{ jurisdiction_name }}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/cara.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">CARA - {{ jurisdiction_name }}</a>
+      <div>
+        <a href="/methodology" class="btn btn-outline-light btn-sm me-2">Methodology</a>
+        <a href="/about" class="btn btn-outline-light btn-sm active">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mt-4 mb-5">
+    <h1 class="h2 mb-1">About CARA</h1>
+    <p class="text-muted mb-4">Comprehensive Automated Risk Assessment</p>
+
+    <div class="row g-4">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">What is CARA?</h2>
+            <p>
+              CARA is an open-source, geospatial public health and emergency preparedness
+              risk assessment platform. It integrates authoritative data sources to produce
+              multi-domain risk scores for jurisdictions at the county, district, province,
+              or national level.
+            </p>
+            <p>
+              Risk scores are computed using the PHRAT (Public Health Risk Assessment Tool)
+              quadratic mean formula, which weights each domain by policy relevance and
+              produces a final composite score on a 0-1 scale. Scores drive prioritized
+              action plans aligned with the {{ framework_name | default('applicable assessment framework') }}.
+            </p>
+            <p>
+              CARA is designed to support both routine strategic planning and operational
+              emergency response. All data is pre-fetched and cached from authoritative
+              sources on a scheduled basis; no external API calls occur during a user session.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">Data sources</h2>
+            <p>
+              This deployment uses the following data sources. All sources are credited
+              in the methodology documentation.
+            </p>
+            {% if data_sources %}
+            <ul class="mb-0">
+              {% for source in data_sources %}
+              <li>{{ source }}</li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted mb-0">Data source list not configured.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">License</h2>
+            <p>
+              CARA is released under the GNU Affero General Public License v3.0 (AGPLv3).
+              Deployments of CARA that are accessible over a network must make their
+              complete source code available to users.
+            </p>
+            <p class="mb-0">
+              Source code:
+              <a href="https://github.com/jdn63/CARA-template" target="_blank" rel="noopener">github.com/jdn63/CARA-template</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">Deployment details</h2>
+            <dl class="row mb-0">
+              <dt class="col-sm-5">Jurisdiction</dt>
+              <dd class="col-sm-7">{{ jurisdiction_name | default('Not configured') }}</dd>
+              <dt class="col-sm-5">Profile</dt>
+              <dd class="col-sm-7">{{ profile | default('Not configured') | replace('_', ' ') | title }}</dd>
+              <dt class="col-sm-5">Framework</dt>
+              <dd class="col-sm-7">{{ framework_name | default('Not configured') }}</dd>
+              <dt class="col-sm-5">Version</dt>
+              <dd class="col-sm-7">{{ version | default('1.0.0') }}</dd>
+              <dt class="col-sm-5">Last data refresh</dt>
+              <dd class="col-sm-7">{{ last_refresh | default('Not available') }}</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2 class="h5 card-title">Quick links</h2>
+            <ul class="list-unstyled mb-0">
+              <li class="mb-1"><a href="/methodology">Methodology documentation</a></li>
+              <li class="mb-1"><a href="/">Jurisdiction selector</a></li>
+              <li class="mb-1"><a href="https://github.com/jdn63/CARA-template" target="_blank" rel="noopener">Source code</a></li>
+              <li><a href="https://github.com/jdn63/CARA" target="_blank" rel="noopener">Wisconsin reference deployment</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-3 border-top text-center text-muted small">
+    CARA Template - Open Source Public Health Risk Assessment | AGPLv3
+  </footer>
+</body>
+</html>

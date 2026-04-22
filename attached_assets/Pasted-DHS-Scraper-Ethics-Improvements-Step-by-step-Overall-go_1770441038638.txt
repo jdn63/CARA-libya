@@ -1,0 +1,147 @@
+DHS Scraper Ethics Improvements (Step-by-step)
+Overall goal
+
+Make the scraper:
+
+Opt-in (off by default in production)
+
+Polite (rate limiting + retry/backoff)
+
+Efficient (cache with TTL so it doesn’t re-hit DHS constantly)
+
+Transparent (documented behavior + safe defaults)
+
+You’ll implement these mainly in utils/wisconsin_dhs_scraper.py.
+
+Step 0: Decide the default behavior for production
+
+Recommended:
+
+In production (Render): scraper disabled
+
+Use cached data if present; otherwise fallback estimates
+
+Enable scraping only when explicitly set
+
+That means you won’t surprise-load DHS or accidentally scrape on every web request.
+
+Step 1 — Add an “ENABLE_SCRAPERS” off switch (most important)
+
+In WisconsinDHSScraper.get_latest_surveillance_data(), add this near the top (right after try: is fine):
+
+# Scraping is opt-in (disabled by default)
+if os.getenv("ENABLE_SCRAPERS", "0") != "1":
+    logger.info("DHS scraper disabled (set ENABLE_SCRAPERS=1 to enable). Using cached/fallback data.")
+    cached = self._load_cached_surveillance_data(max_age_hours=int(os.getenv("CACHE_TTL_HOURS", "24")))
+    return cached if cached else self._get_fallback_data()
+
+
+Then add this helper method anywhere inside the class:
+
+def _load_cached_surveillance_data(self, max_age_hours: int = 24):
+    """Load cached surveillance data if it exists and is fresh enough."""
+    try:
+        cache_file = os.path.join(self.cache_dir, "latest_surveillance.json")
+        if not os.path.exists(cache_file):
+            return None
+
+        mtime = datetime.fromtimestamp(os.path.getmtime(cache_file))
+        if datetime.now() - mtime > timedelta(hours=max_age_hours):
+            return None
+
+        with open(cache_file, "r") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.warning(f"Could not load cached surveillance data: {e}")
+        return None
+
+
+✅ This immediately improves ethics and stability.
+
+Step 2 — Add polite requests: User-Agent + delay + retry/backoff
+
+Add import time to your imports at the top:
+
+import time
+
+
+Then add this method inside the class:
+
+def _request(self, url: str, timeout: int = 15) -> requests.Response:
+    """
+    Polite request helper with:
+    - User-Agent identification
+    - baseline delay between requests
+    - retry/backoff for transient errors (esp. 429/503)
+    """
+    delay = float(os.getenv("REQUEST_DELAY_SECONDS", "1.5"))
+    max_retries = int(os.getenv("REQUEST_MAX_RETRIES", "3"))
+
+    headers = {
+        "User-Agent": os.getenv(
+            "SCRAPER_USER_AGENT",
+            "CARA-WI-DHS-Scraper/1.0 (contact: github.com/jdn63)"
+        )
+    }
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            time.sleep(delay)
+            resp = requests.get(url, headers=headers, timeout=timeout)
+
+            if resp.status_code in (429, 503):
+                backoff = min(60, 10 * attempt)
+                logger.warning(f"{resp.status_code} from {url}. Backing off {backoff}s (attempt {attempt}/{max_retries})")
+                time.sleep(backoff)
+                continue
+
+            resp.raise_for_status()
+            return resp
+
+        except Exception as e:
+            if attempt == max_retries:
+                raise
+            backoff = min(60, 5 * attempt)
+            logger.warning(f"Request error for {url}: {e}. Retrying in {backoff}s (attempt {attempt}/{max_retries})")
+            time.sleep(backoff)
+
+    raise RuntimeError(f"Failed to fetch {url} after {max_retries} retries")
+
+
+Now replace your requests.get(...) calls:
+
+In _get_recent_report_urls:
+
+Replace:
+
+response = requests.get(self.reports_url, timeout=10)
+
+
+With:
+
+response = self._request(self.reports_url, timeout=10)
+
+In _extract_report_data:
+
+Replace:
+
+response = requests.get(report_url, timeout=15)
+
+
+With:
+
+response = self._request(report_url, timeout=15)
+
+In _get_mmr_vaccination_data:
+
+Replace:
+
+response = requests.get(mmr_report_url, timeout=10)
+
+
+With:
+
+response = self._request(mmr_report_url, timeout=10)
+
+
+✅ This makes the scraper polite and resilient.

@@ -1,0 +1,104 @@
+profile: us_state
+name: "US State / Territory / Tribal Nation"
+description: >
+  Configuration profile for United States states, territories, and Tribal nations.
+  Uses US-specific data connectors and the CDC PHEP assessment framework.
+
+assessment_framework: cdc_phep
+
+geographic:
+  source: us_census
+  boundary_level: county
+  projection: EPSG:4326
+  coordinate_order: lon_lat
+
+units:
+  temperature: fahrenheit
+  distance: miles
+  area: square_miles
+
+connectors:
+  air_quality: airnow
+  weather_alerts: nws
+  health_metrics: chr_cdc
+  disaster_history: open_fema
+  hazard_index: fema_nri
+  storm_events: noaa_ncei
+  vector_borne_disease: cdc_arbonet
+  social_vulnerability: cdc_svi
+  respiratory_surveillance: cdc_nssp
+  dam_inventory: nid
+
+domains:
+  enabled:
+    - natural_hazards
+    - health_metrics
+    - air_quality
+    - extreme_heat
+    - dam_failure
+    - vector_borne_disease
+    - mass_casualty
+  disabled:
+    - conflict_displacement
+
+domain_config:
+  mass_casualty:
+    us_subtype: active_shooter
+    include_firearm_data: true
+    data_sources:
+      - gun_violence_archive
+      - rand_firearm_law
+      - nces_ssocs
+      - census_acs
+      - cdc_svi
+
+  natural_hazards:
+    climate_projections: noaa_wicci
+
+  vector_borne_disease:
+    diseases:
+      - lyme
+      - west_nile
+    use_local_incidence: true
+
+weights:
+  natural_hazards: 0.28
+  mass_casualty: 0.18
+  health_metrics: 0.17
+  air_quality: 0.12
+  extreme_heat: 0.11
+  dam_failure: 0.07
+  vector_borne_disease: 0.07
+
+regional_grouping:
+  enabled: true
+  label: "Region"
+  description: >
+    Sub-state regional groupings (e.g. health districts, emergency management regions).
+    Define your regions in jurisdiction.yaml under regional_groups.
+
+action_plan:
+  framework: cdc_phep
+  capabilities:
+    - community_preparedness
+    - community_recovery
+    - emergency_operations_coordination
+    - emergency_public_information_and_warning
+    - fatality_management
+    - healthcare_preparedness
+    - information_sharing
+    - mass_care
+    - medical_countermeasure_dispensing
+    - medical_materiel_management_and_distribution
+    - medical_surge
+    - non_pharmaceutical_interventions
+    - public_health_laboratory_testing
+    - public_health_surveillance_and_epidemiological_investigation
+    - responder_safety_and_health
+
+export:
+  hva_compatible: true
+  formats:
+    - pdf
+    - excel
+    - geojson

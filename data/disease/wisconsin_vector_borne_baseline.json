@@ -1,0 +1,146 @@
+{
+  "metadata": {
+    "description": "County-level baseline data for vector-borne disease risk assessment in Wisconsin",
+    "version": "1.0.0",
+    "last_updated": "2025-01-15",
+    "sources": [
+      "Wisconsin DHS Lyme Disease Surveillance Reports (2018-2023)",
+      "CDC ArboNET West Nile Virus Surveillance (2018-2023)",
+      "Wisconsin DHS Tick-Borne Disease Summary Reports",
+      "USDA Forest Service National Land Cover Database (NLCD 2021)",
+      "Wisconsin DNR Deer Population Estimates (2023)",
+      "U.S. Census Bureau ACS 5-Year Estimates - Rural/Urban Classification"
+    ],
+    "diseases_covered": [
+      "Lyme disease (Borrelia burgdorferi)",
+      "Anaplasmosis (Anaplasma phagocytophilum)",
+      "Ehrlichiosis (Ehrlichia species)",
+      "West Nile Virus (WNV)"
+    ],
+    "case_rate_tiers": {
+      "very_high": "Annual incidence >100 per 100,000 population",
+      "high": "Annual incidence 50-100 per 100,000 population",
+      "moderate": "Annual incidence 20-50 per 100,000 population",
+      "low": "Annual incidence 5-20 per 100,000 population",
+      "minimal": "Annual incidence <5 per 100,000 population"
+    },
+    "notes": "Wisconsin consistently ranks in the top 5 nationally for Lyme disease incidence. The northwestern and north-central counties have the highest tick-borne disease rates. Climate warming is expanding tick and mosquito habitat northward and extending active seasons."
+  },
+  "county_baselines": {
+    "Adams": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 42, "deer_density": "moderate", "outdoor_workforce_pct": 12},
+    "Ashland": {"lyme_tier": "high", "wnv_tier": "minimal", "forest_cover_pct": 72, "deer_density": "high", "outdoor_workforce_pct": 14},
+    "Barron": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 38, "deer_density": "high", "outdoor_workforce_pct": 13},
+    "Bayfield": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 78, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Brown": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 15, "deer_density": "low", "outdoor_workforce_pct": 6},
+    "Buffalo": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 48, "deer_density": "high", "outdoor_workforce_pct": 16},
+    "Burnett": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 55, "deer_density": "high", "outdoor_workforce_pct": 14},
+    "Calumet": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 18, "deer_density": "low", "outdoor_workforce_pct": 8},
+    "Chippewa": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 40, "deer_density": "high", "outdoor_workforce_pct": 12},
+    "Clark": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 42, "deer_density": "high", "outdoor_workforce_pct": 18},
+    "Columbia": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 25, "deer_density": "moderate", "outdoor_workforce_pct": 10},
+    "Crawford": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 52, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Dane": {"lyme_tier": "moderate", "wnv_tier": "moderate", "forest_cover_pct": 14, "deer_density": "low", "outdoor_workforce_pct": 5},
+    "Dodge": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 16, "deer_density": "moderate", "outdoor_workforce_pct": 10},
+    "Door": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 45, "deer_density": "high", "outdoor_workforce_pct": 12},
+    "Douglas": {"lyme_tier": "high", "wnv_tier": "minimal", "forest_cover_pct": 68, "deer_density": "high", "outdoor_workforce_pct": 13},
+    "Dunn": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 35, "deer_density": "high", "outdoor_workforce_pct": 12},
+    "Eau Claire": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 30, "deer_density": "moderate", "outdoor_workforce_pct": 8},
+    "Florence": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 82, "deer_density": "high", "outdoor_workforce_pct": 18},
+    "Fond du Lac": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 15, "deer_density": "moderate", "outdoor_workforce_pct": 9},
+    "Forest": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 85, "deer_density": "very_high", "outdoor_workforce_pct": 16},
+    "Grant": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 30, "deer_density": "moderate", "outdoor_workforce_pct": 14},
+    "Green": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 20, "deer_density": "moderate", "outdoor_workforce_pct": 12},
+    "Green Lake": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 22, "deer_density": "moderate", "outdoor_workforce_pct": 11},
+    "Iowa": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 32, "deer_density": "moderate", "outdoor_workforce_pct": 14},
+    "Iron": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 80, "deer_density": "high", "outdoor_workforce_pct": 16},
+    "Jackson": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 50, "deer_density": "high", "outdoor_workforce_pct": 14},
+    "Jefferson": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 16, "deer_density": "moderate", "outdoor_workforce_pct": 9},
+    "Juneau": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 45, "deer_density": "high", "outdoor_workforce_pct": 13},
+    "Kenosha": {"lyme_tier": "minimal", "wnv_tier": "moderate", "forest_cover_pct": 10, "deer_density": "low", "outdoor_workforce_pct": 5},
+    "Kewaunee": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 22, "deer_density": "moderate", "outdoor_workforce_pct": 14},
+    "La Crosse": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 35, "deer_density": "moderate", "outdoor_workforce_pct": 7},
+    "Lafayette": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 18, "deer_density": "moderate", "outdoor_workforce_pct": 16},
+    "Langlade": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 65, "deer_density": "very_high", "outdoor_workforce_pct": 14},
+    "Lincoln": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 62, "deer_density": "high", "outdoor_workforce_pct": 13},
+    "Manitowoc": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 18, "deer_density": "moderate", "outdoor_workforce_pct": 10},
+    "Marathon": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 40, "deer_density": "high", "outdoor_workforce_pct": 11},
+    "Marinette": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 65, "deer_density": "very_high", "outdoor_workforce_pct": 14},
+    "Marquette": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 38, "deer_density": "moderate", "outdoor_workforce_pct": 13},
+    "Menominee": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 90, "deer_density": "very_high", "outdoor_workforce_pct": 15},
+    "Milwaukee": {"lyme_tier": "minimal", "wnv_tier": "moderate", "forest_cover_pct": 5, "deer_density": "minimal", "outdoor_workforce_pct": 3},
+    "Monroe": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 40, "deer_density": "high", "outdoor_workforce_pct": 13},
+    "Oconto": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 58, "deer_density": "very_high", "outdoor_workforce_pct": 14},
+    "Oneida": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 72, "deer_density": "very_high", "outdoor_workforce_pct": 13},
+    "Outagamie": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 18, "deer_density": "low", "outdoor_workforce_pct": 7},
+    "Ozaukee": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 20, "deer_density": "moderate", "outdoor_workforce_pct": 5},
+    "Pepin": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 40, "deer_density": "high", "outdoor_workforce_pct": 16},
+    "Pierce": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 28, "deer_density": "moderate", "outdoor_workforce_pct": 11},
+    "Polk": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 38, "deer_density": "high", "outdoor_workforce_pct": 12},
+    "Portage": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 35, "deer_density": "moderate", "outdoor_workforce_pct": 10},
+    "Price": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 75, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Racine": {"lyme_tier": "minimal", "wnv_tier": "moderate", "forest_cover_pct": 8, "deer_density": "low", "outdoor_workforce_pct": 5},
+    "Richland": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 48, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Rock": {"lyme_tier": "low", "wnv_tier": "moderate", "forest_cover_pct": 10, "deer_density": "low", "outdoor_workforce_pct": 7},
+    "Rusk": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 60, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Sauk": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 35, "deer_density": "moderate", "outdoor_workforce_pct": 11},
+    "Sawyer": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 70, "deer_density": "very_high", "outdoor_workforce_pct": 14},
+    "Shawano": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 40, "deer_density": "high", "outdoor_workforce_pct": 13},
+    "Sheboygan": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 18, "deer_density": "moderate", "outdoor_workforce_pct": 8},
+    "St. Croix": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 25, "deer_density": "moderate", "outdoor_workforce_pct": 9},
+    "Taylor": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 55, "deer_density": "high", "outdoor_workforce_pct": 16},
+    "Trempealeau": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 38, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Vernon": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 45, "deer_density": "high", "outdoor_workforce_pct": 15},
+    "Vilas": {"lyme_tier": "very_high", "wnv_tier": "minimal", "forest_cover_pct": 78, "deer_density": "very_high", "outdoor_workforce_pct": 14},
+    "Walworth": {"lyme_tier": "low", "wnv_tier": "moderate", "forest_cover_pct": 14, "deer_density": "moderate", "outdoor_workforce_pct": 8},
+    "Washburn": {"lyme_tier": "very_high", "wnv_tier": "low", "forest_cover_pct": 60, "deer_density": "high", "outdoor_workforce_pct": 14},
+    "Washington": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 20, "deer_density": "moderate", "outdoor_workforce_pct": 7},
+    "Waukesha": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 18, "deer_density": "moderate", "outdoor_workforce_pct": 5},
+    "Waupaca": {"lyme_tier": "high", "wnv_tier": "low", "forest_cover_pct": 35, "deer_density": "high", "outdoor_workforce_pct": 12},
+    "Waushara": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 32, "deer_density": "moderate", "outdoor_workforce_pct": 12},
+    "Winnebago": {"lyme_tier": "low", "wnv_tier": "low", "forest_cover_pct": 12, "deer_density": "low", "outdoor_workforce_pct": 6},
+    "Wood": {"lyme_tier": "moderate", "wnv_tier": "low", "forest_cover_pct": 35, "deer_density": "moderate", "outdoor_workforce_pct": 10}
+  },
+  "tier_scores": {
+    "very_high": 0.90,
+    "high": 0.70,
+    "moderate": 0.45,
+    "low": 0.25,
+    "minimal": 0.10
+  },
+  "deer_density_scores": {
+    "very_high": 0.95,
+    "high": 0.70,
+    "moderate": 0.45,
+    "low": 0.25,
+    "minimal": 0.10
+  },
+  "seasonal_risk_factors": {
+    "tick_season": {
+      "peak_months": [5, 6, 7],
+      "active_months": [4, 5, 6, 7, 8, 9, 10],
+      "notes": "Primary tick season April-October, peak May-July. Blacklegged tick (Ixodes scapularis) is primary Lyme vector."
+    },
+    "mosquito_season": {
+      "peak_months": [7, 8],
+      "active_months": [6, 7, 8, 9],
+      "notes": "Mosquito season June-September, peak July-August. Culex species are primary WNV vectors."
+    }
+  },
+  "climate_impact": {
+    "tick_range_expansion": {
+      "description": "Warming temperatures expanding blacklegged tick habitat northward and to higher elevations",
+      "multiplier": 1.15,
+      "notes": "Wisconsin tick populations have expanded significantly since 2000. Climate models project continued northward expansion."
+    },
+    "extended_season": {
+      "description": "Earlier spring and later fall extending tick and mosquito active seasons",
+      "multiplier": 1.10,
+      "notes": "Active season has extended by approximately 2-3 weeks since 1990s"
+    },
+    "mosquito_habitat": {
+      "description": "Increased precipitation and warmer temperatures creating more mosquito breeding habitat",
+      "multiplier": 1.12,
+      "notes": "Heavy precipitation events creating standing water breeding sites"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+alembic
+apscheduler
+flask
+flask-sqlalchemy
+folium
+geopandas
+gunicorn
+numpy
+openpyxl
+pandas
+psycopg2-binary
+pyyaml
+requests
+scikit-learn
+sqlalchemy
+weasyprint

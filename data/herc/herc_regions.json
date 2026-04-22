@@ -1,0 +1,123 @@
+[
+  {
+    "id": "1",
+    "name": "HERC Region 1 (Northwest)",
+    "counties": [
+      "Ashland",
+      "Barron",
+      "Bayfield",
+      "Burnett",
+      "Chippewa",
+      "Douglas",
+      "Dunn",
+      "Eau Claire",
+      "Pepin",
+      "Pierce",
+      "Polk",
+      "Rusk",
+      "Sawyer",
+      "St. Croix",
+      "Washburn"
+    ],
+    "color": "#FF9F1C"
+  },
+  {
+    "id": "2",
+    "name": "HERC Region 2 (North Central)",
+    "counties": [
+      "Clark",
+      "Forest",
+      "Iron",
+      "Langlade",
+      "Lincoln",
+      "Marathon",
+      "Oneida",
+      "Portage",
+      "Price",
+      "Taylor",
+      "Vilas",
+      "Wood"
+    ],
+    "color": "#2EC4B6"
+  },
+  {
+    "id": "3",
+    "name": "HERC Region 3 (Northeast)",
+    "counties": [
+      "Brown",
+      "Door",
+      "Florence",
+      "Kewaunee",
+      "Manitowoc",
+      "Marinette",
+      "Oconto"
+    ],
+    "color": "#E71D36"
+  },
+  {
+    "id": "4",
+    "name": "HERC Region 4 (Western)",
+    "counties": [
+      "Buffalo",
+      "Crawford",
+      "Jackson",
+      "La Crosse",
+      "Monroe",
+      "Trempealeau",
+      "Vernon"
+    ],
+    "color": "#011627"
+  },
+  {
+    "id": "5",
+    "name": "HERC Region 5 (South Central)",
+    "counties": [
+      "Adams",
+      "Columbia",
+      "Dane",
+      "Dodge",
+      "Grant",
+      "Green",
+      "Iowa",
+      "Jefferson",
+      "Juneau",
+      "Lafayette",
+      "Marquette",
+      "Richland",
+      "Rock",
+      "Sauk"
+    ],
+    "color": "#6A4C93"
+  },
+  {
+    "id": "6",
+    "name": "HERC Region 6 (Fox Valley)",
+    "counties": [
+      "Calumet",
+      "Green Lake",
+      "Menominee",
+      "Outagamie",
+      "Shawano",
+      "Waupaca",
+      "Waushara",
+      "Winnebago"
+    ],
+    "color": "#1982C4"
+  },
+  {
+    "id": "7",
+    "name": "HERC Region 7 (Southeast)",
+    "counties": [
+      "Fond du Lac",
+      "Kenosha",
+      "Milwaukee",
+      "Ozaukee",
+      "Racine",
+      "Sheboygan",
+      "Walworth",
+      "Washington",
+      "Waukesha"
+    ],
+    "color": "#8AC926"
+  }
+]

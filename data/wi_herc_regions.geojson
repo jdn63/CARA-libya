@@ -1,0 +1,144 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 1",
+        "color": "#FF6B6B",
+        "counties": ["Ashland", "Bayfield", "Burnett", "Douglas", "Iron", "Price", "Rusk", "Sawyer", "Taylor", "Washburn"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-92.888, 46.938],
+          [-91.688, 46.855],
+          [-90.623, 46.843],
+          [-90.115, 46.905],
+          [-90.118, 46.271],
+          [-90.421, 45.892],
+          [-90.129, 45.234],
+          [-91.294, 45.321],
+          [-92.359, 45.322],
+          [-92.888, 45.234],
+          [-92.888, 46.938]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 2",
+        "color": "#4ECDC4",
+        "counties": ["Florence", "Forest", "Langlade", "Lincoln", "Marathon", "Oneida", "Portage", "Vilas", "Wood"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-90.115, 46.905],
+          [-89.484, 46.856],
+          [-88.812, 46.938],
+          [-88.378, 46.756],
+          [-88.123, 46.938],
+          [-88.156, 46.271],
+          [-88.421, 45.892],
+          [-88.129, 45.234],
+          [-89.294, 45.321],
+          [-89.852, 45.445],
+          [-90.129, 45.234],
+          [-90.115, 46.905]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 3",
+        "color": "#45B7D1",
+        "counties": ["Brown", "Door", "Kewaunee", "Marinette", "Menominee", "Oconto", "Shawano"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-91.294, 44.634],
+          [-90.129, 44.634],
+          [-90.129, 43.512],
+          [-91.294, 43.512],
+          [-91.294, 44.634]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 4",
+        "color": "#96CEB4",
+        "counties": ["Barron", "Chippewa", "Dunn", "Eau Claire", "Pepin", "Pierce", "Polk", "St. Croix"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-90.129, 44.634],
+          [-88.812, 44.634],
+          [-88.812, 43.512],
+          [-90.129, 43.512],
+          [-90.129, 44.634]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 5",
+        "color": "#D4A5A5",
+        "counties": ["Adams", "Buffalo", "Clark", "Columbia", "Crawford", "Dane", "Dodge", "Grant", "Green", "Iowa", "Jackson", "Juneau", "La Crosse", "Lafayette", "Monroe", "Richland", "Rock", "Sauk", "Trempealeau", "Vernon"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-88.812, 44.634],
+          [-87.484, 44.634],
+          [-87.484, 43.512],
+          [-88.812, 43.512],
+          [-88.812, 44.634]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 6",
+        "color": "#9FA8DA",
+        "counties": ["Calumet", "Fond du Lac", "Green Lake", "Manitowoc", "Marquette", "Outagamie", "Sheboygan", "Waupaca", "Waushara", "Winnebago"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-91.294, 43.512],
+          [-89.129, 43.512],
+          [-89.129, 42.491],
+          [-91.294, 42.491],
+          [-91.294, 43.512]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERC 7",
+        "color": "#FFB347",
+        "counties": ["Jefferson", "Kenosha", "Milwaukee", "Ozaukee", "Racine", "Walworth", "Washington", "Waukesha"]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-89.129, 43.512],
+          [-87.484, 43.512],
+          [-87.484, 42.491],
+          [-89.129, 42.491],
+          [-89.129, 43.512]
+        ]]
+      }
+    }
+  ]
+}

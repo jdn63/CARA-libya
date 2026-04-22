@@ -1,0 +1,266 @@
+# CARA - Comprehensive Automated Risk Assessment
+
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/flask-2.3+-green.svg)](https://flask.palletsprojects.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A comprehensive geospatial health and emergency preparedness risk assessment platform designed for Wisconsin public health departments, serving 95 jurisdictions including 11 tribal nations.
+
+## 🎯 Overview
+
+CARA provides multi-domain risk scoring, real-time data integration, and actionable preparedness guidance to public health officials across Wisconsin. The platform enhances public health emergency response and strategic planning capabilities with data-driven insights aligned with CDC Public Health Emergency Preparedness (PHEP) capabilities.
+
+### Key Features
+
+- **🗺️ Comprehensive Coverage**: All 95 Wisconsin public health jurisdictions (72 counties, 12 municipal departments, 11 tribal nations)
+- **📊 Multi-Domain Risk Assessment**: Natural hazards, infectious disease, active shooter, extreme heat, air quality, cybersecurity, and utilities
+- **🔄 Strategic Data Integration**: County-specific local data files plus cached data from Wisconsin DHS, FEMA, and EPA APIs
+- **📈 Strategic Planning Mode**: Long-term risk assessment optimized for annual preparedness planning cycles
+- **🎯 PHEP Alignment**: Full integration with CDC Public Health Emergency Preparedness capabilities
+- **📋 Automated Action Plans**: Customized preparedness recommendations with implementation timelines
+- **📊 Interactive Visualization**: Geospatial mapping, risk distribution charts, and trend analysis
+
+## 🏗️ Architecture
+
+### Backend
+- **Framework**: Flask (Python) with modular utility structure
+- **Database**: PostgreSQL with PostGIS extension for geospatial data
+- **Data Processing**: Pandas, NumPy, GeoPandas for data manipulation
+- **Scheduling**: APScheduler for automated data refreshes
+- **APIs**: RESTful integration with multiple government data sources
+
+### Frontend
+- **Templates**: Jinja2 with Bootstrap 5 responsive design
+- **Visualization**: Chart.js for interactive charts, Folium for mapping
+- **Accessibility**: WCAG 2.1 AA compliant design with screen reader support
+- **Performance**: Lazy loading, caching, and optimized asset delivery
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.11+
+- PostgreSQL with PostGIS extension
+- Required API keys (see Configuration section)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/cara-wisconsin.git
+   cd cara-wisconsin
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   export DATABASE_URL="postgresql://username:password@localhost/cara_db"
+   export SESSION_SECRET="your-secret-key-here"
+   export AIRNOW_API_KEY="your-airnow-api-key"
+   # Add other required API keys
+   ```
+
+4. **Initialize the database**
+   ```bash
+   python -c "from app import app, db; app.app_context().push(); db.create_all()"
+   ```
+
+5. **Run the application**
+   ```bash
+   python main.py
+   ```
+
+The application will be available at `http://localhost:5000`
+
+## 📊 Risk Assessment Framework
+
+CARA employs a sophisticated multi-dimensional risk assessment methodology:
+
+### Risk Domains
+
+| Domain | Weight | Description |
+|--------|--------|-------------|
+| **Natural Hazards** | 40% | Flood, tornado, winter storm, thunderstorm risks |
+| **Health Metrics** | 20% | Infectious disease surveillance and vaccination rates |
+| **Utilities Risk** | 30% | Electrical, supply chain, fuel shortage vulnerabilities |
+| **Active Shooter** | 10% | Community violence risk assessment |
+
+### Temporal Framework (BSTA)
+
+- **Baseline (60%)**: Long-term structural risk factors
+- **Seasonal (25%)**: Predictable cyclical variations
+- **Trend (15%)**: Medium-term directional changes  
+- **Acute (0%)**: Short-term event-driven spikes (Strategic Planning Mode)
+
+### Social Vulnerability Integration
+
+All risk calculations incorporate CDC Social Vulnerability Index (SVI) factors:
+- Socioeconomic status
+- Household composition & disability
+- Minority status & language
+- Housing type & transportation
+
+## 🔧 Configuration
+
+### Required API Keys
+
+Add these environment variables for full functionality:
+
+```bash
+# Air Quality Data
+AIRNOW_API_KEY=your_airnow_api_key
+
+# Weather Data
+OPENWEATHER_API_KEY=your_openweather_api_key
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost/cara_db
+
+# Security
+SESSION_SECRET=your_secure_session_secret
+```
+
+### Data Sources
+
+CARA integrates with multiple authoritative data sources:
+
+- **Wisconsin DHS**: Disease surveillance and health metrics
+- **CDC**: Social Vulnerability Index and PHEP guidelines
+- **FEMA**: Natural hazard risk indices
+- **EPA AirNow**: Real-time air quality monitoring
+- **NOAA/NWS**: Weather alerts and climate projections
+- **Census Bureau**: Demographic and housing data
+
+## 📖 Usage
+
+### Web Interface
+
+1. **Home Page**: Select from 95 Wisconsin jurisdictions
+2. **Dashboard**: View comprehensive risk assessment with interactive charts
+3. **Action Plans**: Download customized preparedness recommendations
+4. **Methodology**: Detailed documentation of risk calculation methods
+5. **HERC Integration**: Regional health coordination dashboard
+
+### API Endpoints
+
+```python
+# Get risk assessment for a jurisdiction
+GET /api/risk/{jurisdiction_id}
+
+# Historical risk data
+GET /api/historical/{jurisdiction_id}
+
+# HERC regional data
+GET /api/herc/{region_id}
+
+# Generate action plan
+POST /api/action-plan/{jurisdiction_id}
+```
+
+## 🧪 Enhanced Infectious Disease Framework
+
+Version 2.0.0 introduces comprehensive infectious disease risk assessment:
+
+- **Surveillance Integration**: Real-time Wisconsin DHS disease activity monitoring
+- **Strategic Vaccination Assessment**: County-level vaccination rate analysis
+- **Outbreak Multipliers**: Dynamic risk adjustments for active disease outbreaks
+- **Enhanced Metrics**: Detailed breakdown of infectious disease risk components
+
+## 🔒 Security
+
+CARA implements comprehensive security measures:
+
+- **Environment-based Secrets**: No hardcoded API keys or credentials
+- **Input Validation**: All user inputs sanitized and validated
+- **XSS Protection**: Template rendering with proper escaping
+- **Database Security**: Parameterized queries and connection pooling
+- **Error Handling**: Graceful degradation without information disclosure
+
+## 🤝 Contributing
+
+We welcome contributions from the public health and emergency management community!
+
+### Development Setup
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes and add tests
+4. Commit your changes: `git commit -m 'Add amazing feature'`
+5. Push to the branch: `git push origin feature/amazing-feature`
+6. Open a Pull Request
+
+### Code Style
+
+- Follow PEP 8 for Python code
+- Use meaningful variable and function names
+- Add docstrings for all functions and classes
+- Include unit tests for new features
+
+## 📚 Documentation
+
+- **[Risk Assessment Methodology](docs/risk_assessment_methodology.md)**: Detailed calculation methods
+- **[API Management Guide](docs/api_management_guide.md)**: API integration best practices
+- **[Data Sources Analysis](docs/data_sources_comprehensive_analysis.md)**: Complete data source documentation
+- **[Temporal Framework](docs/temporal_framework_usage_strategy.md)**: Strategic planning implementation
+
+## 🆔 Version History
+
+### Version 2.0.0 (September 8, 2025)
+- **SECURITY**: Production-ready security hardening and vulnerability fixes
+- **VALIDATION**: Enhanced infectious disease framework operational across all jurisdictions
+- **PERFORMANCE**: Import optimization and LSP diagnostic resolution
+- **DEPLOYMENT**: Application declared ready for production deployment
+
+### Version 1.9.0 (May 4, 2025)
+- **NEW**: Persistent caching system with data source-appropriate refresh cycles
+- **NEW**: Advanced data validation and API error handling
+- Enhanced SVI data retrieval with comprehensive validation
+
+[View Complete Version History](docs/version_history.md)
+
+## 🏥 PHEP Capabilities Integration
+
+CARA fully aligns with CDC Public Health Emergency Preparedness Cooperative Agreement 2024-2028:
+
+**Foundational Capabilities:**
+- Community Preparedness
+- Emergency Operations Coordination
+- Information Sharing
+- Responder Safety and Health
+
+**Incident-Specific Capabilities:**
+- Medical Countermeasure Dispensing
+- Public Health Surveillance
+- Medical Surge
+- Nonpharmaceutical Interventions
+
+## 📄 Research Context
+
+CARA is a research project developed at Georgetown University to support Wisconsin public health preparedness. Users should verify critical information with authoritative sources before making major operational decisions.
+
+## 📞 Support
+
+For technical support or questions:
+- **Issues**: Create a GitHub issue with detailed description
+- **Documentation**: Check the [docs/](docs/) directory
+- **Community**: Join our discussions for best practices sharing
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🏛️ Acknowledgments
+
+- **Wisconsin Department of Health Services** for surveillance data and guidance
+- **CDC** for Public Health Emergency Preparedness framework
+- **FEMA** for natural hazard risk indices
+- **Georgetown University** for research support and development
+- **Wisconsin public health community** for feedback and testing
+
+---
+
+**Built with ❤️ for Wisconsin Public Health Preparedness**

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ jurisdiction.name }} - CARA Risk Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/cara.css">
+  <style>
+    .risk-score-ring {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; font-weight: 700;
+      border: 8px solid;
+      margin: 0 auto 0.75rem;
+    }
+    .risk-low    { border-color: #198754; color: #198754; }
+    .risk-moderate { border-color: #fd7e14; color: #fd7e14; }
+    .risk-high   { border-color: #dc3545; color: #dc3545; }
+    .risk-critical { border-color: #6f0000; color: #6f0000; }
+    .domain-bar-label { font-size: 0.82rem; min-width: 180px; }
+    .progress { height: 18px; }
+    .action-badge-critical { background: #6f0000; }
+    .action-badge-high { background: #dc3545; }
+    .action-badge-medium { background: #fd7e14; }
+    .action-badge-low { background: #198754; }
+    .data-freshness { font-size: 0.78rem; color: #6c757d; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">CARA - {{ app_name | default(jurisdiction.name) }}</a>
+      <div>
+        <a href="/methodology" class="btn btn-outline-light btn-sm me-2">Methodology</a>
+        <a href="/about" class="btn btn-outline-light btn-sm">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid mt-3 mb-5 px-4">
+
+    <!-- Header row: jurisdiction selector + composite score -->
+    <div class="row align-items-center mb-4">
+      <div class="col-md-5">
+        <label for="jx-select" class="form-label fw-semibold mb-1">Viewing jurisdiction</label>
+        <select id="jx-select" class="form-select"
+                onchange="if(this.value) window.location='/dashboard/'+this.value">
+          {% for j in all_jurisdictions %}
+          <option value="{{ j.id }}" {% if j.id == jurisdiction.id %}selected{% endif %}>
+            {{ j.name }}{% if j.parent %} ({{ j.parent }}){% endif %}
+          </option>
+          {% endfor %}
+        </select>
+        <div class="data-freshness mt-1">
+          Last data refresh: {{ last_refresh | default('Not available') }}
+          &nbsp;|&nbsp; Profile: {{ profile | replace('_', ' ') | title }}
+          &nbsp;|&nbsp; Framework: {{ framework_name | default('N/A') }}
+        </div>
+      </div>
+
+      <div class="col-md-3 text-center mt-3 mt-md-0">
+        <div class="risk-score-ring risk-{{ composite.tier | lower }}">
+          {{ (composite.score * 100) | round(1) }}
+        </div>
+        <div class="fw-semibold">Composite Risk Score</div>
+        <div class="badge bg-{{ composite.tier_color }} mt-1">{{ composite.tier | title }}</div>
+      </div>
+
+      <div class="col-md-4 mt-3 mt-md-0">
+        <div class="card border-0 bg-light h-100">
+          <div class="card-body py-2">
+            <div class="small text-muted mb-1 fw-semibold">Score range</div>
+            <div class="d-flex flex-wrap justify-content-between small mb-2">
+              <span class="text-secondary">Minimal (0.00-0.14)</span>
+              <span style="color:#FFD700">Low (0.15-0.34)</span>
+              <span class="text-warning">Moderate (0.35-0.54)</span>
+              <span class="text-danger">High (0.55-0.74)</span>
+              <span style="color:#6f0000">Critical (0.75+)</span>
+            </div>
+            <div class="small text-muted">
+              Scores use the PHRAT quadratic mean:
+              <code>sqrt(sum(w_i x s_i^2))</code>.
+              See <a href="/methodology">Methodology</a>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Domain scores row -->
+    <div class="card mb-4">
+      <div class="card-header fw-semibold">Domain Scores</div>
+      <div class="card-body">
+        {% for domain in domains %}
+        <div class="row align-items-center mb-2">
+          <div class="col-auto domain-bar-label">
+            {{ domain.label }}
+            <span class="text-muted small">({{ (domain.weight * 100) | round(0) | int }}%)</span>
+          </div>
+          <div class="col">
+            {% if domain.score is not none %}
+            <div class="progress">
+              <div class="progress-bar
+                {% if domain.score >= 0.75 %}bg-danger
+                {% elif domain.score >= 0.60 %}bg-warning text-dark
+                {% elif domain.score >= 0.40 %}bg-info text-dark
+                {% else %}bg-success
+                {% endif %}"
+                role="progressbar"
+                style="width: {{ (domain.score * 100) | round(1) }}%"
+                aria-valuenow="{{ (domain.score * 100) | round(1) }}"
+                aria-valuemin="0" aria-valuemax="100">
+                {{ (domain.score * 100) | round(1) }}
+              </div>
+            </div>
+            {% else %}
+            <div class="text-muted small">Data unavailable</div>
+            {% endif %}
+          </div>
+          <div class="col-auto text-muted small">
+            {{ domain.data_sources | join(', ') if domain.data_sources else 'N/A' }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Action Plan -->
+      <div class="col-lg-7">
+        <div class="card h-100">
+          <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+            Prioritized Action Plan
+            <span class="badge bg-secondary">{{ framework_name | default('') }}</span>
+          </div>
+          <div class="card-body p-0">
+            {% if action_items %}
+            <div class="list-group list-group-flush">
+              {% for item in action_items %}
+              <div class="list-group-item">
+                <div class="d-flex align-items-start gap-2 mb-1">
+                  <span class="badge action-badge-{{ item.priority }} text-capitalize mt-1">
+                    {{ item.priority }}
+                  </span>
+                  <div>
+                    <div class="fw-semibold small">{{ item.capability | replace('_', ' ') | title }}</div>
+                    <div class="small">{{ item.action }}</div>
+                    <div class="data-freshness mt-1">
+                      Timeline: {{ item.timeline }}
+                      {% if item.metric %}
+                      &nbsp;|&nbsp; Metric: {{ item.metric }}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-3 text-muted">No action items generated.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Jurisdiction detail + map -->
+      <div class="col-lg-5">
+        <div class="card mb-3">
+          <div class="card-header fw-semibold">Jurisdiction Details</div>
+          <div class="card-body py-2">
+            <dl class="row mb-0 small">
+              <dt class="col-sm-5">Name</dt>
+              <dd class="col-sm-7">{{ jurisdiction.name }}</dd>
+              {% if jurisdiction.parent %}
+              <dt class="col-sm-5">Parent region</dt>
+              <dd class="col-sm-7">{{ jurisdiction.parent }}</dd>
+              {% endif %}
+              {% if jurisdiction.population %}
+              <dt class="col-sm-5">Population</dt>
+              <dd class="col-sm-7">{{ "{:,}".format(jurisdiction.population) }}</dd>
+              {% endif %}
+              {% if jurisdiction.area_km2 %}
+              <dt class="col-sm-5">Area</dt>
+              <dd class="col-sm-7">{{ "{:,.0f}".format(jurisdiction.area_km2) }} km&sup2;</dd>
+              {% endif %}
+              {% if jurisdiction.gadm_level is not none %}
+              <dt class="col-sm-5">GADM level</dt>
+              <dd class="col-sm-7">{{ jurisdiction.gadm_level }}</dd>
+              {% endif %}
+            </dl>
+          </div>
+        </div>
+
+        {% if map_html %}
+        <div class="card mb-3">
+          <div class="card-header fw-semibold">Location</div>
+          <div class="card-body p-0" style="height: 280px; overflow: hidden;">
+            {{ map_html | safe }}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Component breakdown for top domain -->
+        {% if top_domain %}
+        <div class="card">
+          <div class="card-header fw-semibold small">
+            Component breakdown: {{ top_domain.label }}
+          </div>
+          <div class="card-body py-2">
+            {% for key, val in top_domain.components.items() %}
+            <div class="row align-items-center mb-1">
+              <div class="col domain-bar-label small">{{ key | replace('_', ' ') | title }}</div>
+              <div class="col">
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-secondary"
+                       role="progressbar"
+                       style="width: {{ (val * 100) | round(1) }}%"
+                       aria-valuenow="{{ (val * 100) | round(1) }}"
+                       aria-valuemin="0" aria-valuemax="100">
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto small text-muted">{{ (val * 100) | round(1) }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Framework capability summary (collapsible) -->
+    {% if framework_summary %}
+    <div class="card mt-4">
+      <div class="card-header fw-semibold">
+        <button class="btn btn-link text-dark text-decoration-none p-0"
+                data-bs-toggle="collapse" data-bs-target="#frameworkCollapse">
+          {{ framework_name }} Capability Summary
+        </button>
+      </div>
+      <div id="frameworkCollapse" class="collapse">
+        <div class="card-body">
+          <div class="row row-cols-1 row-cols-md-3 g-3">
+            {% for cap in framework_summary %}
+            <div class="col">
+              <div class="border rounded p-2 h-100 small">
+                <div class="fw-semibold">{{ cap.name }}</div>
+                <div class="text-muted">{{ cap.description }}</div>
+                {% if cap.score is not none %}
+                <div class="mt-1">
+                  Score: <strong>{{ (cap.score * 100) | round(0) | int }}</strong>/100
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <footer class="py-3 border-top text-center text-muted small">
+    CARA Template - Open Source Public Health Risk Assessment | AGPLv3 |
+    <a href="/methodology">Methodology</a> |
+    <a href="/about">About</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

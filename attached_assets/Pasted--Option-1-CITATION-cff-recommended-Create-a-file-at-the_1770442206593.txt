@@ -1,0 +1,91 @@
+✅ Option 1: CITATION.cff (recommended)
+
+Create a file at the root of the repository named exactly:
+
+CITATION.cff
+
+📄 Suggested CITATION.cff content
+cff-version: 1.2.0
+message: >
+  If you use CARA (Comprehensive Automated Risk Assessment) in your research,
+  policy analysis, or operational planning, please cite it using the
+  information below.
+
+title: "CARA: Comprehensive Automated Risk Assessment"
+authors:
+  - family-names: Niedermeier
+    given-names: Jaime
+    affiliation: Georgetown University
+    orcid: https://orcid.org/0000-0000-0000-0000
+
+abstract: >
+  CARA (Comprehensive Automated Risk Assessment) is an open-source, geospatial
+  public health and emergency preparedness risk assessment platform designed
+  to support jurisdiction-level strategic planning. CARA integrates
+  multi-domain hazard data, social vulnerability indicators, and public health
+  surveillance inputs to generate transparent, explainable risk scores and
+  preparedness action plans aligned with CDC Public Health Emergency
+  Preparedness (PHEP) capabilities.
+
+keywords:
+  - public health preparedness
+  - emergency management
+  - risk assessment
+  - geospatial analysis
+  - health equity
+  - disaster resilience
+
+license: MIT
+repository-code: https://github.com/jdn63/CARA
+url: https://caratool.org
+
+preferred-citation:
+  type: software
+  authors:
+    - family-names: Niedermeier
+      given-names: Jaime
+  title: "CARA: Comprehensive Automated Risk Assessment"
+  year: 2026
+  url: https://github.com/jdn63/CARA
+  version: 2.3
+
+✅ Notes
+
+GitHub will automatically detect this and show a “Cite this repository” button
+
+The ORCID can be updated later (or removed if you prefer)
+
+The version number should match your current release tag
+
+✅ Option 2: “How to Cite CARA” (README section)
+
+Add this near the bottom of your README.md, ideally after “Research Context” or before “License”.
+
+📚 How to Cite CARA
+
+If you use CARA (Comprehensive Automated Risk Assessment) in academic research, policy analysis, reports, or operational planning documents, please cite it as software.
+
+Recommended citation (APA-style)
+
+Niedermeier, J. (2026). CARA: Comprehensive Automated Risk Assessment (Version 2.3) [Software]. https://github.com/jdn63/CARA
+
+BibTeX
+@software{cara_2026,
+  author  = {Niedermeier, Jaime},
+  title   = {CARA: Comprehensive Automated Risk Assessment},
+  year    = {2026},
+  version = {2.3},
+  url     = {https://github.com/jdn63/CARA}
+}
+
+Acknowledgment guidance
+
+When used in operational or policy contexts, users are encouraged to acknowledge CARA as:
+
+“An open-source public health preparedness risk assessment tool developed for jurisdiction-level strategic planning.”
+
+✅ Optional (but strong): Ethics-aware citation note
+
+This is optional, but very aligned with CARA’s values:
+
+CARA is intended to support preparedness planning, risk awareness, and policy analysis. It should not be used as the sole basis for real-time emergency response or enforcement decisions without corroborating authoritative sources.

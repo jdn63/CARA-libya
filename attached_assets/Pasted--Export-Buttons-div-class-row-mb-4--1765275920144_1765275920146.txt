@@ -1,0 +1,42 @@
+ <!-- Export Buttons -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mx-auto">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-table fa-2x text-success mb-2"></i>
+                                                <h6>CSV Export</h6>
+                                                <p class="small">Tabular data for spreadsheet analysis and GIS joining</p>
+                                                <button id="exportCsvBtn" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-download me-1"></i>Export CSV
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- GeoJSON Export - Hidden for now, code preserved for future use
+                                    <div class="col-md-4">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-globe fa-2x text-info mb-2"></i>
+                                                <h6>GeoJSON Export</h6>
+                                                <p class="small">Spatial data with geometries for GIS</p>
+                                                <button id="exportGeojsonBtn" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-download me-1"></i>Export GeoJSON
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card h-100">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-download fa-2x text-primary mb-2"></i>
+                                                <h6>Export Both</h6>
+                                                <p class="small">Download both formats together</p>
+                                                <button id="exportAllBtn" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-download me-1"></i>Both Formats
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    -->
+                                </div>
+                                

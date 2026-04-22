@@ -1,0 +1,666 @@
+/* Professional Public Health Theme - Default Light Mode */
+
+/* Comprehensive CSS Variables for CARA Application */
+:root {
+    /* Primary Colors - WCAG AA Compliant */
+    --primary-blue: #1f4788;     /* Professional navy blue - 4.5:1+ on white */
+    --secondary-blue: #2e5fa3;   /* Medium blue - 4.5:1+ on white */
+    --accent-green: #0d7377;     /* Healthcare green - 4.5:1+ on white */
+    --light-blue: #e8f2f7;       /* Light blue background */
+    
+    /* Text Colors */
+    --text-primary: #2c3e50;     /* Dark gray text - 7:1+ on white */
+    --text-secondary: #6c757d;   /* Medium gray text - 4.5:1+ on white */
+    --text-light: #ffffff;       /* White text */
+    
+    /* Background Colors */
+    --background-color: #ffffff; /* Clean white background */
+    --background-alt: #f8f9fa;   /* Light gray background */
+    --card-bg: #ffffff;          /* White card background */
+    
+    /* Border Colors */
+    --border-light: #dee2e6;     /* Light gray borders */
+    --border-focus: #0d7377;     /* Focus border color */
+    
+    /* Status Colors - WCAG AA Compliant */
+    --success-green: #0d7377;    /* Success green - improved contrast */
+    --warning-orange: #e8690b;   /* Warning orange - improved from #fd7e14 */
+    --danger-red: #dc3545;       /* Danger red */
+    --info-blue: #1f4788;        /* Info blue - improved from #17a2b8 to fix contrast */
+    
+    /* Focus and Interaction States */
+    --focus-ring-color: #0d7377;
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+    --focus-ring-opacity: 0.5;
+    
+    /* Animation and Transition Variables */
+    --transition-speed: 0.3s;
+    --transition-easing: ease;
+    --hover-transform: translateY(-1px);
+    
+    /* Shadow Variables */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(31, 71, 136, 0.25);
+    --shadow-focus: 0 0 0 0.2rem rgba(13, 115, 119, 0.25);
+    
+    /* Spacing Variables */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+}
+
+/* High-contrast mode variables (accessibility option) */
+[data-high-contrast="true"] {
+    --text-color: #ffffff;
+    --background-color: #000000;
+    --link-color: #ffff00;
+    --visited-link-color: #ffcc00;
+    --heading-color: #ffffff;
+    --border-color: #ffffff;
+    --button-bg: #0050ff;
+    --button-text: #ffffff;
+    --card-bg: #0c0c0c;
+    --card-header-bg: #2b2b2b;
+    --success-color: #00ff00;
+    --warning-color: #ffff00;
+    --danger-color: #ff0000;
+    --info-color: #00ffff;
+}
+
+/* Default light theme styles */
+body {
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Professional header styling */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    border-bottom: 3px solid var(--accent-green);
+    box-shadow: 0 2px 12px rgba(31, 71, 136, 0.15);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* Professional card styling */
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--light-blue) 0%, #f8f9fa 100%);
+    border-bottom: 2px solid var(--accent-green);
+    color: var(--primary-blue);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+}
+
+/* Professional button styling */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(31, 71, 136, 0.3);
+}
+
+.btn-success {
+    background-color: var(--accent-green);
+    border: none;
+    border-radius: 6px;
+}
+
+/* Typography improvements */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-blue) !important;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* Ensure headers are always dark unless specifically overridden */
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--primary-blue) !important;
+}
+
+/* Override for headers inside alert components */
+.alert h1, .alert h2, .alert h3, .alert h4, .alert h5, .alert h6,
+.alert .h1, .alert .h2, .alert .h3, .alert .h4, .alert .h5, .alert .h6 {
+    color: var(--primary-blue) !important;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Professional link styling */
+a {
+    color: var(--secondary-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-green);
+    text-decoration: underline;
+}
+
+/* Professional footer */
+.footer {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: rgba(255, 255, 255, 0.9);
+    border-top: 3px solid var(--accent-green);
+    padding: 1rem 0;
+}
+
+.footer .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Bootstrap overrides for proper contrast */
+.bg-primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%) !important;
+    color: #ffffff !important;
+}
+
+.bg-primary .h1, .bg-primary .h2, .bg-primary .h3, .bg-primary .h4, .bg-primary .h5, .bg-primary .h6,
+.bg-primary h1, .bg-primary h2, .bg-primary h3, .bg-primary h4, .bg-primary h5, .bg-primary h6 {
+    color: #ffffff !important;
+}
+
+.text-white {
+    color: #ffffff !important;
+}
+
+/* Status indicators */
+.text-success, .bg-success {
+    color: var(--success-green) !important;
+}
+
+.text-warning, .bg-warning {
+    color: var(--warning-orange) !important;
+}
+
+.text-danger, .bg-danger {
+    color: var(--danger-red) !important;
+}
+
+.text-info, .bg-info {
+    color: var(--info-blue) !important;
+}
+
+.bg-success {
+    background-color: var(--success-green) !important;
+    color: #ffffff !important;
+}
+
+.bg-warning {
+    background-color: var(--warning-orange) !important;
+    color: #ffffff !important;
+}
+
+.bg-danger {
+    background-color: var(--danger-red) !important;
+    color: #ffffff !important;
+}
+
+.bg-info {
+    background-color: var(--info-blue) !important;
+    color: var(--text-light) !important;
+}
+
+/* Fix contrast issue - ensure proper color combinations */
+.btn-info {
+    background-color: var(--info-blue);
+    border-color: var(--info-blue);
+    color: var(--text-light);
+}
+
+.btn-info:hover,
+.btn-info:focus-visible {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: var(--text-light);
+}
+
+/* Ensure all text-on-color combinations meet WCAG AA */
+.text-on-primary {
+    color: var(--text-light) !important;
+}
+
+.text-on-secondary {
+    color: var(--text-light) !important;
+}
+
+.text-on-success {
+    color: var(--text-light) !important;
+}
+
+.text-on-warning {
+    color: var(--text-primary) !important; /* Dark text on warning background */
+}
+
+.text-on-danger {
+    color: var(--text-light) !important;
+}
+
+.text-on-info {
+    color: var(--text-light) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary-blue) !important;
+    color: #ffffff !important;
+}
+
+/* Ensure card titles are properly styled */
+.card-title {
+    color: var(--primary-blue) !important;
+}
+
+/* Alert heading overrides */
+.alert-heading {
+    color: var(--primary-blue) !important;
+}
+
+/* Breadcrumb text */
+.breadcrumb-item a {
+    color: var(--secondary-blue) !important;
+}
+
+/* Tab navigation styling */
+.nav-tabs .nav-link {
+    color: var(--primary-blue) !important;
+    border: 1px solid transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--secondary-blue) !important;
+    border-color: var(--border-light);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-blue) !important;
+    background-color: #ffffff !important;
+    border-color: var(--border-light) var(--border-light) #ffffff;
+}
+
+/* Base elements */
+[data-high-contrast="true"] body,
+[data-high-contrast="true"] .container,
+[data-high-contrast="true"] main {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Typography */
+[data-high-contrast="true"] h1,
+[data-high-contrast="true"] h2,
+[data-high-contrast="true"] h3,
+[data-high-contrast="true"] h4,
+[data-high-contrast="true"] h5,
+[data-high-contrast="true"] h6 {
+    color: var(--heading-color);
+}
+
+/* Links */
+[data-high-contrast="true"] a {
+    color: var(--link-color);
+    text-decoration: underline;
+}
+
+[data-high-contrast="true"] a:visited {
+    color: var(--visited-link-color);
+}
+
+[data-high-contrast="true"] a:hover,
+[data-high-contrast="true"] a:focus {
+    text-decoration: none;
+    outline: 2px solid var(--link-color);
+}
+
+/* Buttons */
+[data-high-contrast="true"] .btn,
+[data-high-contrast="true"] button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .btn:hover,
+[data-high-contrast="true"] button:hover,
+[data-high-contrast="true"] .btn:focus,
+[data-high-contrast="true"] button:focus {
+    outline: 3px solid var(--link-color);
+}
+
+/* Navbar */
+[data-high-contrast="true"] .navbar,
+[data-high-contrast="true"] .navbar-dark {
+    background-color: var(--card-header-bg) !important;
+    border-bottom: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .navbar-brand,
+[data-high-contrast="true"] .nav-link,
+[data-high-contrast="true"] .navbar-text {
+    color: var(--text-color) !important;
+}
+
+/* Card styles */
+[data-high-contrast="true"] .card {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .card-header {
+    background-color: var(--card-header-bg);
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .card-body {
+    color: var(--text-color);
+}
+
+/* Forms */
+[data-high-contrast="true"] .form-control,
+[data-high-contrast="true"] .form-select {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .form-label {
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* Tables */
+[data-high-contrast="true"] .table {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-high-contrast="true"] .table th,
+[data-high-contrast="true"] .table td {
+    border: 2px solid var(--border-color);
+}
+
+/* Alerts */
+[data-high-contrast="true"] .alert {
+    border: 2px solid var(--border-color);
+}
+
+/* Progress bars */
+[data-high-contrast="true"] .progress {
+    background-color: var(--background-color);
+    border: 2px solid var(--border-color);
+}
+
+/* Status colors with high-contrast alternatives */
+[data-high-contrast="true"] .bg-success,
+[data-high-contrast="true"] .table-success,
+[data-high-contrast="true"] .alert-success,
+[data-high-contrast="true"] .text-success {
+    background-color: var(--background-color) !important;
+    color: var(--success-color) !important;
+    border-color: var(--success-color) !important;
+}
+
+[data-high-contrast="true"] .bg-warning,
+[data-high-contrast="true"] .table-warning,
+[data-high-contrast="true"] .alert-warning,
+[data-high-contrast="true"] .text-warning {
+    background-color: var(--background-color) !important;
+    color: var(--warning-color) !important;
+    border-color: var(--warning-color) !important;
+}
+
+[data-high-contrast="true"] .bg-danger,
+[data-high-contrast="true"] .table-danger,
+[data-high-contrast="true"] .alert-danger,
+[data-high-contrast="true"] .text-danger {
+    background-color: var(--background-color) !important;
+    color: var(--danger-color) !important;
+    border-color: var(--danger-color) !important;
+}
+
+[data-high-contrast="true"] .bg-info,
+[data-high-contrast="true"] .table-info,
+[data-high-contrast="true"] .alert-info,
+[data-high-contrast="true"] .text-info {
+    background-color: var(--background-color) !important;
+    color: var(--info-color) !important;
+    border-color: var(--info-color) !important;
+}
+
+/* Badge modifications */
+[data-high-contrast="true"] .badge {
+    border: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .badge.bg-success {
+    background-color: var(--success-color) !important;
+    color: var(--background-color) !important;
+}
+
+[data-high-contrast="true"] .badge.bg-warning {
+    background-color: var(--warning-color) !important;
+    color: var(--background-color) !important;
+}
+
+[data-high-contrast="true"] .badge.bg-danger {
+    background-color: var(--danger-color) !important;
+    color: var(--background-color) !important;
+}
+
+/* Footer */
+[data-high-contrast="true"] .footer {
+    background-color: var(--card-header-bg);
+    border-top: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .footer .text-muted {
+    color: var(--text-color) !important;
+}
+
+/* Comprehensive Focus-Visible Styles for Keyboard Navigation */
+
+/* Remove default focus outline */
+*:focus {
+    outline: none;
+}
+
+/* Modern focus-visible for keyboard users only */
+*:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: var(--shadow-focus);
+    transition: outline var(--transition-speed) var(--transition-easing),
+                box-shadow var(--transition-speed) var(--transition-easing);
+}
+
+/* Enhanced focus styles for interactive elements */
+a:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+button:focus-visible,
+.btn:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: var(--shadow-focus), var(--shadow-md);
+    transform: var(--hover-transform);
+}
+
+/* Form element focus styles */
+.form-control:focus-visible,
+.form-select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    border-color: var(--border-focus);
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: 0;
+    box-shadow: var(--shadow-focus);
+}
+
+/* Card and interactive component focus */
+.card:focus-visible,
+.health-metric:focus-visible,
+.nav-link:focus-visible,
+.nav-pills .nav-link:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: var(--shadow-focus), var(--shadow-md);
+}
+
+/* Modal and dropdown focus */
+.modal:focus-visible,
+.dropdown-item:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+}
+
+/* Skip links for screen readers */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    background: var(--primary-blue);
+    color: var(--text-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    z-index: 10000;
+}
+
+.skip-link:focus-visible {
+    left: var(--spacing-sm);
+    top: var(--spacing-sm);
+    outline: var(--focus-ring-width) solid var(--text-light);
+    outline-offset: var(--focus-ring-offset);
+}
+
+/* High contrast focus improvements */
+[data-high-contrast="true"] *:focus-visible {
+    outline: 3px solid var(--link-color) !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px rgba(255, 255, 0, 0.3) !important;
+}
+
+/* Increased focus visibility for keyboard navigation */
+[data-high-contrast="true"] *:focus {
+    outline: 3px solid var(--link-color) !important;
+    outline-offset: 2px !important;
+}
+
+/* Accessibility toggle button */
+.accessibility-toggle {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.accessibility-toggle i {
+    margin-right: 5px;
+}
+
+/* Utility classes for screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Improved font size for readability */
+[data-high-contrast="true"] body {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Increase spacing for better readability */
+[data-high-contrast="true"] p,
+[data-high-contrast="true"] li,
+[data-high-contrast="true"] td,
+[data-high-contrast="true"] th {
+    line-height: 1.8;
+}
+
+/* Dropdown accessibility improvements */
+[data-high-contrast="true"] .dropdown-menu {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+}
+
+[data-high-contrast="true"] .dropdown-item {
+    color: var(--text-color);
+}
+
+[data-high-contrast="true"] .dropdown-item:hover,
+[data-high-contrast="true"] .dropdown-item:focus {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+/* Return to top button - high contrast version */
+[data-high-contrast="true"] #return-to-top {
+    background: var(--button-bg);
+    border: 3px solid var(--border-color);
+    color: var(--button-text);
+}

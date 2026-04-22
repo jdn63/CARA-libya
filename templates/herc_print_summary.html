@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HERC Region Risk Assessment Summary | CARA</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            body {
+                font-size: 12pt;
+                color: #000;
+                background-color: #fff;
+            }
+            .card {
+                border: 1px solid #ddd !important;
+                margin-bottom: 1rem !important;
+                break-inside: avoid;
+            }
+            .card-header {
+                background-color: #f8f9fa !important;
+                color: #000 !important;
+                font-weight: bold !important;
+            }
+            .text-muted {
+                color: #6c757d !important;
+            }
+            .container {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .badge {
+                border: 1px solid #000 !important;
+                padding: 0.25rem 0.5rem !important;
+            }
+            .badge-success, .bg-success {
+                background-color: #d4edda !important;
+                color: #155724 !important;
+            }
+            .badge-warning, .bg-warning {
+                background-color: #fff3cd !important;
+                color: #856404 !important;
+            }
+            .badge-danger, .bg-danger {
+                background-color: #f8d7da !important;
+                color: #721c24 !important;
+            }
+            /* Dark background for footer */
+            .bg-dark {
+                background-color: #343a40 !important;
+                color: #ffffff !important;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            .text-white {
+                color: #ffffff !important;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            .progress {
+                border: 1px solid #ddd !important;
+            }
+            .progress-bar-success, .bg-success {
+                background-color: #d4edda !important;
+            }
+            .progress-bar-warning, .bg-warning {
+                background-color: #fff3cd !important;
+            }
+            .progress-bar-danger, .bg-danger {
+                background-color: #f8d7da !important;
+            }
+            @page {
+                size: letter;
+                margin: 0.5in;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="mb-0">CARA - HERC Region Risk Assessment Summary</h1>
+                <h3>{{ risk_data.location }}</h3>
+                <p class="text-muted mb-1">Generated on: {{ current_date }}</p>
+                <p class="mb-4">This report provides a comprehensive risk assessment for the {{ risk_data.location }} region.</p>
+                
+                <div class="no-print">
+                    <button class="btn btn-primary" onclick="window.print()">Print This Report</button>
+                    <a href="/herc-dashboard/{{ risk_data.herc_id }}" class="btn btn-outline-secondary ms-2">Return to Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- HERC Region Overview -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">HERC Region Overview</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Counties in Region</h5>
+                                <ul>
+                                    {% for county in risk_data.counties %}
+                                    <li>{{ county }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Region Information</h5>
+                                <p>This HERC region contains {{ risk_data.counties|length }} counties and coordinates healthcare emergency preparedness activities across the region.</p>
+                                <p>Risk assessment data is aggregated from county-level jurisdictions to provide a regional view of public health and emergency preparedness risks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Risk Score Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Overall Risk Assessment</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Total Risk Score: {{ "%.2f"|format(risk_data.total_risk_score) }}</h5>
+                                <div class="progress mb-2" style="height: 25px;">
+                                    <div class="progress-bar {{ 'bg-danger' if risk_data.total_risk_score > 0.6 else 'bg-warning' if risk_data.total_risk_score > 0.3 else 'bg-success' }}" 
+                                         role="progressbar" 
+                                         style="width: {{ risk_data.total_risk_score * 100 }}%" 
+                                         aria-valuenow="{{ risk_data.total_risk_score * 100 }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                        {{ "%.0f"|format(risk_data.total_risk_score * 100) }}%
+                                    </div>
+                                </div>
+                                <span class="badge {{ 'bg-danger' if risk_data.total_risk_score > 0.6 else 'bg-warning' if risk_data.total_risk_score > 0.3 else 'bg-success' }}">
+                                    {{ 'High Risk' if risk_data.total_risk_score > 0.6 else 'Medium Risk' if risk_data.total_risk_score > 0.3 else 'Low Risk' }}
+                                </span>
+                            </div>
+                            <div class="col-md-8">
+                                <h5>Risk Component Scores</h5>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Natural Hazards Risk</td>
+                                        <td>{{ "%.2f"|format(risk_data.natural_hazards_risk) }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar {{ 'bg-danger' if risk_data.natural_hazards_risk > 0.6 else 'bg-warning' if risk_data.natural_hazards_risk > 0.3 else 'bg-success' }}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ risk_data.natural_hazards_risk * 100 }}%" 
+                                                     aria-valuenow="{{ risk_data.natural_hazards_risk * 100 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Health Risk</td>
+                                        <td>{{ "%.2f"|format(risk_data.health_risk) }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar {{ 'bg-danger' if risk_data.health_risk > 0.6 else 'bg-warning' if risk_data.health_risk > 0.3 else 'bg-success' }}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ risk_data.health_risk * 100 }}%" 
+                                                     aria-valuenow="{{ risk_data.health_risk * 100 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Active Shooter Risk</td>
+                                        <td>{{ "%.2f"|format(risk_data.active_shooter_risk) }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar {{ 'bg-danger' if risk_data.active_shooter_risk > 0.6 else 'bg-warning' if risk_data.active_shooter_risk > 0.3 else 'bg-success' }}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ risk_data.active_shooter_risk * 100 }}%" 
+                                                     aria-valuenow="{{ risk_data.active_shooter_risk * 100 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Extreme Heat Risk</td>
+                                        <td>{{ "%.2f"|format(risk_data.extreme_heat_risk) }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar {{ 'bg-danger' if risk_data.extreme_heat_risk > 0.6 else 'bg-warning' if risk_data.extreme_heat_risk > 0.3 else 'bg-success' }}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ risk_data.extreme_heat_risk * 100 }}%" 
+                                                     aria-valuenow="{{ risk_data.extreme_heat_risk * 100 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cybersecurity Risk</td>
+                                        <td>{{ "%.2f"|format(risk_data.cybersecurity_risk) }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar {{ 'bg-danger' if risk_data.cybersecurity_risk > 0.6 else 'bg-warning' if risk_data.cybersecurity_risk > 0.3 else 'bg-success' }}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ risk_data.cybersecurity_risk * 100 }}%" 
+                                                     aria-valuenow="{{ risk_data.cybersecurity_risk * 100 }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Natural Hazards Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Natural Hazards Risk</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for hazard_type in ['flood', 'tornado', 'winter_storm', 'thunderstorm'] %}
+                            {% if hazard_type in risk_data.natural_hazards %}
+                            {% set score = risk_data.natural_hazards[hazard_type] %}
+                            <div class="col-md-3 mb-3">
+                                <h5>{{ hazard_type|replace('_', ' ')|title }}</h5>
+                                <h4>{{ "%.2f"|format(score) }}</h4>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar {{ 'bg-danger' if score > 0.6 else 'bg-warning' if score > 0.3 else 'bg-success' }}"
+                                         role="progressbar"
+                                         style="width: {{ score * 100 }}%"
+                                         aria-valuenow="{{ score * 100 }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <span class="badge {{ 'bg-danger' if score > 0.6 else 'bg-warning' if score > 0.3 else 'bg-success' }}">
+                                    {{ 'High Risk' if score > 0.6 else 'Medium Risk' if score > 0.3 else 'Low Risk' }}
+                                </span>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Infectious Disease Risk -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Infectious Disease Risk</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Overall Health Risk</h5>
+                                <h4>{{ "%.2f"|format(risk_data.health_risk) }}</h4>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar {{ 'bg-danger' if risk_data.health_risk > 0.6 else 'bg-warning' if risk_data.health_risk > 0.3 else 'bg-success' }}"
+                                         role="progressbar"
+                                         style="width: {{ risk_data.health_risk * 100 }}%"
+                                         aria-valuenow="{{ risk_data.health_risk * 100 }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <span class="badge {{ 'bg-danger' if risk_data.health_risk > 0.6 else 'bg-warning' if risk_data.health_risk > 0.3 else 'bg-success' }}">
+                                    {{ 'High Risk' if risk_data.health_risk > 0.6 else 'Medium Risk' if risk_data.health_risk > 0.3 else 'Low Risk' }}
+                                </span>
+                            </div>
+                            <div class="col-md-8">
+                                <h5>Disease Activity Breakdown</h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Disease Activity</th>
+                                            <th>Score</th>
+                                            <th>Level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if risk_data.health_metrics and (risk_data.health_metrics.metrics is defined) %}
+                                            {% for metric, score in risk_data.health_metrics.metrics.items() %}
+                                            {% if metric != 'last_updated' and metric != 'themes' and metric != 'data_sources' %}
+                                            <tr>
+                                                <td>{{ 'ILI Activity' if metric == 'ili_activity' else 'COVID-19 Activity' if metric == 'covid_activity' else 'RSV Activity' if metric == 'rsv_activity' else 'Vaccination Rate' if metric == 'vaccination_rate' else metric|upper if metric == 'ili' or metric == 'rsv' else metric|replace('_', ' ')|title }}</td>
+                                                <td>{{ "%.2f"|format(score) if score is number else '0.00' }}</td>
+                                                <td>
+                                                    {% set num_score = score if score is number else 0 %}
+                                                    <span class="badge {{ 'bg-danger' if num_score > 0.6 else 'bg-warning' if num_score > 0.3 else 'bg-success' }}">
+                                                        {{ 'High' if num_score > 0.6 else 'Medium' if num_score > 0.3 else 'Low' }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        {% elif risk_data.health_metrics is mapping %}
+                                            {% for metric, score in risk_data.health_metrics.items() if metric != 'risk_score' and metric != 'data_sources' and metric != 'last_updated' and metric != 'themes' %}
+                                            {% if score is number %}
+                                            <tr>
+                                                <td>{{ 'ILI Activity' if metric == 'ili_activity' else 'COVID-19 Activity' if metric == 'covid_activity' else 'RSV Activity' if metric == 'rsv_activity' else 'Vaccination Rate' if metric == 'vaccination_rate' else metric|upper if metric == 'ili' or metric == 'rsv' else metric|replace('_', ' ')|title }}</td>
+                                                <td>{{ "%.2f"|format(score) }}</td>
+                                                <td>
+                                                    <span class="badge {{ 'bg-danger' if score > 0.6 else 'bg-warning' if score > 0.3 else 'bg-success' }}">
+                                                        {{ 'High' if score > 0.6 else 'Medium' if score > 0.3 else 'Low' }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="3" class="text-center">No disease activity data available</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Healthcare Data Notes Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Healthcare Data Notes</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Additional hospital and healthcare system capacity data can be accessed directly from the Wisconsin Hospital Association (WHA) Information Center or through the <a href="https://www.dhs.wisconsin.gov/preparedness/healthcare/index.htm" target="_blank">HERC coordinator</a>.</p>
+                        <p>For emergency preparedness planning, please consult the most current healthcare resource data from official sources.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body bg-dark">
+                        <p class="small mb-0 text-white">This risk assessment aggregates data from the following counties: {{ risk_data.counties|join(', ') }}</p>
+                        <p class="small mb-0 text-white">Generated by CARA - Comprehensive Automated Risk Assessment</p>
+                        <p class="small mb-0 text-white">Report generated on: {{ current_date }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enable print functionality
+            document.querySelector('.btn-primary').addEventListener('click', function() {
+                window.print();
+            });
+        });
+    </script>
+</body>
+</html>

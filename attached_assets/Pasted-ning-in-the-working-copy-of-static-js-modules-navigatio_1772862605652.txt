@@ -1,0 +1,121 @@
+ning: in the working copy of 'static/js/modules/navigation.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/modules/utils.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/performance.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/return-to-top.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/action_plan.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/active_shooter_methodology.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/base.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/footer.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/head.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/info_popover.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/navigation.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/return_to_top.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/scripts.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/docs/faq.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/docs/quick_start_guide.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/error.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/400.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/404.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/429.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/500.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/503.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/herc_dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/herc_print_summary.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/methodology.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/print_summary.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/results.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/scheduler_status.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/conftest.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_api.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_basic.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_score_reproducibility.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/active_shooter_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/air_quality_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_helpers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_key_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_monitoring.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_responses.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/boundary_mapping.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/cache.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/cache_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/census_data_loader.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/census_data_validation.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/climate_adjusted_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/config_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/correctional_facilities.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_cache_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_freshness.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_processor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_refresh_scheduler.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_source_refresher.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/dhs_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/disease_surveillance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/download_census_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/em_comparison_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/email_notifications.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/error_handlers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/export_job_worker.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/extreme_heat_metrics.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/fema_rapt_connector.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/geo_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/gis_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/gva_data_processor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/heat_vulnerability.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/herc_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/herc_risk_aggregator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/hva_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/jurisdiction_geojson.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/jurisdiction_mapping_code.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/jurisdictions_code.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/kp_hva_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/logging_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/main_risk_calculator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/map_generator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/metadata_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/natural_hazards_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/nces_ssocs_processor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/noaa_storm_events.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/openfema_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/persistent_cache.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/ph_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/planning_mode_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/predictive_analysis.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/report_generator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/risk_alignment.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/risk_calculation.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/scheduler_init.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/security_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/strategic_air_quality.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/strategic_extreme_heat.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/svi_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/temporal_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/tribal_air_quality_mapping.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/tribal_boundaries.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/update_risk_functions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/utilities_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/weather_alerts.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/web_scraper.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wem_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wem_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wha_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wisconsin_climate_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wisconsin_dhs_scraper.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wisconsin_mapping.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'wi_health_departments.json', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\jaime\Documents\CARA> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   README.md
+        new file:   data/cache/.gitkeep
+        modified:   data/census/README_DATA_SOURCES.md
+        modified:   docs/api-security-guide.md
+        modified:   docs/data_sources_comprehensive_analysis.md
+
+PS C:\Users\jaime\Documents\CARA>

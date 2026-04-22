@@ -1,0 +1,55 @@
+# CARA - Comprehensive Automated Risk Assessment
+# Python Dependencies for Render.com Deployment
+
+# Core Web Framework
+flask>=3.0.0
+gunicorn>=21.0.0
+werkzeug>=3.0.0
+
+# Database
+flask-sqlalchemy>=3.1.0
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# Data Processing
+numpy>=2.0.0
+pandas>=2.0.0
+geopandas>=0.14.0
+shapely>=2.0.0
+pyshp>=2.3.0
+scikit-learn>=1.3.0
+openpyxl>=3.1.0
+
+# Visualization and Mapping
+matplotlib>=3.8.0
+folium>=0.15.0
+
+# PDF Generation
+fpdf>=1.7.2
+
+# API and Web Scraping
+beautifulsoup4>=4.12.0
+trafilatura>=1.6.0
+census>=0.8.0
+requests>=2.31.0
+
+# Configuration and Environment
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+
+# Scheduling
+apscheduler>=3.10.0
+
+# Security and Monitoring
+sentry-sdk>=1.38.0
+flask-limiter>=3.5.0
+
+# Statistical Data File Support (for NCES data)
+pyreadstat>=1.2.0
+
+# Testing (dev dependencies, can be removed for production)
+pytest>=7.4.0
+pytest-flask>=1.3.0
+pytest-cov>=4.1.0
+coverage>=7.3.0
+flask-testing>=0.8.1

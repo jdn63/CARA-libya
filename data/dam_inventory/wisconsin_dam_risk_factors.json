@@ -1,0 +1,738 @@
+{
+  "metadata": {
+    "description": "County-level dam counts and hazard classifications for Wisconsin",
+    "version": "2.0.0",
+    "last_updated": "2026-03-07T15:15:04.761455",
+    "sources": [
+      "WI DNR Dam Safety Database (ArcGIS FeatureServer)"
+    ],
+    "notes": "Real dam data fetched from public API. Hazard classifications follow federal standards. Only active dams (On Landscape) are counted."
+  },
+  "statewide_summary": {
+    "total_dams": 4133,
+    "counties_with_dams": 72,
+    "max_county_dam_count": 177
+  },
+  "county_dam_data": {
+    "Adams": {
+      "total_dams": 56,
+      "high_hazard": 4,
+      "significant_hazard": 2,
+      "low_hazard": 50,
+      "has_eap": true,
+      "eap_count": 15,
+      "total_storage_acre_ft": 345028.0,
+      "max_dam_height_ft": 44.0
+    },
+    "Ashland": {
+      "total_dams": 26,
+      "high_hazard": 1,
+      "significant_hazard": 4,
+      "low_hazard": 21,
+      "has_eap": true,
+      "eap_count": 5,
+      "total_storage_acre_ft": 14126.0,
+      "max_dam_height_ft": 57.0
+    },
+    "Barron": {
+      "total_dams": 70,
+      "high_hazard": 2,
+      "significant_hazard": 2,
+      "low_hazard": 66,
+      "has_eap": true,
+      "eap_count": 7,
+      "total_storage_acre_ft": 148780.2,
+      "max_dam_height_ft": 39.0
+    },
+    "Bayfield": {
+      "total_dams": 43,
+      "high_hazard": 1,
+      "significant_hazard": 3,
+      "low_hazard": 39,
+      "has_eap": true,
+      "eap_count": 7,
+      "total_storage_acre_ft": 64917.0,
+      "max_dam_height_ft": 29.0
+    },
+    "Brown": {
+      "total_dams": 43,
+      "high_hazard": 1,
+      "significant_hazard": 2,
+      "low_hazard": 40,
+      "has_eap": true,
+      "eap_count": 5,
+      "total_storage_acre_ft": 13731.7,
+      "max_dam_height_ft": 40.0
+    },
+    "Buffalo": {
+      "total_dams": 55,
+      "high_hazard": 2,
+      "significant_hazard": 2,
+      "low_hazard": 51,
+      "has_eap": true,
+      "eap_count": 9,
+      "total_storage_acre_ft": 1025678.5,
+      "max_dam_height_ft": 42.0
+    },
+    "Burnett": {
+      "total_dams": 81,
+      "high_hazard": 3,
+      "significant_hazard": 5,
+      "low_hazard": 73,
+      "has_eap": true,
+      "eap_count": 20,
+      "total_storage_acre_ft": 145890.6,
+      "max_dam_height_ft": 45.0
+    },
+    "Calumet": {
+      "total_dams": 19,
+      "high_hazard": 4,
+      "significant_hazard": 0,
+      "low_hazard": 15,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 993.3,
+      "max_dam_height_ft": 18.9
+    },
+    "Chippewa": {
+      "total_dams": 49,
+      "high_hazard": 4,
+      "significant_hazard": 5,
+      "low_hazard": 40,
+      "has_eap": true,
+      "eap_count": 19,
+      "total_storage_acre_ft": 297850.6,
+      "max_dam_height_ft": 65.0
+    },
+    "Clark": {
+      "total_dams": 80,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 77,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 17255.8,
+      "max_dam_height_ft": 28.0
+    },
+    "Columbia": {
+      "total_dams": 62,
+      "high_hazard": 4,
+      "significant_hazard": 1,
+      "low_hazard": 57,
+      "has_eap": true,
+      "eap_count": 11,
+      "total_storage_acre_ft": 47354.2,
+      "max_dam_height_ft": 61.0
+    },
+    "Crawford": {
+      "total_dams": 64,
+      "high_hazard": 0,
+      "significant_hazard": 2,
+      "low_hazard": 62,
+      "has_eap": true,
+      "eap_count": 3,
+      "total_storage_acre_ft": 270839.7,
+      "max_dam_height_ft": 47.0
+    },
+    "Dane": {
+      "total_dams": 40,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 37,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 231988.2,
+      "max_dam_height_ft": 33.5
+    },
+    "Dodge": {
+      "total_dams": 62,
+      "high_hazard": 2,
+      "significant_hazard": 2,
+      "low_hazard": 58,
+      "has_eap": true,
+      "eap_count": 13,
+      "total_storage_acre_ft": 138418.2,
+      "max_dam_height_ft": 24.0
+    },
+    "Door": {
+      "total_dams": 16,
+      "high_hazard": 0,
+      "significant_hazard": 0,
+      "low_hazard": 16,
+      "has_eap": true,
+      "eap_count": 1,
+      "total_storage_acre_ft": 8561.2,
+      "max_dam_height_ft": 10.0
+    },
+    "Douglas": {
+      "total_dams": 32,
+      "high_hazard": 1,
+      "significant_hazard": 1,
+      "low_hazard": 30,
+      "has_eap": true,
+      "eap_count": 7,
+      "total_storage_acre_ft": 28499.8,
+      "max_dam_height_ft": 20.0
+    },
+    "Dunn": {
+      "total_dams": 53,
+      "high_hazard": 4,
+      "significant_hazard": 0,
+      "low_hazard": 49,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 62754.4,
+      "max_dam_height_ft": 65.0
+    },
+    "Eau Claire": {
+      "total_dams": 22,
+      "high_hazard": 2,
+      "significant_hazard": 0,
+      "low_hazard": 20,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 50659.7,
+      "max_dam_height_ft": 44.0
+    },
+    "Florence": {
+      "total_dams": 31,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 28,
+      "has_eap": true,
+      "eap_count": 7,
+      "total_storage_acre_ft": 41805.6,
+      "max_dam_height_ft": 75.0
+    },
+    "Fond du Lac": {
+      "total_dams": 52,
+      "high_hazard": 0,
+      "significant_hazard": 2,
+      "low_hazard": 50,
+      "has_eap": true,
+      "eap_count": 8,
+      "total_storage_acre_ft": 16411.7,
+      "max_dam_height_ft": 41.0
+    },
+    "Forest": {
+      "total_dams": 27,
+      "high_hazard": 0,
+      "significant_hazard": 2,
+      "low_hazard": 25,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 85801.0,
+      "max_dam_height_ft": 14.0
+    },
+    "Grant": {
+      "total_dams": 74,
+      "high_hazard": 0,
+      "significant_hazard": 2,
+      "low_hazard": 72,
+      "has_eap": true,
+      "eap_count": 1,
+      "total_storage_acre_ft": 457077.6,
+      "max_dam_height_ft": 43.0
+    },
+    "Green": {
+      "total_dams": 29,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 26,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 3256.8,
+      "max_dam_height_ft": 29.0
+    },
+    "Green Lake": {
+      "total_dams": 33,
+      "high_hazard": 3,
+      "significant_hazard": 1,
+      "low_hazard": 29,
+      "has_eap": true,
+      "eap_count": 5,
+      "total_storage_acre_ft": 66347.1,
+      "max_dam_height_ft": 22.2
+    },
+    "Iowa": {
+      "total_dams": 93,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 90,
+      "has_eap": true,
+      "eap_count": 9,
+      "total_storage_acre_ft": 25323.1,
+      "max_dam_height_ft": 58.4
+    },
+    "Iron": {
+      "total_dams": 30,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 27,
+      "has_eap": true,
+      "eap_count": 12,
+      "total_storage_acre_ft": 285912.3,
+      "max_dam_height_ft": 37.0
+    },
+    "Jackson": {
+      "total_dams": 177,
+      "high_hazard": 2,
+      "significant_hazard": 2,
+      "low_hazard": 173,
+      "has_eap": true,
+      "eap_count": 18,
+      "total_storage_acre_ft": 41622.2,
+      "max_dam_height_ft": 58.0
+    },
+    "Jefferson": {
+      "total_dams": 23,
+      "high_hazard": 5,
+      "significant_hazard": 1,
+      "low_hazard": 17,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 39224.5,
+      "max_dam_height_ft": 25.0
+    },
+    "Juneau": {
+      "total_dams": 119,
+      "high_hazard": 1,
+      "significant_hazard": 6,
+      "low_hazard": 112,
+      "has_eap": true,
+      "eap_count": 26,
+      "total_storage_acre_ft": 613894.5,
+      "max_dam_height_ft": 50.0
+    },
+    "Kenosha": {
+      "total_dams": 26,
+      "high_hazard": 2,
+      "significant_hazard": 3,
+      "low_hazard": 21,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 7850.0,
+      "max_dam_height_ft": 21.5
+    },
+    "Kewaunee": {
+      "total_dams": 17,
+      "high_hazard": 0,
+      "significant_hazard": 1,
+      "low_hazard": 16,
+      "has_eap": true,
+      "eap_count": 1,
+      "total_storage_acre_ft": 216.5,
+      "max_dam_height_ft": 28.0
+    },
+    "La Crosse": {
+      "total_dams": 101,
+      "high_hazard": 3,
+      "significant_hazard": 1,
+      "low_hazard": 97,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 123037.5,
+      "max_dam_height_ft": 46.0
+    },
+    "Lafayette": {
+      "total_dams": 51,
+      "high_hazard": 1,
+      "significant_hazard": 2,
+      "low_hazard": 48,
+      "has_eap": true,
+      "eap_count": 3,
+      "total_storage_acre_ft": 8921.3,
+      "max_dam_height_ft": 40.0
+    },
+    "Langlade": {
+      "total_dams": 57,
+      "high_hazard": 1,
+      "significant_hazard": 1,
+      "low_hazard": 55,
+      "has_eap": true,
+      "eap_count": 15,
+      "total_storage_acre_ft": 25643.5,
+      "max_dam_height_ft": 25.0
+    },
+    "Lincoln": {
+      "total_dams": 39,
+      "high_hazard": 9,
+      "significant_hazard": 0,
+      "low_hazard": 30,
+      "has_eap": true,
+      "eap_count": 15,
+      "total_storage_acre_ft": 155625.0,
+      "max_dam_height_ft": 61.0
+    },
+    "Manitowoc": {
+      "total_dams": 37,
+      "high_hazard": 1,
+      "significant_hazard": 0,
+      "low_hazard": 36,
+      "has_eap": true,
+      "eap_count": 7,
+      "total_storage_acre_ft": 10140.9,
+      "max_dam_height_ft": 18.0
+    },
+    "Marathon": {
+      "total_dams": 111,
+      "high_hazard": 1,
+      "significant_hazard": 2,
+      "low_hazard": 108,
+      "has_eap": true,
+      "eap_count": 11,
+      "total_storage_acre_ft": 184206.7,
+      "max_dam_height_ft": 42.0
+    },
+    "Marinette": {
+      "total_dams": 57,
+      "high_hazard": 10,
+      "significant_hazard": 1,
+      "low_hazard": 46,
+      "has_eap": true,
+      "eap_count": 19,
+      "total_storage_acre_ft": 118857.5,
+      "max_dam_height_ft": 99.0
+    },
+    "Marquette": {
+      "total_dams": 36,
+      "high_hazard": 3,
+      "significant_hazard": 1,
+      "low_hazard": 32,
+      "has_eap": true,
+      "eap_count": 12,
+      "total_storage_acre_ft": 61270.2,
+      "max_dam_height_ft": 35.0
+    },
+    "Menominee": {
+      "total_dams": 8,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 5,
+      "has_eap": true,
+      "eap_count": 3,
+      "total_storage_acre_ft": 42702.0,
+      "max_dam_height_ft": 22.0
+    },
+    "Milwaukee": {
+      "total_dams": 16,
+      "high_hazard": 1,
+      "significant_hazard": 0,
+      "low_hazard": 15,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 1592.1,
+      "max_dam_height_ft": 32.0
+    },
+    "Monroe": {
+      "total_dams": 139,
+      "high_hazard": 3,
+      "significant_hazard": 2,
+      "low_hazard": 134,
+      "has_eap": true,
+      "eap_count": 8,
+      "total_storage_acre_ft": 14440.5,
+      "max_dam_height_ft": 57.0
+    },
+    "Oconto": {
+      "total_dams": 45,
+      "high_hazard": 5,
+      "significant_hazard": 1,
+      "low_hazard": 39,
+      "has_eap": true,
+      "eap_count": 9,
+      "total_storage_acre_ft": 48119.0,
+      "max_dam_height_ft": 44.0
+    },
+    "Oneida": {
+      "total_dams": 49,
+      "high_hazard": 4,
+      "significant_hazard": 5,
+      "low_hazard": 40,
+      "has_eap": true,
+      "eap_count": 12,
+      "total_storage_acre_ft": 357850.0,
+      "max_dam_height_ft": 35.0
+    },
+    "Outagamie": {
+      "total_dams": 55,
+      "high_hazard": 9,
+      "significant_hazard": 2,
+      "low_hazard": 44,
+      "has_eap": true,
+      "eap_count": 13,
+      "total_storage_acre_ft": 34129.3,
+      "max_dam_height_ft": 30.0
+    },
+    "Ozaukee": {
+      "total_dams": 18,
+      "high_hazard": 1,
+      "significant_hazard": 2,
+      "low_hazard": 15,
+      "has_eap": true,
+      "eap_count": 5,
+      "total_storage_acre_ft": 3035.7,
+      "max_dam_height_ft": 28.0
+    },
+    "Pepin": {
+      "total_dams": 58,
+      "high_hazard": 0,
+      "significant_hazard": 1,
+      "low_hazard": 57,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 990.9,
+      "max_dam_height_ft": 44.0
+    },
+    "Pierce": {
+      "total_dams": 82,
+      "high_hazard": 2,
+      "significant_hazard": 3,
+      "low_hazard": 77,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 417589.7,
+      "max_dam_height_ft": 122.0
+    },
+    "Polk": {
+      "total_dams": 77,
+      "high_hazard": 3,
+      "significant_hazard": 5,
+      "low_hazard": 69,
+      "has_eap": true,
+      "eap_count": 14,
+      "total_storage_acre_ft": 89566.4,
+      "max_dam_height_ft": 60.0
+    },
+    "Portage": {
+      "total_dams": 66,
+      "high_hazard": 4,
+      "significant_hazard": 2,
+      "low_hazard": 60,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 125884.2,
+      "max_dam_height_ft": 37.0
+    },
+    "Price": {
+      "total_dams": 98,
+      "high_hazard": 2,
+      "significant_hazard": 2,
+      "low_hazard": 94,
+      "has_eap": true,
+      "eap_count": 24,
+      "total_storage_acre_ft": 75448.0,
+      "max_dam_height_ft": 29.0
+    },
+    "Racine": {
+      "total_dams": 19,
+      "high_hazard": 0,
+      "significant_hazard": 3,
+      "low_hazard": 16,
+      "has_eap": true,
+      "eap_count": 4,
+      "total_storage_acre_ft": 22915.4,
+      "max_dam_height_ft": 20.0
+    },
+    "Richland": {
+      "total_dams": 125,
+      "high_hazard": 5,
+      "significant_hazard": 5,
+      "low_hazard": 115,
+      "has_eap": true,
+      "eap_count": 14,
+      "total_storage_acre_ft": 3608.7,
+      "max_dam_height_ft": 47.0
+    },
+    "Rock": {
+      "total_dams": 22,
+      "high_hazard": 1,
+      "significant_hazard": 1,
+      "low_hazard": 20,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 115980.5,
+      "max_dam_height_ft": 38.3
+    },
+    "Rusk": {
+      "total_dams": 40,
+      "high_hazard": 2,
+      "significant_hazard": 2,
+      "low_hazard": 36,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 97835.0,
+      "max_dam_height_ft": 81.0
+    },
+    "Sauk": {
+      "total_dams": 137,
+      "high_hazard": 3,
+      "significant_hazard": 0,
+      "low_hazard": 134,
+      "has_eap": true,
+      "eap_count": 17,
+      "total_storage_acre_ft": 226346.1,
+      "max_dam_height_ft": 60.0
+    },
+    "Sawyer": {
+      "total_dams": 52,
+      "high_hazard": 4,
+      "significant_hazard": 5,
+      "low_hazard": 43,
+      "has_eap": true,
+      "eap_count": 12,
+      "total_storage_acre_ft": 506369.3,
+      "max_dam_height_ft": 46.0
+    },
+    "Shawano": {
+      "total_dams": 41,
+      "high_hazard": 1,
+      "significant_hazard": 3,
+      "low_hazard": 37,
+      "has_eap": true,
+      "eap_count": 13,
+      "total_storage_acre_ft": 15530.9,
+      "max_dam_height_ft": 44.0
+    },
+    "Sheboygan": {
+      "total_dams": 27,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 24,
+      "has_eap": true,
+      "eap_count": 5,
+      "total_storage_acre_ft": 7303.5,
+      "max_dam_height_ft": 18.0
+    },
+    "St. Croix": {
+      "total_dams": 61,
+      "high_hazard": 8,
+      "significant_hazard": 2,
+      "low_hazard": 51,
+      "has_eap": true,
+      "eap_count": 13,
+      "total_storage_acre_ft": 18089.6,
+      "max_dam_height_ft": 64.0
+    },
+    "Taylor": {
+      "total_dams": 89,
+      "high_hazard": 3,
+      "significant_hazard": 1,
+      "low_hazard": 85,
+      "has_eap": true,
+      "eap_count": 31,
+      "total_storage_acre_ft": 64536.9,
+      "max_dam_height_ft": 30.4
+    },
+    "Trempealeau": {
+      "total_dams": 108,
+      "high_hazard": 5,
+      "significant_hazard": 6,
+      "low_hazard": 97,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 59915.1,
+      "max_dam_height_ft": 41.0
+    },
+    "Vernon": {
+      "total_dams": 111,
+      "high_hazard": 7,
+      "significant_hazard": 2,
+      "low_hazard": 102,
+      "has_eap": true,
+      "eap_count": 24,
+      "total_storage_acre_ft": 219348.4,
+      "max_dam_height_ft": 73.0
+    },
+    "Vilas": {
+      "total_dams": 62,
+      "high_hazard": 3,
+      "significant_hazard": 5,
+      "low_hazard": 54,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 234257.4,
+      "max_dam_height_ft": 25.0
+    },
+    "Walworth": {
+      "total_dams": 45,
+      "high_hazard": 5,
+      "significant_hazard": 0,
+      "low_hazard": 40,
+      "has_eap": true,
+      "eap_count": 18,
+      "total_storage_acre_ft": 95981.1,
+      "max_dam_height_ft": 28.0
+    },
+    "Washburn": {
+      "total_dams": 38,
+      "high_hazard": 3,
+      "significant_hazard": 4,
+      "low_hazard": 31,
+      "has_eap": true,
+      "eap_count": 11,
+      "total_storage_acre_ft": 117307.0,
+      "max_dam_height_ft": 36.0
+    },
+    "Washington": {
+      "total_dams": 57,
+      "high_hazard": 2,
+      "significant_hazard": 1,
+      "low_hazard": 54,
+      "has_eap": true,
+      "eap_count": 5,
+      "total_storage_acre_ft": 12220.0,
+      "max_dam_height_ft": 25.0
+    },
+    "Waukesha": {
+      "total_dams": 70,
+      "high_hazard": 8,
+      "significant_hazard": 2,
+      "low_hazard": 60,
+      "has_eap": true,
+      "eap_count": 23,
+      "total_storage_acre_ft": 89467.3,
+      "max_dam_height_ft": 22.0
+    },
+    "Waupaca": {
+      "total_dams": 60,
+      "high_hazard": 4,
+      "significant_hazard": 2,
+      "low_hazard": 54,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 13518.9,
+      "max_dam_height_ft": 26.0
+    },
+    "Waushara": {
+      "total_dams": 33,
+      "high_hazard": 3,
+      "significant_hazard": 2,
+      "low_hazard": 28,
+      "has_eap": true,
+      "eap_count": 10,
+      "total_storage_acre_ft": 9325.9,
+      "max_dam_height_ft": 27.0
+    },
+    "Winnebago": {
+      "total_dams": 22,
+      "high_hazard": 2,
+      "significant_hazard": 0,
+      "low_hazard": 20,
+      "has_eap": true,
+      "eap_count": 3,
+      "total_storage_acre_ft": 2404717.8,
+      "max_dam_height_ft": 16.0
+    },
+    "Wood": {
+      "total_dams": 101,
+      "high_hazard": 3,
+      "significant_hazard": 1,
+      "low_hazard": 97,
+      "has_eap": true,
+      "eap_count": 6,
+      "total_storage_acre_ft": 54729.6,
+      "max_dam_height_ft": 42.0
+    }
+  }
+}

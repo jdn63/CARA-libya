@@ -1,0 +1,111 @@
+ after waiting for internal health check to return a successful response code at: caratool.org:10000 /api/health
+
+All logs
+Search
+Search
+
+Dec 9, 11:18 AM - 11:38 AM
+CST
+
+Menu
+
+INFO:core:Registered comprehensive error handlers
+DEBUG:htmldate.validators:minimum date setting: 1995-01-01 00:00:00
+INFO:utils.config_manager:Loaded risk configuration from config/risk_weights.yaml
+INFO:utils.active_shooter_risk:Loaded active shooter risk model configuration
+INFO:utils.api_monitoring:Monitoring endpoints registered
+INFO:core:Registered application blueprints
+DEBUG:core:Setting up production logging...
+[2025-12-09 17:23:13 +0000] [60] [INFO] Starting gunicorn 23.0.0
+[2025-12-09 17:23:13 +0000] [60] [INFO] Listening at: http://0.0.0.0:10000 (60)
+[2025-12-09 17:23:13 +0000] [60] [INFO] Using worker: gthread
+[2025-12-09 17:23:13 +0000] [96] [INFO] Booting worker with pid: 96
+[2025-12-09 17:23:13 +0000] [97] [INFO] Booting worker with pid: 97
+127.0.0.1 - - [09/Dec/2025:17:23:14 +0000] "HEAD / HTTP/1.1" 200 0 "-" "Go-http-client/1.1"
+10.228.26.229 - - [09/Dec/2025:17:23:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:23:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:23:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:23:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:24:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:24:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:24:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:24:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:24:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:24:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:25:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:25:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:25:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:25:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:25:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:25:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:26:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:26:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:26:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:26:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:26:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:26:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:27:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:27:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:27:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:27:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:27:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:27:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:28:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:28:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:28:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:28:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:28:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:28:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:29:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:29:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:29:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:29:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:29:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:29:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:30:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:30:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:30:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:30:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:30:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:30:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:31:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:31:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:31:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:31:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:31:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:31:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:32:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:32:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:32:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:32:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:32:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:32:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:33:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:33:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:33:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:33:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:33:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:33:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:34:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:34:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:34:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:34:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:34:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:34:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:35:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:35:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:35:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:35:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:35:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:35:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:36:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:36:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:36:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:36:30 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:36:40 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:36:50 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:37:00 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:37:10 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.26.229 - - [09/Dec/2025:17:37:20 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+==> Timed Out
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys

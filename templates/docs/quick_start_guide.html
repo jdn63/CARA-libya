@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}Quick-Start Guide | CARA - Comprehensive Automated Risk Assessment{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1>Quick-Start Guide</h1>
+            <p class="lead">Welcome to CARA - Comprehensive Automated Risk Assessment.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Quick-Start Guide</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#overview" class="list-group-item list-group-item-action">Overview</a>
+                <a href="#data-sources" class="list-group-item list-group-item-action">Data Sources</a>
+                <a href="#using-tool" class="list-group-item list-group-item-action">Using the Tool</a>
+                <a href="#interpreting-results" class="list-group-item list-group-item-action">Interpreting Results</a>
+                <a href="#regional-features" class="list-group-item list-group-item-action">Regional Features</a>
+                <a href="#support" class="list-group-item list-group-item-action">Getting Support</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card mb-4" id="overview">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Overview</h2>
+                </div>
+                <div class="card-body">
+                    <p>CARA is designed to help public health departments, healthcare coalitions, and emergency managers evaluate and respond to a variety of risks across Wisconsin.</p>
+                    
+                    <h3 class="h5">What This Tool Does</h3>
+                    <p>This tool provides:</p>
+                    <ul>
+                        <li>Comprehensive risk assessments for natural hazards, health risks, active shooter scenarios, and infrastructure vulnerabilities</li>
+                        <li>Geospatial visualization of risks across all Wisconsin counties and tribal areas</li>
+                        <li>Regional aggregation of data by Healthcare Emergency Readiness Coalition (HERC) regions</li>
+                        <li>Printable risk summaries for planning and reporting</li>
+                        <li>Compatibility with Kaiser Permanente HVA export for hospital preparedness programs</li>
+                        <li>Temporal risk analysis using the BSTA framework (Baseline, Seasonal, Trend, Acute)</li>
+                    </ul>
+                    
+                    <h3 class="h5">Who Should Use This Tool</h3>
+                    <p>This tool is designed for:</p>
+                    <ul>
+                        <li>Local Health Department staff</li>
+                        <li>Tribal Health Center coordinators</li>
+                        <li>HERC coordinators and members</li>
+                        <li>Emergency management professionals</li>
+                        <li>Public health preparedness planners</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mb-4" id="data-sources">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Data Sources</h2>
+                </div>
+                <div class="card-body">
+                    <p>The risk assessments are built on data from multiple authoritative sources:</p>
+                    
+                    <h3 class="h5">Natural Hazards</h3>
+                    <ul>
+                        <li>FEMA National Risk Index (exposure scores, health impact factors)</li>
+                        <li>NOAA NCEI Storm Events Database (county-level event counts, property damage, injuries, fatalities)</li>
+                        <li>OpenFEMA Disaster Declarations Summaries (federal disaster declaration history)</li>
+                        <li>OpenFEMA NFIP Redacted Claims (flood insurance claims and payments)</li>
+                        <li>OpenFEMA Hazard Mitigation Assistance Projects (mitigation project data)</li>
+                        <li>NOAA/IPCC AR6/WICCI/EPA climate projections</li>
+                    </ul>
+                    
+                    <h3 class="h5">Health Risks</h3>
+                    <ul>
+                        <li>Wisconsin Department of Health Services disease surveillance</li>
+                        <li>CDC COVID-19, influenza, and RSV activity reports (via Wisconsin DHS)</li>
+                        <li>Respiratory illness surveillance data (Flu, COVID, RSV)</li>
+                    </ul>
+                    
+                    <h3 class="h5">Social Vulnerability</h3>
+                    <ul>
+                        <li>CDC Social Vulnerability Index (SVI)</li>
+                        <li>U.S. Census Bureau American Community Survey data</li>
+                        <li>Housing and demographic data</li>
+                    </ul>
+                    
+                    <h3 class="h5">Additional Risk Factors</h3>
+                    <ul>
+                        <li>Gun Violence Archive (2023 mass shooting data)</li>
+                        <li>National Center for Education Statistics School Survey data (SSOCS 2019-2020)</li>
+                        <li>EPA AirNow API for air quality monitoring</li>
+                        <li>NOAA/NWS heat forecasting data</li>
+                        <li>Wisconsin DHS Heat Vulnerability Index</li>
+                    </ul>
+                    
+                    <p><strong>Data Refresh Schedule:</strong> Different data sources update at varying frequencies, from daily weather data to annual census information. The tool uses an intelligent caching system to maintain the most recent data while handling API limitations.</p>
+                </div>
+            </div>
+
+            <div class="card mb-4" id="using-tool">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Using the Tool</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="h5">Accessing Jurisdiction Data</h3>
+                    <ol>
+                        <li><strong>Start at the home page:</strong> The interactive map displays risk levels across Wisconsin.</li>
+                        <li><strong>Select a jurisdiction:</strong> Click on any county or tribal area to view its specific risk profile.</li>
+                        <li><strong>Explore the dashboard:</strong> Each jurisdiction dashboard provides detailed breakdowns of various risk factors.</li>
+                    </ol>
+                    
+                    <h3 class="h5">Using HERC Regional Views</h3>
+                    <ol>
+                        <li><strong>Access regional data:</strong> Use the HERC tab in the navigation to select a specific HERC region.</li>
+                        <li><strong>View aggregated risks:</strong> Regional dashboards show risk aggregated across all counties in the region.</li>
+                        <li><strong>Export HVA data:</strong> HERC coordinators can export risk data in Kaiser Permanente HVA format.</li>
+                    </ol>
+                    
+                    <h3 class="h5">Generating Reports</h3>
+                    <ol>
+                        <li><strong>Create printable summaries:</strong> Use the "Print Summary" button on any dashboard to generate a printer-friendly report.</li>
+                        <li><strong>Download data:</strong> Export options are available for data integration with other tools.</li>
+                        <li><strong>View action plans:</strong> Generate customized preparedness action plans based on identified risks.</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="card mb-4" id="interpreting-results">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Interpreting Results</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="h5">Understanding Risk Scores</h3>
+                    <p>Risk scores range from 0.0 to 1.0 and are categorized as follows:</p>
+                    <ul>
+                        <li><span class="badge bg-success">0.0 - 0.3: High Readiness</span> - The jurisdiction has strong preparedness for this risk type.</li>
+                        <li><span class="badge bg-warning">0.3 - 0.6: Moderate Readiness</span> - Some preparedness measures are in place, but improvements are recommended.</li>
+                        <li><span class="badge bg-danger">0.6 - 1.0: Development Needed</span> - Significant improvements to preparedness are recommended.</li>
+                    </ul>
+                    
+                    <h3 class="h5">Risk Score Calculation</h3>
+                    <p>Each risk score is calculated using the formula:</p>
+                    <p><strong>Residual Risk = (Exposure × Vulnerability × Health Impact Factor) - (Resilience Factor × Maximum Risk)</strong></p>
+                    <p>Where:</p>
+                    <ul>
+                        <li><strong>Exposure</strong> - The likelihood and frequency of the hazard</li>
+                        <li><strong>Vulnerability</strong> - The susceptibility of the population, including SVI factors</li>
+                        <li><strong>Health Impact Factor</strong> - The specific health consequences (1.0-1.5)</li>
+                        <li><strong>Resilience</strong> - Existing preparedness and mitigation measures</li>
+                    </ul>
+                    
+                    <h3 class="h5">Temporal Assessment (BSTA Framework)</h3>
+                    <p>Risk is evaluated across four timeframes:</p>
+                    <ul>
+                        <li><strong>Baseline (60%)</strong> - Long-term risk over 1-10 years</li>
+                        <li><strong>Seasonal (25%)</strong> - Cyclical risk patterns</li>
+                        <li><strong>Trend (15%)</strong> - Real data trends from NOAA Storm Events, OpenFEMA, climate projections, and Census demographics (not applicable to infectious disease)</li>
+                        <li><strong>Acute (0%/15%)</strong> - Context only for most domains; 15% weight for infectious disease using WI DHS surveillance data</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mb-4" id="regional-features">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Regional Features</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="h5">HERC Region Integration</h3>
+                    <p>The tool integrates Wisconsin's seven Healthcare Emergency Readiness Coalition (HERC) regions for a broader view of healthcare preparedness:</p>
+                    <ul>
+                        <li>Aggregated risk scores across all counties in each HERC region</li>
+                        <li>Regional healthcare capacity data (when available)</li>
+                        <li>Links to HERC coordinators and resources</li>
+                        <li>Kaiser Permanente HVA export for Hospital Preparedness Program (HPP) planning</li>
+                    </ul>
+                    
+                    <h3 class="h5">Understanding Aggregated Data</h3>
+                    <p>Regional data is aggregated using population-weighted averages of county-level data, with special consideration for:</p>
+                    <ul>
+                        <li>Population distribution differences across counties</li>
+                        <li>Regional healthcare resource availability</li>
+                        <li>Cross-county infrastructure dependencies</li>
+                        <li>Tribal areas that span multiple counties</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mb-4" id="support">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Getting Support</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="h5">Contact Information</h3>
+                    <p>For assistance with the tool or to provide feedback:</p>
+                    <ul>
+                        <li><strong>Project Developer:</strong> Jaime Niedermeier, Georgetown University</li>
+                        <li><strong>Email:</strong> <a href="mailto:jdn63@georgetown.edu">jdn63@georgetown.edu</a></li>
+                    </ul>
+                    
+                    <h3 class="h5">Additional Resources</h3>
+                    <ul>
+                        <li><a href="/docs/faq">Frequently Asked Questions</a></li>
+                        <li><a href="/methodology">Risk Assessment Methodology</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

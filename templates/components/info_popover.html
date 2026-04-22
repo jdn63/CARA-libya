@@ -1,0 +1,13 @@
+{% macro show_work_btn(popover_id, title, body) %}
+<button type="button" class="btn btn-link p-0 ms-1 show-work-btn" 
+        data-bs-toggle="popover" 
+        data-bs-trigger="hover focus"
+        data-bs-placement="bottom"
+        data-bs-html="true"
+        data-bs-custom-class="show-work-popover"
+        title="{{ title }}"
+        data-bs-content="{{ body }}"
+        aria-label="Show calculation details for {{ title }}">
+    <i class="fas fa-info-circle"></i>
+</button>
+{% endmacro %}

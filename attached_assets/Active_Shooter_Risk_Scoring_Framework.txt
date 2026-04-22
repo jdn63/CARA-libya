@@ -1,0 +1,44 @@
+
+# Active Shooter Risk Assessment Scoring Framework
+
+## Purpose:
+This scoring framework is intended to support public health and public safety planning
+by identifying environmental and social indicators correlated with elevated risk conditions
+for active shooter events.
+
+## Scoring Domains & Indicators
+
+1. Historical Incident Density (Weight: 25%)
+   - Indicator: Past active shooter or gun violence incidents (last 10 years)
+   - Source: FBI Active Shooter Reports, Gun Violence Archive
+   - Scoring: Normalize per 100k population by county or metro area
+
+2. School & Youth Vulnerability (Weight: 20%)
+   - Indicators: School incident reports, bullying prevalence, youth disconnectedness
+   - Source: NCES, CRDC, ACS
+   - Scoring: Composite index from school environment and youth risk indicators
+
+3. Social & Community Fragility (Weight: 20%)
+   - Indicators: Isolation, single households, hate crimes, community trauma
+   - Source: CDC SVI, FBI Hate Crime Reports
+   - Scoring: Average of SVI (social cohesion), hate crime rate, and isolation metrics
+
+4. Mental Health & Behavioral Health Risk (Weight: 20%)
+   - Indicators: Poor mental health days, access to providers, reported distress
+   - Source: County Health Rankings, BRFSS, HRSA
+   - Scoring: Normalize values and invert access score
+
+5. Access to Lethal Means (Weight: 15%)
+   - Indicators: Firearm ownership laws, storage practices, UCR gun-related crimes
+   - Source: RAND Firearm Law Database, CDC WISQARS
+   - Scoring: Based on permissiveness of state laws + proxy gun prevalence
+
+## Scoring Method:
+- Each domain produces a 0.0 to 1.0 score (normalized)
+- Total Risk Score = Weighted sum of domain scores (rounded to 2 decimals)
+
+## Ethical Guidelines:
+- Use only aggregate, anonymized data
+- Do not use for profiling individuals
+- Intended for public safety awareness, program targeting, and prevention strategy
+

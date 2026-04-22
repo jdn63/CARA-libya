@@ -1,0 +1,76 @@
+{
+  "scoring_domains": [
+    {
+      "name": "Historical Incident Density",
+      "weight": 0.25,
+      "indicators": [
+        {
+          "name": "Active shooter or gun violence events per capita",
+          "source": "FBI Active Shooter Reports, Gun Violence Archive",
+          "notes": "Normalize per 100k population over 10 years"
+        }
+      ]
+    },
+    {
+      "name": "School & Youth Vulnerability",
+      "weight": 0.2,
+      "indicators": [
+        {
+          "name": "School environment and safety indicators",
+          "source": "NCES, CRDC",
+          "notes": "Include bullying, school policing, prior incidents"
+        },
+        {
+          "name": "Youth disconnectedness",
+          "source": "ACS, Opportunity Index",
+          "notes": "Youth not in school or working"
+        }
+      ]
+    },
+    {
+      "name": "Social & Community Fragility",
+      "weight": 0.2,
+      "indicators": [
+        {
+          "name": "Social isolation and cohesion risk",
+          "source": "CDC SVI, ACS",
+          "notes": "Single households, lack of community engagement"
+        },
+        {
+          "name": "Hate crime rates",
+          "source": "FBI Hate Crime Data, SPLC",
+          "notes": "Per capita rate where available"
+        }
+      ]
+    },
+    {
+      "name": "Mental & Behavioral Health Risk",
+      "weight": 0.2,
+      "indicators": [
+        {
+          "name": "Poor mental health days and provider shortage",
+          "source": "County Health Rankings, HRSA",
+          "notes": "Invert score for provider availability"
+        },
+        {
+          "name": "Psychological distress prevalence",
+          "source": "BRFSS",
+          "notes": "Aggregate estimates if available"
+        }
+      ]
+    },
+    {
+      "name": "Access to Lethal Means",
+      "weight": 0.15,
+      "indicators": [
+        {
+          "name": "Firearm ownership and storage permissiveness",
+          "source": "RAND Firearm Law Database, CDC WISQARS",
+          "notes": "Use state-level estimates + law leniency scoring"
+        }
+      ]
+    }
+  ],
+  "score_scale": "0.0 - 1.0",
+  "usage_notes": "Do not use for individual profiling. Intended for community-level awareness and prevention planning."
+}

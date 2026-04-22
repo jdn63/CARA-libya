@@ -1,0 +1,77 @@
+Skip to content
+Navigation Menu
+jdn63
+CARA
+
+Type / to search
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+Settings
+Pylint
+Create pylint.yml #1
+Jobs
+Run details
+Annotations
+1 error
+build (3.9)
+failed 1 minute ago in 32s
+Search logs
+2s
+1s
+0s
+7s
+19s
+                    [-87.8855, 43.1927],
+                    [-87.9405, 43.1927],
+                    [-87.9405, 43.2927]
+                ]]
+            },
+            '43': {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-88.4631, 43.2191],
+                    [-88.0684, 43.2191],
+                    [-88.0684, 42.8435],
+                    [-88.4631, 42.8435],
+                    [-88.4631, 43.2191]
+                ]]
+            },
+            '44': {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-89.7707, 43.2610],
+                    [-89.0684, 43.2610],
+                    [-89.0684, 42.8435],
+                    [-89.7707, 42.8435],
+                    [-89.7707, 43.2610]
+                ]]
+            },
+            '45': {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-88.1, 44.6],
+                    [-87.7, 44.6],
+                    [-87.7, 44.3],
+                    [-88.1, 44.3],
+                    [-88.1, 44.6]
+                ]]
+            }, (duplicate-code)
+utils/wisconsin_mapping.py:1:0: R0401: Cyclic import (utils.data_processor -> utils.update_risk_functions) (cyclic-import)
+utils/wisconsin_mapping.py:1:0: R0401: Cyclic import (core -> utils.api_monitoring) (cyclic-import)
+utils/wisconsin_mapping.py:1:0: R0401: Cyclic import (core -> models) (cyclic-import)
+utils/wisconsin_mapping.py:1:0: R0401: Cyclic import (core -> routes.gis_export -> models) (cyclic-import)
+utils/wisconsin_mapping.py:1:0: R0401: Cyclic import (utils.data_processor -> utils.disease_surveillance) (cyclic-import)
+utils/wisconsin_mapping.py:1:0: R0401: Cyclic import (core -> utils.export_job_worker) (cyclic-import)
+
+-----------------------------------
+Your code has been rated at 3.00/10
+
+Error: Process completed with exit code 30.
+0s
+0s
+0s

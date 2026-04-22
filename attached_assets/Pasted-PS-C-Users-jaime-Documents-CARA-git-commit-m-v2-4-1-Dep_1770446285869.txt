@@ -1,0 +1,537 @@
+PS C:\Users\jaime\Documents\CARA> git commit -m "v2.4.1: Deployment hardening, ethical scraping, and citation guidance"
+[master (root-commit) 9d159b6] v2.4.1: Deployment hardening, ethical scraping, and citation guidance
+ 266 files changed, 13946229 insertions(+)
+ create mode 100644 .coveragerc
+ create mode 100644 .env.example
+ create mode 100644 .github/workflows/ci.yml
+ create mode 100644 .gitignore
+ create mode 100644 CARA_Action_Plan_Checkboxes_Analysis.md
+ create mode 100644 CARA_DEPLOY_README.md
+ create mode 100644 CARA_requirements.txt
+ create mode 100644 CITATION.cff
+ create mode 100644 CODE_REVIEW_ANALYSIS.md
+ create mode 100644 DEPLOYMENT_GUIDE.md
+ create mode 100644 HERC_Region_1_HVA_Export.xlsx
+ create mode 100644 Makefile
+ create mode 100644 README.md
+ create mode 100644 README_CARA_Application.md
+ create mode 100644 agencies.txt
+ create mode 100644 app_old.py
+ create mode 100644 attached_assets/Active_Shooter_Risk_Scoring_Framework.txt
+ create mode 100644 attached_assets/CARAacronymonly.png
+ create mode 100644 attached_assets/CARAlogo.png
+ create mode 100644 attached_assets/GunViolenceArchive 2023 mass shootings data.csv
+ create mode 100644 attached_assets/NRI_Table_CensusTracts_Wisconsin_FloodTornadoWinterOnly.csv
+ create mode 100644 attached_assets/PHEP Notice of Funding Opportunity -PKG00285036-instructions.docx
+ create mode 100644 attached_assets/PHEP Notice of Funding Opportunity -PKG00285036-instructions.pdf
+ create mode 100644 attached_assets/Pasted--CARA-Comprehensive-Automated-Risk-Assessment-Python-3-11-https-img-shields-io-badge-pyth-1757514484171_1757514484172.txt
+ create mode 100644 attached_assets/Pasted--CARA-Comprehensive-Automated-Risk-Assessment-Python-3-11-https-img-shields-io-badge-pyth-1757514692571_1757514692572.txt
+ create mode 100644 attached_assets/Pasted--Export-Buttons-div-class-row-mb-4--1765275920144_1765275920146.txt
+ create mode 100644 attached_assets/Pasted--Option-1-CITATION-cff-recommended-Create-a-file-at-the_1770442206593.txt
+ create mode 100644 attached_assets/Pasted--Search-Dec-3-12-35-PM-12-41-PM-CST-Menu-Uploading-buil_1764787641113.txt
+ create mode 100644 attached_assets/Pasted--Search-Dec-3-12-50-PM-12-55-PM-CST-Menu-self-callable-_1764788155534.txt
+ create mode 100644 attached_assets/Pasted--after-waiting-for-internal-health-check-to-return-a-su_1765303936839.txt
+ create mode 100644 attached_assets/Pasted-12The-source-list-for-the-Content-Security-Policy-directive-default-src-contains-an-invalid-source-1757532853441_1757532853442.txt
+ create mode 100644 attached_assets/Pasted-All-logs-Search-Search-Dec-3-12-57-PM-1-32-PM-CST-Menu-_1764791575631.txt
+ create mode 100644 attached_assets/Pasted-Below-are-fully-generated-ready-to-import-files-for-setting-up-unit-testing-with-pytest-and-CI-with-1757430387246_1757430387246.txt
+ create mode 100644 attached_assets/Pasted-DHS-Scraper-Ethics-Improvements-Step-by-step-Overall-go_1770441038638.txt
+ create mode 100644 attached_assets/Pasted-Exited-with-status-1-while-running-your-code-Read-our-d_1765300519112.txt
+ create mode 100644 attached_assets/Pasted-INFO-core-Registered-custom-template-filters-Traceback-most-recent-call-last-File-opt-rende-1757609071642_1757609071642.txt
+ create mode 100644 attached_assets/Pasted-If-the-new-instance-spins-up-successfully-for-web-servi_1764791666170.txt
+ create mode 100644 attached_assets/Pasted-Refused-to-load-the-font-URL-because-it-violates-the-following-Content-Security-Policy-directive-1757482798478_1757482798479.txt
+ create mode 100644 attached_assets/Pasted-Skip-to-content-Navigation-Menu-jdn63-CARA-Type-to-sear_1764796082624.txt
+ create mode 100644 attached_assets/Pasted-The-source-list-for-the-Content-Security-Policy-directive-default-src-contains-an-invalid-source--1757517201011_1757517201013.txt
+ create mode 100644 attached_assets/Pasted-ll-logs-Search-Search-Dec-8-3-17-PM-3-22-PM-CST-Menu-Fi_1765228926713.txt
+ create mode 100644 attached_assets/Pasted-ll-logs-Search-Search-Sep-11-9-30-AM-9-38-AM-CDT-Menu-Downloading-lxml-html-clean-0-4-1757602547806_1757602547808.txt
+ create mode 100644 attached_assets/Pasted-s-Search-Search-Dec-8-4-12-PM-4-17-PM-CST-Menu-File-opt_1765232283041.txt
+ create mode 100644 attached_assets/Pasted-s-Search-Search-Dec-9-12-14-PM-12-33-PM-CST-Menu-File-o_1765310246706.txt
+ create mode 100644 attached_assets/Wisconsin_Local_Public_Health_Department_Office_Boundaries.geojson
+ create mode 100644 attached_assets/active_shooter_risk_model_config.json
+ create mode 100644 attached_assets/generated_images/CARA_risk_scoring_flowchart_4f7d0367.png
+ create mode 100644 attached_assets/map-public-health-regions.png
+ create mode 100644 attached_assets/tribalgovernmentmap600.png
+ create mode 100644 config/risk_weights.yaml
+ create mode 100644 core.py
+ create mode 100644 data/census/README_DATA_SOURCES.md
+ create mode 100644 data/census/wisconsin_demographics.csv
+ create mode 100644 data/census/wisconsin_housing_data.csv
+ create mode 100644 data/climate/natural_hazard_climate_projections.json
+ create mode 100644 data/climate_projections.json
+ create mode 100644 data/config/scheduler_config.json
+ create mode 100644 data/gva_reports/GunViolenceArchive_2023_mass_shootings.csv
+ create mode 100644 data/gva_reports/gva_data_2023.json
+ create mode 100644 data/herc/herc_regions.json
+ create mode 100644 data/nces/README.md
+ create mode 100644 data/nces/SAPMetadata_SSOCS2020_PUF_rev060724.xlsx
+ create mode 100644 data/nces/SSOCS 2020 Codebook.pdf
+ create mode 100644 data/nces/pu_ssocs20.dta
+ create mode 100644 data/nces/pu_ssocs20.sas7bdat
+ create mode 100644 data/nces/pu_ssocs20.sav
+ create mode 100644 data/nces/pu_ssocs20_ASCII.dat
+ create mode 100644 data/nces/pu_ssocs20_format.do
+ create mode 100644 data/nces/pu_ssocs20_format.sas
+ create mode 100644 data/nces/pu_ssocs20_format.sps
+ create mode 100644 data/nces/pu_ssocs20_readme.txt
+ create mode 100644 data/svi/wisconsin_svi_data.json
+ create mode 100644 data/tribal/tl_2022_us_aiannh.cpg
+ create mode 100644 data/tribal/tl_2022_us_aiannh.dbf
+ create mode 100644 data/tribal/tl_2022_us_aiannh.prj
+ create mode 100644 data/tribal/tl_2022_us_aiannh.shp
+ create mode 100644 data/tribal/tl_2022_us_aiannh.shp.ea.iso.xml
+ create mode 100644 data/tribal/tl_2022_us_aiannh.shp.iso.xml
+ create mode 100644 data/tribal/tl_2022_us_aiannh.shx
+ create mode 100644 data/tribal/wisconsin_tribal_areas.csv
+ create mode 100644 data/tribal/wisconsin_tribal_boundaries.geojson
+ create mode 100644 data/tribal/wisconsin_tribal_boundaries_filtered.geojson
+ create mode 100644 data/wi_herc_regions.geojson
+ create mode 100644 docs/api-security-guide.md
+ create mode 100644 docs/api_management_guide.md
+ create mode 100644 docs/contributing.md
+ create mode 100644 docs/data_dictionary.md
+ create mode 100644 docs/data_sources_comprehensive_analysis.md
+ create mode 100644 docs/deployment_guide.md
+ create mode 100644 docs/risk_assessment_comprehensive_methodology.md
+ create mode 100644 docs/risk_assessment_methodology.md
+ create mode 100644 docs/temporal_framework_usage_strategy.md
+ create mode 100644 exports/cara_polygons.cpg
+ create mode 100644 exports/cara_polygons.dbf
+ create mode 100644 exports/cara_polygons.prj
+ create mode 100644 exports/cara_polygons.shp
+ create mode 100644 exports/cara_polygons.shx
+ create mode 100644 exports/cara_polygons_only.geojson
+ create mode 100644 exports/cara_polygons_repaired.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_080403.csv
+ create mode 100644 exports/cara_risk_scores_20250913_080403.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_080544.csv
+ create mode 100644 exports/cara_risk_scores_20250913_080544.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_080642.csv
+ create mode 100644 exports/cara_risk_scores_20250913_080642.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_080755.csv
+ create mode 100644 exports/cara_risk_scores_20250913_080755.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_080916.csv
+ create mode 100644 exports/cara_risk_scores_20250913_080916.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_081016.csv
+ create mode 100644 exports/cara_risk_scores_20250913_081016.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_081016_arcgis.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_081818.csv
+ create mode 100644 exports/cara_risk_scores_20250913_081818.geojson
+ create mode 100644 exports/cara_risk_scores_20250913_082821.csv
+ create mode 100644 exports/cara_risk_scores_20250913_082821.geojson
+ create mode 100644 exports/cara_risk_scores_20251002_160651.csv
+ create mode 100644 exports/cara_risk_scores_20251002_160651.geojson
+ create mode 100644 exports/cara_risk_scores_20251002_160756.csv
+ create mode 100644 exports/cara_risk_scores_20251002_160756.geojson
+ create mode 100644 exports/cara_risk_scores_20251208_152903.csv
+ create mode 100644 exports/cara_risk_scores_20251208_152903.geojson
+ create mode 100644 exports/cara_risk_scores_20251208_153138.csv
+ create mode 100644 exports/cara_risk_scores_20251208_153138.geojson
+ create mode 100644 exports/cara_risk_scores_20251208_154049.csv
+ create mode 100644 exports/cara_risk_scores_20251208_154049.geojson
+ create mode 100644 exports/cara_risk_scores_20251230_194922.csv
+ create mode 100644 exports/cara_risk_scores_20251230_194922.geojson
+ create mode 100644 exports/test_sample.geojson
+ create mode 100644 extract_geojson_info.py
+ create mode 100644 generate_static_map.py
+ create mode 100644 gunicorn.conf.py
+ create mode 100644 main.py
+ create mode 100644 models.py
+ create mode 100644 render.yaml
+ create mode 100644 requirements-dev.txt
+ create mode 100644 requirements.txt
+ create mode 100644 routes/__init__.py
+ create mode 100644 routes/api.py
+ create mode 100644 routes/dashboard.py
+ create mode 100644 routes/gis_export.py
+ create mode 100644 routes/herc.py
+ create mode 100644 routes/public.py
+ create mode 100644 static/css/accessibility.css
+ create mode 100644 static/css/custom.css
+ create mode 100644 static/css/performance.css
+ create mode 100644 static/images/CARAacronymonly.png
+ create mode 100644 static/images/regions/wisconsin_public_health_regions.png
+ create mode 100644 static/images/regions/wisconsin_tribal_jurisdictions.png
+ create mode 100644 static/images/wisconsin_health_jurisdictions.png
+ create mode 100644 static/images/wisconsin_health_jurisdictions_small.png
+ create mode 100644 static/js/accessibility.js
+ create mode 100644 static/js/chart_fix.js
+ create mode 100644 static/js/index.js
+ create mode 100644 static/js/lazy-load.js
+ create mode 100644 static/js/legacy/main-legacy.js
+ create mode 100644 static/js/main.js
+ create mode 100644 static/js/modules/accessibility.js
+ create mode 100644 static/js/modules/dashboard.js
+ create mode 100644 static/js/modules/legacy-navigation.js
+ create mode 100644 static/js/modules/navigation.js
+ create mode 100644 static/js/modules/utils.js
+ create mode 100644 static/js/performance.js
+ create mode 100644 static/js/return-to-top.js
+ create mode 100644 templates/action_plan.html
+ create mode 100644 templates/active_shooter_methodology.html
+ create mode 100644 templates/base.html
+ create mode 100644 templates/components/footer.html
+ create mode 100644 templates/components/head.html
+ create mode 100644 templates/components/info_popover.html
+ create mode 100644 templates/components/navigation.html
+ create mode 100644 templates/components/return_to_top.html
+ create mode 100644 templates/components/scripts.html
+ create mode 100644 templates/dashboard.html
+ create mode 100644 templates/docs/faq.html
+ create mode 100644 templates/docs/feedback.html
+ create mode 100644 templates/docs/feedback_thanks.html
+ create mode 100644 templates/docs/quick_start_guide.html
+ create mode 100644 templates/error.html
+ create mode 100644 templates/errors/400.html
+ create mode 100644 templates/errors/404.html
+ create mode 100644 templates/errors/429.html
+ create mode 100644 templates/errors/500.html
+ create mode 100644 templates/errors/503.html
+ create mode 100644 templates/feedback_alerts.html
+ create mode 100644 templates/feedback_dashboard.html
+ create mode 100644 templates/herc_dashboard.html
+ create mode 100644 templates/herc_print_summary.html
+ create mode 100644 templates/index.html
+ create mode 100644 templates/methodology.html
+ create mode 100644 templates/print_summary.html
+ create mode 100644 templates/results.html
+ create mode 100644 templates/scheduler_status.html
+ create mode 100644 tests/__init__.py
+ create mode 100644 tests/conftest.py
+ create mode 100644 tribal_territories.json
+ create mode 100644 utils/__init__.py
+ create mode 100644 utils/active_shooter_risk.py
+ create mode 100644 utils/air_quality_data.py
+ create mode 100644 utils/api_helpers.py
+ create mode 100644 utils/api_key_manager.py
+ create mode 100644 utils/api_monitoring.py
+ create mode 100644 utils/api_responses.py
+ create mode 100644 utils/boundary_mapping.py
+ create mode 100644 utils/cache.py
+ create mode 100644 utils/cache_config.py
+ create mode 100644 utils/census_data_loader.py
+ create mode 100644 utils/census_data_validation.py
+ create mode 100644 utils/climate_adjusted_risk.py
+ create mode 100644 utils/config_manager.py
+ create mode 100644 utils/correctional_facilities.py
+ create mode 100644 utils/data_cache_manager.py
+ create mode 100644 utils/data_processor.py
+ create mode 100644 utils/data_refresh_scheduler.py
+ create mode 100644 utils/data_source_refresher.py
+ create mode 100644 utils/dhs_data.py
+ create mode 100644 utils/disease_surveillance.py
+ create mode 100644 utils/download_census_data.py
+ create mode 100644 utils/email_notifications.py
+ create mode 100644 utils/error_handlers.py
+ create mode 100644 utils/export_job_worker.py
+ create mode 100644 utils/extreme_heat_metrics.py
+ create mode 100644 utils/fema_rapt_connector.py
+ create mode 100644 utils/geo_data.py
+ create mode 100644 utils/gis_export.py
+ create mode 100644 utils/gva_data_processor.py
+ create mode 100644 utils/heat_vulnerability.py
+ create mode 100644 utils/herc_data.py
+ create mode 100644 utils/herc_risk_aggregator.py
+ create mode 100644 utils/hva_export.py
+ create mode 100644 utils/jurisdiction_geojson.py
+ create mode 100644 utils/jurisdiction_mapping_code.py
+ create mode 100644 utils/jurisdictions_code.py
+ create mode 100644 utils/logging_config.py
+ create mode 100644 utils/main_risk_calculator.py
+ create mode 100644 utils/map_generator.py
+ create mode 100644 utils/metadata_config.py
+ create mode 100644 utils/natural_hazards_risk.py
+ create mode 100644 utils/nces_ssocs_processor.py
+ create mode 100644 utils/persistent_cache.py
+ create mode 100644 utils/ph_data.py
+ create mode 100644 utils/planning_mode_config.py
+ create mode 100644 utils/predictive_analysis.py
+ create mode 100644 utils/report_generator.py
+ create mode 100644 utils/risk_alignment.py
+ create mode 100644 utils/risk_calculation.py
+ create mode 100644 utils/scheduler_init.py
+ create mode 100644 utils/security_manager.py
+ create mode 100644 utils/strategic_air_quality.py
+ create mode 100644 utils/strategic_extreme_heat.py
+ create mode 100644 utils/svi_data.py
+ create mode 100644 utils/temporal_risk.py
+ create mode 100644 utils/tribal_air_quality_mapping.py
+ create mode 100644 utils/tribal_boundaries.py
+ create mode 100644 utils/update_risk_functions.py
+ create mode 100644 utils/utilities_risk.py
+ create mode 100644 utils/weather_alerts.py
+ create mode 100644 utils/web_scraper.py
+ create mode 100644 utils/wem_data.py
+ create mode 100644 utils/wem_integration.py
+ create mode 100644 utils/wha_integration.py
+ create mode 100644 utils/wisconsin_climate_data.py
+ create mode 100644 utils/wisconsin_dhs_scraper.py
+ create mode 100644 utils/wisconsin_mapping.py
+ create mode 100644 wi_health_departments.json
+ create mode 100644 wisconsin_tribal_areas.pdf
+PS C:\Users\jaime\Documents\CARA> git branch -M main
+PS C:\Users\jaime\Documents\CARA> git push -u origin main --force
+Enumerating objects: 292, done.
+Counting objects: 100% (292/292), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (284/284), done.
+Writing objects: 100% (292/292), 31.55 MiB | 1.70 MiB/s, done.
+Total 292 (delta 44), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (44/44), done.
+To https://github.com/jdn63/CARA.git
+ + b7dba48...9d159b6 main -> main (forced update)
+branch 'main' set up to track 'origin/main'.
+PS C:\Users\jaime\Documents\CARA> git add -A
+warning: in the working copy of 'requirements.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/web_scraper.py', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\jaime\Documents\CARA> git commit -m "Remove trafilatura dependency - replaced by pypdf and BeautifulSoup"
+[main 0ed2518] Remove trafilatura dependency - replaced by pypdf and BeautifulSoup
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+PS C:\Users\jaime\Documents\CARA> git push
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 655 bytes | 655.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/jdn63/CARA.git
+   9d159b6..0ed2518  main -> main
+PS C:\Users\jaime\Documents\CARA> git add -A
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\jaime\Documents\CARA> git commit -m "Fix CI: correct pytest coverage path and test discovery"
+[main 64e634d] Fix CI: correct pytest coverage path and test discovery
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\jaime\Documents\CARA> git push
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (5/5), 442 bytes | 147.00 KiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/jdn63/CARA.git
+   0ed2518..64e634d  main -> main
+PS C:\Users\jaime\Documents\CARA> git add -A
+warning: in the working copy of '.coveragerc', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.env.example', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CARA_Action_Plan_Checkboxes_Analysis.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CARA_DEPLOY_README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CARA_requirements.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CITATION.cff', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CODE_REVIEW_ANALYSIS.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'DEPLOYMENT_GUIDE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Makefile', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README_CARA_Application.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'agencies.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app_old.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Active_Shooter_Risk_Scoring_Framework.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/CARAlogo.png', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted--CARA-Comprehensive-Automated-Risk-Assessment-Python-3-11-https-img-shields-io-badge-pyth-1757514484171_1757514484172.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted--CARA-Comprehensive-Automated-Risk-Assessment-Python-3-11-https-img-shields-io-badge-pyth-1757514692571_1757514692572.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted--Export-Buttons-div-class-row-mb-4--1765275920144_1765275920146.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted--Option-1-CITATION-cff-recommended-Create-a-file-at-the_1770442206593.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted-12The-source-list-for-the-Content-Security-Policy-directive-default-src-contains-an-invalid-source-1757532853441_1757532853442.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted-Below-are-fully-generated-ready-to-import-files-for-setting-up-unit-testing-with-pytest-and-CI-with-1757430387246_1757430387246.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Pasted-DHS-Scraper-Ethics-Improvements-Step-by-step-Overall-go_1770441038638.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/Wisconsin_Local_Public_Health_Department_Office_Boundaries.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'attached_assets/active_shooter_risk_model_config.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'config/risk_weights.yaml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'core.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/census/README_DATA_SOURCES.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/census/wisconsin_demographics.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/census/wisconsin_housing_data.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/climate/natural_hazard_climate_projections.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/climate_projections.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/config/scheduler_config.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/gva_reports/GunViolenceArchive_2023_mass_shootings.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/gva_reports/gva_data_2023.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/herc/herc_regions.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/nces/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/nces/pu_ssocs20_ASCII.dat', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/svi/wisconsin_svi_data.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/tribal/tl_2022_us_aiannh.shp.ea.iso.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/tribal/tl_2022_us_aiannh.shp.iso.xml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/tribal/wisconsin_tribal_areas.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/wi_herc_regions.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/api-security-guide.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/api_management_guide.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/contributing.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/data_dictionary.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/data_sources_comprehensive_analysis.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/deployment_guide.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/risk_assessment_comprehensive_methodology.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/risk_assessment_methodology.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/temporal_framework_usage_strategy.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_080403.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_080544.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_080642.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_080755.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_080916.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_081016.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_081818.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20250913_082821.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20251002_160651.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20251002_160756.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20251208_152903.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20251208_153138.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20251208_154049.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/cara_risk_scores_20251230_194922.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'exports/test_sample.geojson', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'extract_geojson_info.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'generate_static_map.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'gunicorn.conf.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'main.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'models.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'render.yaml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'requirements-dev.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'requirements.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'routes/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'routes/api.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'routes/dashboard.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'routes/gis_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'routes/herc.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'routes/public.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/css/accessibility.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/css/custom.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/css/performance.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/accessibility.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/chart_fix.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/index.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/lazy-load.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/legacy/main-legacy.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/main.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/modules/accessibility.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/modules/dashboard.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/modules/legacy-navigation.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/modules/navigation.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/modules/utils.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/performance.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'static/js/return-to-top.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/action_plan.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/active_shooter_methodology.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/base.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/footer.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/head.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/info_popover.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/navigation.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/return_to_top.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/components/scripts.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/docs/faq.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/docs/feedback.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/docs/feedback_thanks.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/docs/quick_start_guide.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/error.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/400.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/404.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/429.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/500.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/errors/503.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/feedback_alerts.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/feedback_dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/herc_dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/herc_print_summary.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/methodology.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/print_summary.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/results.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'templates/scheduler_status.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/conftest.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/active_shooter_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/air_quality_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_helpers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_key_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_monitoring.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/api_responses.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/boundary_mapping.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/cache.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/cache_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/census_data_loader.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/census_data_validation.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/climate_adjusted_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/config_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/correctional_facilities.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_cache_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_processor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_refresh_scheduler.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/data_source_refresher.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/dhs_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/disease_surveillance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/download_census_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/email_notifications.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/error_handlers.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/export_job_worker.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/extreme_heat_metrics.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/fema_rapt_connector.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/geo_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/gis_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/gva_data_processor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/heat_vulnerability.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/herc_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/herc_risk_aggregator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/hva_export.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/jurisdiction_geojson.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/jurisdiction_mapping_code.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/jurisdictions_code.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/logging_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/main_risk_calculator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/map_generator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/metadata_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/natural_hazards_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/nces_ssocs_processor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/persistent_cache.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/ph_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/planning_mode_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/predictive_analysis.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/report_generator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/risk_alignment.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/risk_calculation.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/scheduler_init.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/security_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/strategic_air_quality.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/strategic_extreme_heat.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/svi_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/temporal_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/tribal_air_quality_mapping.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/tribal_boundaries.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/update_risk_functions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/utilities_risk.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/weather_alerts.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/web_scraper.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wem_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wem_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wha_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wisconsin_climate_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wisconsin_dhs_scraper.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'utils/wisconsin_mapping.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'wi_health_departments.json', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\jaime\Documents\CARA> git commit -m "Fix CI: add system deps for geospatial libs, remove trafilatura from pyproject.toml"
+[main 1cee6f2] Fix CI: add system deps for geospatial libs, remove trafilatura from pyproject.toml
+ 8 files changed, 433 insertions(+), 2 deletions(-)
+ create mode 100644 attached_assets/Pasted--PS-C-Users-jaime-Remove-Item-C-Users-jaime-Documents-C_1770443963411.txt
+ create mode 100644 attached_assets/Pasted--self-callable-self-load-File-opt-render-project-src-v-_1770444395505.txt
+ create mode 100644 attached_assets/Pasted-3s-Run-pytest-cov-cov-report-term-missing-test-session-_1770445804433.txt
+ create mode 100644 attached_assets/Pasted-PS-C-Users-jaime-Documents-CARA-dir-C-Users-jaime-Docum_1770443504246.txt
+ create mode 100644 zi9s9DqH
+ create mode 100644 zigd4p3P
+PS C:\Users\jaime\Documents\CARA> git push
+Enumerating objects: 19, done.
+Counting objects: 100% (19/19), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (13/13), 219.94 MiB | 2.40 MiB/s, done.
+Total 13 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+remote: warning: File zigd4p3P is 66.03 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+remote: error: Trace: 5dc708503a85e0a69db1abed7b64eb0926ac82529b373bfa5f5bc8de4181bd57
+remote: error: See https://gh.io/lfs for more information.
+remote: error: File zi9s9DqH is 156.39 MB; this exceeds GitHub's file size limit of 100.00 MB
+remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.
+To https://github.com/jdn63/CARA.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/jdn63/CARA.git'
+PS C:\Users\jaime\Documents\CARA>

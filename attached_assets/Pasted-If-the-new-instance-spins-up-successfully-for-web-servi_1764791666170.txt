@@ -1,0 +1,79 @@
+If the new instance spins up successfully (for web services, you can help verify this by setting up health checks), Render updates your current deployed commit accordingly.
+
+For web services and private services, Render also updates its networking configuration so that your new instance begins receiving all incoming traffic:
+Render
+load balancer
+
+Original instance
+(v1)
+
+New instance
+(v2)
+
+After 60 seconds, Render sends a SIGTERM signal to your app's process on the original instance.
+
+This signals your app to perform a graceful shutdown.
+If your app's process doesn't exit within its specified shutdown delay (default 30 seconds), Render sends a SIGKILL signal to force the process to terminate.
+
+You can extend your service's shutdown delay. See details.
+
+Render
+load balancer
+
+Original instance
+(v1)
+
+New instance
+(v2)
+
+For web services with edge caching enabled, Render purges all of the service's cache entries.
+
+This helps ensure that clients receive up-to-date content. See details.
+The zero-downtime deploy is complete.
+
+For services that are scaled to multiple instances, Render performs steps 2-5 for one instance at a time. If any new instance fails to become healthy during this process, Render cancels the entire deploy and reverts to instances running the previous version of your service.
+
+Graceful shutdown
+As part of deploying your service to a new instance, Render triggers a shutdown of the current instance by sending your application a SIGTERM signal. Your application should define logic to perform a graceful shutdown in response to this signal.
+
+Common shutdown actions include:
+
+Responding to remaining in-flight HTTP requests
+Completing in-progress worker tasks (or marking them as failed so they're retried by other workers)
+Terminating outbound connections to external services
+Exiting with a zero status after other cleanup actions are complete
+If your service is still running after its configured shutdown delay (default 30 seconds), Render sends your application a SIGKILL signal. This terminates the application immediately with a non-zero status.
+
+Setting a shutdown delay
+If your service needs more than 30 seconds to complete a graceful shutdown, you can specify a longer shutdown delay (up to a maximum of 300 seconds) in one of the following ways:
+
+Call the Render API's Update service endpoint and set the maxShutdownDelaySeconds field to the desired value.
+Add the maxShutdownDelaySeconds field to your service's associated render.yaml configuration.
+Use this method if you manage your service with a Blueprint.
+
+Copy page
+
+Deploying on Render
+Automatic deploys
+Configuring auto-deploys
+Skipping an auto-deploy
+Manual deploys
+Deploy steps
+Build command
+Pre-deploy command
+Start command
+Managing deploys
+Handling overlapping deploys
+Canceling a deploy
+Restarting a service
+Rolling back a deploy
+Deployment concepts
+Ephemeral filesystem
+Zero-downtime deploys
+Graceful shutdown
+Did this page help?
+Pricing
+Blog
+Security
+Customers
+Careers

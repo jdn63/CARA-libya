@@ -1,0 +1,74 @@
+{
+  "northwest": {
+    "flood": 1.1201664049800582,
+    "tornado": 1.0262623057848512,
+    "winter_storm": 1.2,
+    "thunderstorm": 1.2203955762404666,
+    "extreme_heat": 1.2746117930694296,
+    "drought": 1.180721210440802
+  },
+  "north_central": {
+    "flood": 1.13359263023461,
+    "tornado": 1.0696001204249732,
+    "winter_storm": 1.2,
+    "thunderstorm": 1.1619280902944233,
+    "extreme_heat": 1.2044356737115411,
+    "drought": 1.2400723013107608
+  },
+  "northeast": {
+    "flood": 1.1712388929359931,
+    "tornado": 1.020605030142066,
+    "winter_storm": 1.2,
+    "thunderstorm": 1.165299397857422,
+    "extreme_heat": 1.2358347989578642,
+    "drought": 1.150908211790238
+  },
+  "west_central": {
+    "flood": 1.25,
+    "tornado": 1.0575832263008533,
+    "winter_storm": 1.1203819467637277,
+    "thunderstorm": 1.190123294492175,
+    "extreme_heat": 1.2843405977192117,
+    "drought": 1.2180767134651143
+  },
+  "central": {
+    "flood": 1.1689992007724714,
+    "tornado": 1.0826662149798634,
+    "winter_storm": 1.141163574414466,
+    "thunderstorm": 1.1344185988860545,
+    "extreme_heat": 1.2780923963912472,
+    "drought": 1.1566615641845235
+  },
+  "east_central": {
+    "flood": 1.161795072362998,
+    "tornado": 1.0851394170740152,
+    "winter_storm": 1.1064236191738577,
+    "thunderstorm": 1.1326625610076864,
+    "extreme_heat": 1.2402773712707598,
+    "drought": 1.2432092362489664
+  },
+  "southwest": {
+    "flood": 1.25,
+    "tornado": 1.051240030059944,
+    "winter_storm": 1.0568559834020927,
+    "thunderstorm": 1.1412862283384677,
+    "extreme_heat": 1.2111848011945947,
+    "drought": 1.1873940178360702
+  },
+  "south_central": {
+    "flood": 1.1034093890431715,
+    "tornado": 1.0012720408989568,
+    "winter_storm": 1.1056479331612898,
+    "thunderstorm": 1.1729021939009638,
+    "extreme_heat": 1.2438923678977798,
+    "drought": 1.1932609109239682
+  },
+  "southeast": {
+    "flood": 1.1858560648856775,
+    "tornado": 1.0390188271111296,
+    "winter_storm": 1.1491413127789363,
+    "thunderstorm": 1.174079555753689,
+    "extreme_heat": 1.35,
+    "drought": 1.1945719305061364
+  }
+}

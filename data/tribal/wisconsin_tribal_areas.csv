@@ -1,0 +1,29 @@
+AIANNHCE,AIANNHNS,GEOID,NAME,NAMELSAD,LSAD,CLASSFP,COMPTYP,AIANNHR,MTFCC,FUNCSTAT,ALAND,AWATER,INTPTLAT,INTPTLON,matched_tribe
+2980,01934332,2980R,Prairie Band of Potawatomi Nation,Prairie Band of Potawatomi Nation Reservation,86,D2,R,F,G2101,A,314701434,174485,+39.3473013,-095.8397870,Forest County Potawatomi Community
+2555,02419043,2555R,Oneida Indian Nation,Oneida Indian Nation Reservation,86,D2,R,F,G2101,A,1095724360,8467177,+43.0718791,-075.6958610,Oneida Nation
+1135,02418936,1135R,Forest County Potawatomi,Forest County Potawatomi Community,82,D8,R,F,G2101,A,49292136,183379,+45.4926816,-088.6206081,Forest County Potawatomi Community
+3885,01577206,3885R,Sokaogon Chippewa,Sokaogon Chippewa Community,82,D8,R,F,G2101,A,7636965,887257,+45.4911889,-088.9900824,Bad River Band of Lake Superior Chippewa
+2175,01831784,2175R,Menominee,Menominee Reservation,86,D8,R,F,G2101,A,915522061,19016881,+44.9913041,-088.6692512,Menominee Indian Tribe of Wisconsin
+4015,01577203,4015R,Stockbridge Munsee,Stockbridge Munsee Community,82,D8,R,F,G2101,A,62819750,95813,+44.9099556,-088.8827193,Stockbridge-Munsee Community
+1815,01577192,1815R,Lac Courte Oreilles,Lac Courte Oreilles Reservation,86,D8,R,F,G2101,A,277671658,41346283,+45.8810289,-091.3305641,Lac Courte Oreilles Band of Lake Superior Chippewa
+0140,01577209,0140R,Bad River,Bad River Reservation,86,D2,R,F,G2101,A,500160677,10301346,+46.5214832,-090.6654905,Bad River Band of Lake Superior Chippewa
+1825,01580845,1825R,Lac du Flambeau,Lac du Flambeau Reservation,86,D2,R,F,G2101,A,277303837,73007138,+45.9846244,-089.8798117,Lac du Flambeau Band of Lake Superior Chippewa
+3085,01577204,3085R,Red Cliff,Red Cliff Reservation,86,D8,R,F,G2101,A,56845216,351028,+46.9100605,-090.7874406,Red Cliff Band of Lake Superior Chippewa
+2560,01577191,2560R,Oneida (WI),Oneida (WI) Reservation,86,D8,R,F,G2101,A,264542144,332210,+44.4895868,-088.1997310,Oneida Nation
+3305,01843172,3305R,St. Croix,St. Croix Reservation,86,D8,R,F,G2101,A,8116405,147462,+45.5227421,-092.2750353,St. Croix Chippewa Indians of Wisconsin
+4625,00834982,4625R,Winnebago,Winnebago Reservation,86,D8,R,F,G2101,A,457255431,2885400,+42.2256362,-096.5960485,Ho-Chunk Nation
+1550,02109298,1550R,Huron Potawatomi,Huron Potawatomi Reservation,86,D8,R,F,G2101,A,502198,18193,+42.1048867,-085.2614067,Forest County Potawatomi Community
+1450,02418963,1450R,Ho-Chunk Nation,Ho-Chunk Nation Reservation,86,D8,R,F,G2101,A,8896297,72893,+43.3630433,-089.7554362,Ho-Chunk Nation
+1135,02418936,1135T,Forest County Potawatomi,Forest County Potawatomi Off-Reservation Trust Land,OT,D5,T,F,G2102,A,9364887,8,+45.4554887,-088.6508589,Forest County Potawatomi Community
+3885,01577206,3885T,Sokaogon Chippewa,Sokaogon Chippewa Off-Reservation Trust Land,OT,D5,T,F,G2102,A,5940672,0,+45.5062284,-088.9891573,Bad River Band of Lake Superior Chippewa
+2175,01831784,2175T,Menominee,Menominee Off-Reservation Trust Land,OT,D5,T,F,G2102,A,5072834,4848,+44.9336076,-088.7430657,Menominee Indian Tribe of Wisconsin
+4015,01577203,4015T,Stockbridge Munsee,Stockbridge Munsee Off-Reservation Trust Land,OT,D5,T,F,G2102,A,7631780,27194,+44.8661822,-088.8979234,Stockbridge-Munsee Community
+1815,01577192,1815T,Lac Courte Oreilles,Lac Courte Oreilles Off-Reservation Trust Land,OT,D5,T,F,G2102,A,2887386,56225,+45.9908707,-091.3749145,Lac Courte Oreilles Band of Lake Superior Chippewa
+2285,02419018,2285T,Minnesota Chippewa,Minnesota Chippewa Trust Land,89,D3,T,F,G2102,A,1162889,0,+46.9891248,-094.0369818,Bad River Band of Lake Superior Chippewa
+3085,01577204,3085T,Red Cliff,Red Cliff Off-Reservation Trust Land,OT,D5,T,F,G2102,A,2150439,0,+46.8864160,-090.8048047,Red Cliff Band of Lake Superior Chippewa
+2560,01577191,2560T,Oneida (WI),Oneida (WI) Off-Reservation Trust Land,OT,D5,T,F,G2102,A,1339489,0,+44.5795654,-088.2349554,Oneida Nation
+3305,01843172,3305T,St. Croix,St. Croix Off-Reservation Trust Land,OT,D5,T,F,G2102,A,1482986,112902,+46.0085942,-092.3611669,St. Croix Chippewa Indians of Wisconsin
+4625,00834982,4625T,Winnebago,Winnebago Off-Reservation Trust Land,OT,D5,T,F,G2102,A,464635,0,+41.6874933,-096.3710593,Ho-Chunk Nation
+1550,02109298,1550T,Huron Potawatomi,Huron Potawatomi Off-Reservation Trust Land,OT,D5,T,F,G2102,A,341470,0,+42.2964602,-085.0748466,Forest County Potawatomi Community
+1450,02418963,1450T,Ho-Chunk Nation,Ho-Chunk Nation Off-Reservation Trust Land,OT,D5,T,F,G2102,A,32507929,171187,+44.3386638,-090.7873197,Ho-Chunk Nation
+5600,01925074,5600R,Citizen Potawatomi Nation-Absentee Shawnee,Citizen Potawatomi Nation-Absentee Shawnee OTSA,88,D6,R,F,G2140,S,2893719523,44384859,+35.2052578,-097.0766298,Forest County Potawatomi Community

@@ -1,0 +1,95 @@
+3s
+Run pytest --cov=. --cov-report=term-missing
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.6.0
+rootdir: /home/runner/work/CARA/CARA
+plugins: flask-1.3.0, cov-7.0.0
+collected 0 items
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.11.14-final-0 _______________
+
+Name                                  Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------
+app_old.py                              484    484     0%   22-1040
+core.py                                 139    122    12%   59-162, 173-193, 202-213, 224-242, 256-313
+extract_geojson_info.py                  35     35     0%   1-52
+generate_static_map.py                   74     74     0%   4-201
+main.py                                   4      4     0%   20-28
+models.py                               171    171     0%   1-368
+routes/api.py                           124    124     0%   11-212
+routes/dashboard.py                     171    171     0%   10-395
+routes/gis_export.py                    151    151     0%   8-395
+routes/herc.py                           89     89     0%   10-184
+routes/public.py                        101    101     0%   11-215
+utils/active_shooter_risk.py            329    329     0%   19-1312
+utils/air_quality_data.py               210    210     0%   9-619
+utils/api_helpers.py                     53     53     0%   7-131
+utils/api_key_manager.py                162    162     0%   8-285
+utils/api_monitoring.py                  74     74     0%   9-165
+utils/api_responses.py                   22     22     0%   8-119
+utils/boundary_mapping.py                14     14     0%   12-145
+utils/cache.py                           52     52     0%   7-133
+utils/cache_config.py                    16     16     0%   8-89
+utils/census_data_loader.py             109    109     0%   10-223
+utils/census_data_validation.py          89     89     0%   8-228
+utils/climate_adjusted_risk.py          123    123     0%   26-818
+utils/config_manager.py                 137    137     0%   8-331
+utils/correctional_facilities.py         58     58     0%   2-138
+utils/data_cache_manager.py             182    182     0%   16-484
+utils/data_processor.py                 821    821     0%   2-2890
+utils/data_refresh_scheduler.py         170    170     0%   12-448
+utils/data_source_refresher.py          177    177     0%   15-385
+utils/dhs_data.py                       169    169     0%   12-429
+utils/disease_surveillance.py           233    233     0%   12-782
+utils/download_census_data.py            72     72     0%   9-157
+utils/email_notifications.py             49     49     0%   5-115
+utils/error_handlers.py                  99     99     0%   12-311
+utils/export_job_worker.py              260    260     0%   8-481
+utils/extreme_heat_metrics.py           135    135     0%   6-311
+utils/fema_rapt_connector.py             47     47     0%   2-119
+utils/geo_data.py                        79     79     0%   2-242
+utils/gis_export.py                     158    158     0%   8-362
+utils/gva_data_processor.py             147    147     0%   11-315
+utils/heat_vulnerability.py             257    257     0%   17-719
+utils/herc_data.py                       92     92     0%   8-269
+utils/herc_risk_aggregator.py           230    230     0%   11-515
+utils/hva_export.py                      93     93     0%   1-256
+utils/jurisdiction_geojson.py            55     55     0%   6-402
+utils/jurisdiction_mapping_code.py        1      1     0%   5
+utils/jurisdictions_code.py               1      1     0%   17
+utils/logging_config.py                 112    112     0%   12-273
+utils/main_risk_calculator.py           113    113     0%   8-262
+utils/map_generator.py                   41     41     0%   1-169
+utils/metadata_config.py                  3      3     0%   8-24
+utils/natural_hazards_risk.py           247    247     0%   1-609
+utils/nces_ssocs_processor.py           235    235     0%   18-583
+utils/persistent_cache.py               134    134     0%   9-280
+utils/ph_data.py                         12     12     0%   2-179
+utils/planning_mode_config.py            19     19     0%   9-130
+utils/predictive_analysis.py             84     84     0%   9-337
+utils/report_generator.py                33     33     0%   1-53
+utils/risk_alignment.py                  34     34     0%   8-111
+utils/risk_calculation.py                61     61     0%   2-197
+utils/scheduler_init.py                  52     52     0%   9-138
+utils/security_manager.py               115    115     0%   12-322
+utils/strategic_air_quality.py           84     84     0%   8-326
+utils/strategic_extreme_heat.py          79     79     0%   8-340
+utils/svi_data.py                       136    136     0%   9-479
+utils/temporal_risk.py                  263    263     0%   20-683
+utils/tribal_air_quality_mapping.py      47     47     0%   8-141
+utils/tribal_boundaries.py              100    100     0%   5-317
+utils/update_risk_functions.py          146    146     0%   5-477
+utils/utilities_risk.py                 136    136     0%   2-797
+utils/weather_alerts.py                 172    172     0%   9-603
+utils/web_scraper.py                    238    238     0%   1-485
+utils/wem_data.py                        66     66     0%   8-197
+utils/wem_integration.py                 21     21     0%   2-41
+utils/wha_integration.py                 23     23     0%   2-47
+utils/wisconsin_climate_data.py          28     28     0%   9-186
+utils/wisconsin_dhs_scraper.py          225    225     0%   11-523
+utils/wisconsin_mapping.py               27     27     0%   9-147
+-------------------------------------------------------------------
+TOTAL                                  9604   9587     1%
+============================ no tests ran in 1.00s =============================
+Error: Process completed with exit code 5.

@@ -1,0 +1,13 @@
+# .coveragerc
+
+[run]
+omit =
+    */__init__.py
+    */config.py
+    */migrations/*
+    */tests/*
+    venv/*
+
+[report]
+show_missing = True
+skip_covered = True

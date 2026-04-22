@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methodology - CARA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/cara.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">CARA - {{ jurisdiction_name }}</a>
+      <div>
+        <a href="/methodology" class="btn btn-outline-light btn-sm active me-2">Methodology</a>
+        <a href="/about" class="btn btn-outline-light btn-sm">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mt-4 mb-5">
+    <h1 class="h2 mb-1">CARA Methodology</h1>
+    <p class="text-muted mb-4">How risk scores are calculated and what they mean</p>
+
+    <div class="row g-4">
+      <div class="col-lg-9">
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">PHRAT Formula</h2>
+            <p>
+              All domain scores are combined using the PHRAT (Public Health Risk Assessment Tool)
+              quadratic mean formula:
+            </p>
+            <blockquote class="blockquote bg-light border-start border-4 border-secondary ps-3 py-2 my-3">
+              <p class="mb-0 font-monospace">Total Score = sqrt( sum( weight_i x score_i^2 ) )</p>
+            </blockquote>
+            <p>
+              Each domain score is on [0, 1]. Domain weights are configured per profile and
+              optionally per jurisdiction. The quadratic mean penalizes concentrated risk in a
+              single domain more than a linear mean would, which better reflects the amplifying
+              effect of compound vulnerabilities in public health emergencies.
+            </p>
+            <p>
+              The final composite score is also on [0, 1] and maps to five risk tiers
+              (matching <code>classify_risk()</code> in <code>utils/risk_engine.py</code>):
+              Minimal (0.00-0.14), Low (0.15-0.34), Moderate (0.35-0.54),
+              High (0.55-0.74), and Critical (0.75-1.00).
+            </p>
+            <p class="mb-0">
+              When one or more domains have no data for a jurisdiction, PHRAT excludes them
+              and rescales the surviving weights so the formula remains comparable across
+              jurisdictions. The breakdown returned by <code>calculate_phrat()</code> includes
+              <code>data_coverage</code> (the fraction of total weight that contributed to the
+              score). Treat scores from low-coverage jurisdictions cautiously; a coverage value
+              below 0.7 indicates that the composite is based on less than 70 percent of the
+              configured domain weight.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">EVR Framework</h2>
+            <p>
+              Each domain score is computed using the EVR (Exposure-Vulnerability-Resilience)
+              framework, which reflects the internationally accepted hazard risk model described
+              in the Sendai Framework for Disaster Risk Reduction and WHO IHR guidance:
+            </p>
+            <ul>
+              <li>
+                <strong>Exposure</strong> - the degree to which a population encounters a hazard
+                (event frequency, concentration, proximity)
+              </li>
+              <li>
+                <strong>Vulnerability</strong> - the susceptibility of that population to harm
+                (demographic factors, chronic disease burden, social determinants)
+              </li>
+              <li>
+                <strong>Resilience</strong> - the capacity of the system to absorb, adapt, and
+                recover (health infrastructure, preparedness, mitigation investment)
+              </li>
+            </ul>
+            <p class="mb-0">
+              A health impact factor is applied to domains where data on direct health outcomes
+              (excess mortality, ED visits, displacement) is available.
+            </p>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">Active risk domains</h2>
+            {% if domains %}
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Domain</th>
+                    <th>Weight</th>
+                    <th>Primary data source</th>
+                    <th>Update frequency</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for d in domains %}
+                  <tr>
+                    <td>{{ d.label }}</td>
+                    <td>{{ (d.weight * 100) | round(0) | int }}%</td>
+                    <td>{{ d.source }}</td>
+                    <td>{{ d.frequency }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">Domain configuration not available.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">Assessment framework: {{ framework_name | default('Not configured') }}</h2>
+            {% if profile == 'international' or framework_key == 'who_ihr' %}
+            <p>
+              Action plans and capability assessments are aligned with the
+              WHO International Health Regulations (IHR 2005) core capacities.
+              Each action plan item is tagged to one of the 19 IHR core capacities
+              and, where applicable, to the corresponding Joint External Evaluation (JEE) indicator.
+            </p>
+            <p>
+              The IHR core capacities cover: legislation and policy, coordination and EOC,
+              zoonotic disease, food safety, laboratory, surveillance, reporting, point of entry,
+              chemical events, radiation emergencies, risk communication, human resources,
+              preparedness, emergency response, linking public health to security authorities,
+              medical countermeasures, and means of deployment.
+            </p>
+            {% else %}
+            <p>
+              Action plans and capability assessments are aligned with the
+              CDC Public Health Emergency Preparedness (PHEP) capabilities.
+              Each action plan item is tagged to one of the 15 CDC PHEP core capabilities.
+            </p>
+            <p>
+              The 15 PHEP capabilities are: Community Preparedness, Community Recovery,
+              Emergency Operations Coordination, Emergency Public Information and Warning,
+              Fatality Management, Information Sharing, Mass Care, Medical Countermeasure
+              Dispensing, Medical Materiel Management, Medical Surge, Non-Pharmaceutical
+              Interventions, Public Health Laboratory Testing, Public Health Surveillance,
+              Responder Safety and Health, and Volunteer Management.
+            </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">Data sources and attribution</h2>
+            {% if data_source_detail %}
+            <dl>
+              {% for src in data_source_detail %}
+              <dt>{{ src.name }}</dt>
+              <dd>{{ src.description }} - <a href="{{ src.url }}" target="_blank" rel="noopener">{{ src.url }}</a></dd>
+              {% endfor %}
+            </dl>
+            {% else %}
+            <p class="text-muted mb-0">
+              Data source details are listed in <code>config/profiles/{{ profile | default('us_state') }}.yaml</code>.
+              See the <a href="https://github.com/jdn63/CARA-template/blob/main/docs/configuration_reference.md">configuration reference</a>
+              for attribution requirements for each connector.
+            </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="h5 card-title">Limitations</h2>
+            <ul class="mb-0">
+              <li>
+                CARA scores represent relative risk within the jurisdiction set and are not
+                absolute measures of hazard probability or expected loss.
+              </li>
+              <li>
+                Data availability and recency vary by connector and jurisdiction.
+                Scores for jurisdictions with limited monitoring data should be interpreted
+                cautiously.
+              </li>
+              <li>
+                The PHRAT formula and domain weights represent policy choices and should be
+                reviewed and validated by public health officials familiar with the jurisdiction.
+              </li>
+              <li>
+                CARA does not replace clinical, epidemiological, or operational judgment.
+                It is a decision support tool, not a decision-making tool.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card mb-3 sticky-top" style="top: 1rem;">
+          <div class="card-body">
+            <h2 class="h6 card-title">On this page</h2>
+            <ul class="list-unstyled small mb-0">
+              <li class="mb-1"><a href="#" class="text-decoration-none">PHRAT formula</a></li>
+              <li class="mb-1"><a href="#" class="text-decoration-none">EVR framework</a></li>
+              <li class="mb-1"><a href="#" class="text-decoration-none">Active domains</a></li>
+              <li class="mb-1"><a href="#" class="text-decoration-none">Assessment framework</a></li>
+              <li class="mb-1"><a href="#" class="text-decoration-none">Data sources</a></li>
+              <li><a href="#" class="text-decoration-none">Limitations</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-3 border-top text-center text-muted small">
+    CARA Template - Open Source Public Health Risk Assessment | AGPLv3
+  </footer>
+</body>
+</html>

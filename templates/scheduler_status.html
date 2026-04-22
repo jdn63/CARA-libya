@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Data Refresh Scheduler Status{% endblock %}
+
+{% block head %}
+<style>
+    .stats-card {
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    .data-source-row:hover {
+        background-color: rgba(33, 37, 41, 0.05);
+    }
+    .status-badge {
+        padding: 0.35rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+    .scheduler-controls {
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+    .cache-controls {
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    .action-btn {
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <h1 class="mb-4">Data Refresh Scheduler Dashboard</h1>
+    
+    <div class="row mb-4">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card stats-card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Scheduler Status</h5>
+                    <h2 class="mb-0">
+                        {% if scheduler_status.running %}
+                            Running
+                        {% else %}
+                            Stopped
+                        {% endif %}
+                    </h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card stats-card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Data Sources</h5>
+                    <h2 class="mb-0">{{ scheduler_status.data_sources|length }}</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card stats-card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Uptime</h5>
+                    <h2 class="mb-0">{{ scheduler_status.uptime }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Data Sources</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Data Source</th>
+                                    <th>Last Refresh</th>
+                                    <th>Next Refresh</th>
+                                    <th>Interval</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for source in scheduler_status.data_sources %}
+                                <tr class="data-source-row">
+                                    <td>
+                                        <span class="fw-semibold">{{ source.name|title|replace('_', ' ') }}</span>
+                                    </td>
+                                    <td>
+                                        {% if source.last_refresh %}
+                                            {{ source.last_refresh }}
+                                        {% else %}
+                                            Never
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if source.next_refresh %}
+                                            {{ source.next_refresh }}
+                                        {% else %}
+                                            Not scheduled
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ source.interval_hours }} hours</td>
+                                    <td>
+                                        {% if source.status == 'success' %}
+                                            <span class="status-badge bg-success text-white">Success</span>
+                                        {% elif source.status == 'pending' %}
+                                            <span class="status-badge bg-warning text-dark">Pending</span>
+                                        {% elif source.status == 'in_progress' %}
+                                            <span class="status-badge bg-info text-white">In Progress</span>
+                                        {% elif source.status == 'error' %}
+                                            <span class="status-badge bg-danger text-white">Error</span>
+                                        {% else %}
+                                            <span class="status-badge bg-secondary text-white">Unknown</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('refresh_data_source_route', source=source.name) }}" class="btn btn-sm btn-outline-primary action-btn">
+                                            Refresh
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card scheduler-controls bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Scheduler Controls</h5>
+                    
+                    {% if scheduler_status.running %}
+                        <a href="{{ url_for('stop_scheduler_route') }}" class="btn btn-danger w-100 mb-3">
+                            Stop Scheduler
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('start_scheduler_route') }}" class="btn btn-success w-100 mb-3">
+                            Start Scheduler
+                        </a>
+                    {% endif %}
+                    
+                    <div class="small text-muted">
+                        <p><strong>Last Started:</strong> {{ scheduler_status.last_started or 'Never' }}</p>
+                        <p class="mb-0"><strong>Refresh Interval Check:</strong> 60 seconds</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card cache-controls bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Cache Management</h5>
+                    
+                    <div class="d-grid gap-2">
+                        <div class="btn-group mb-2">
+                            <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Clear Cache
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='weather') }}">Weather Data</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='disease') }}">Disease Surveillance</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='svi') }}">SVI Data</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='crime') }}">Crime Statistics</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='census') }}">Census Data</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='climate') }}">Climate Data</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('clear_cache', cache_type='all') }}">All Caches</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="small text-muted mt-3">
+                        <p class="mb-1"><strong>Cache Statistics:</strong></p>
+                        <p class="mb-1">Memory Cache Items: {{ cache_stats.memory_items }}</p>
+                        <p class="mb-0">Persistent Cache Items: {{ cache_stats.persistent_items }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">System Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">CPU Usage</h6>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ system_stats.cpu_percent }}%;" aria-valuenow="{{ system_stats.cpu_percent }}" aria-valuemin="0" aria-valuemax="100">{{ system_stats.cpu_percent }}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">Memory Usage</h6>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ system_stats.memory_percent }}%;" aria-valuenow="{{ system_stats.memory_percent }}" aria-valuemin="0" aria-valuemax="100">{{ system_stats.memory_percent }}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2">Disk Usage</h6>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ system_stats.disk_percent }}%;" aria-valuenow="{{ system_stats.disk_percent }}" aria-valuemin="0" aria-valuemax="100">{{ system_stats.disk_percent }}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="small">
+                                <p class="mb-1"><strong>Application Uptime:</strong> {{ system_stats.app_uptime }}</p>
+                                <p class="mb-1"><strong>Server Time:</strong> {{ system_stats.server_time }}</p>
+                                <p class="mb-0"><strong>Server Timezone:</strong> {{ system_stats.timezone }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="small">
+                                <p class="mb-1"><strong>Python Version:</strong> {{ system_stats.python_version }}</p>
+                                <p class="mb-1"><strong>OS:</strong> {{ system_stats.os_info }}</p>
+                                <p class="mb-0"><strong>Process ID:</strong> {{ system_stats.pid }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-refresh the page every 30 seconds
+    setTimeout(function() {
+        location.reload();
+    }, 30000);
+</script>
+{% endblock %}

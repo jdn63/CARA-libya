@@ -1,0 +1,145 @@
+# CARA County Baseline Scores
+# These values were previously hardcoded in utils/data_processor.py.
+# Moving them here makes them auditable, editable, and transparent
+# without requiring Python code changes.
+#
+# IMPORTANT: These are proxy-derived baseline scores, NOT direct measurements.
+# See config/risk_weights.yaml for proxy indicator source citations.
+# All scores are on a 0.0-1.0 scale.
+
+# Cybersecurity Domain Baselines
+# Source citations for each component are documented in the comments.
+cybersecurity:
+  # THREAT LANDSCAPE COMPONENT
+  # Proxy: Population size (Census ACS 2022) and institutional presence (WI Blue Book)
+  # Higher population and more government/healthcare institutions = higher target visibility
+  threat:
+    Milwaukee: 0.72    # Pop 577k, major metro, healthcare/finance hub
+    Dane: 0.68         # Pop 561k, state capital, university, government systems
+    Waukesha: 0.58     # Pop 406k, suburban, healthcare facilities
+    Brown: 0.60        # Pop 268k, Green Bay metro, moderate institutional presence
+    Racine: 0.55       # Pop 197k, industrial base
+    Kenosha: 0.52      # Pop 169k, border county
+    Rock: 0.50         # Pop 163k, smaller metro
+    Walworth: 0.48     # Pop 103k, rural/resort
+    Bayfield: 0.42     # Pop 15k, rural northern
+    _default: 0.48     # Median of listed counties
+
+  # VULNERABILITY COMPONENT
+  # Proxy: County per-capita revenue (WI DOR 2022) and urban/rural classification (Census)
+  # Lower revenue and rural classification = less IT modernization budget
+  vulnerability:
+    Milwaukee: 0.60    # Mixed: large budget but aging legacy systems
+    Dane: 0.45         # Higher per-capita revenue, university tech resources
+    Waukesha: 0.52     # Moderate per-capita revenue, suburban infrastructure
+    Brown: 0.58        # Mid-range revenue, mixed infrastructure
+    Racine: 0.62       # Lower per-capita revenue, older systems
+    Kenosha: 0.60      # Mid-range revenue, mixed infrastructure quality
+    Rock: 0.65         # Lower revenue, budget constraints
+    Walworth: 0.68     # Rural, limited modernization budget
+    Bayfield: 0.72     # Rural, lowest per-capita IT resources
+    _default: 0.62     # Median of listed counties
+
+  # CAPABILITY COMPONENT (organizational readiness)
+  # Proxy: County government staffing levels (WI DOR 2022) and urban/rural classification
+  # Larger governments with urban access = more likely to have dedicated IT/security staff
+  # NOTE: Higher score = BETTER capability (inverted for risk calculation in code)
+  capability:
+    Milwaukee: 0.65    # Dedicated IT security staff, moderate maturity
+    Dane: 0.72         # Well-resourced, access to university expertise
+    Waukesha: 0.62     # Moderate staffing, suburban access to specialists
+    Brown: 0.60        # Moderate staffing, some gaps
+    Racine: 0.55       # Limited dedicated security staffing
+    Kenosha: 0.58      # Moderate staffing, resource constraints
+    Rock: 0.52         # Limited specialized IT staff
+    Walworth: 0.48     # Minimal dedicated security resources
+    Bayfield: 0.45     # Rural, minimal specialized staffing
+    _default: 0.55     # Median of listed counties
+
+# Extreme Heat Domain Baselines
+# All scores are on a 0.0-1.0 scale.
+extreme_heat:
+  # EXPOSURE COMPONENT
+  # Proxy: NOAA Climate Normals 1991-2020 average July maximum temperatures
+  # Higher summer temps = higher heat exposure
+  exposure:
+    Milwaukee: 0.62    # 83°F avg July max, urban heat island amplification
+    Dane: 0.58         # 82°F avg July max, moderate urban heat island
+    Waukesha: 0.55     # 82°F avg July max, suburban
+    Brown: 0.52        # 80°F avg July max, bay moderation
+    Racine: 0.64       # 83°F avg July max, southern lakeshore
+    Kenosha: 0.65      # 84°F avg July max, southernmost county
+    Rock: 0.63         # 83°F avg July max, southern inland
+    Walworth: 0.60     # 82°F avg July max, southern lakes
+    Jefferson: 0.57    # 82°F avg July max, south central
+    Bayfield: 0.35     # 77°F avg July max, northern Lake Superior
+    Douglas: 0.36      # 78°F avg July max, far northwest
+    Ashland: 0.34      # 77°F avg July max, northern lake region
+    Iron: 0.33         # 76°F avg July max, northern forests
+    Vilas: 0.38        # 78°F avg July max, northern lakes
+    Florence: 0.37     # 78°F avg July max, northeast forest
+    _default: 0.50     # Statewide median estimate
+
+  # VULNERABILITY COMPONENT
+  # Proxy: Census ACS 2022 population aged 65+ (%) and poverty rate; CDC SVI housing theme
+  # Higher population aged 65+ (%), poverty, and older housing stock = higher heat vulnerability
+  vulnerability:
+    Milwaukee: 0.70    # 25% poverty rate, 13% aged 65+, aging housing stock
+    Dane: 0.45         # 11% poverty, university resources, newer housing
+    Waukesha: 0.38     # 5% poverty, higher income, newer housing
+    Brown: 0.52        # 11% poverty, mixed urban/rural
+    Racine: 0.65       # 17% poverty, 16% aged 65+, older housing
+    Kenosha: 0.60      # 13% poverty, mixed demographics
+    Rock: 0.58         # 14% poverty, industrial area
+    Walworth: 0.47     # 9% poverty, resort area, seasonal population
+    Jefferson: 0.50    # 10% poverty, mixed rural/suburban
+    Bayfield: 0.55     # 12% poverty, 24% aged 65+, remote
+    Douglas: 0.52      # 14% poverty, rural
+    Ashland: 0.58      # 18% poverty, rural, tribal areas
+    Iron: 0.62         # 13% poverty, 28% aged 65+, remote
+    Vilas: 0.60        # 11% poverty, 27% aged 65+, seasonal
+    Florence: 0.64     # 12% poverty, 25% aged 65+, limited infrastructure
+    _default: 0.52     # Statewide median estimate
+
+  # RESILIENCE COMPONENT
+  # Proxy: County Health Rankings healthcare access; Census urbanization level;
+  # population density as proxy for cooling center and emergency service availability
+  # NOTE: Higher score = BETTER resilience (inverted for risk calculation in code)
+  resilience:
+    Milwaukee: 0.58    # Many resources but high per-capita demand
+    Dane: 0.72         # Strong county health dept, university medical center
+    Waukesha: 0.68     # Well-resourced county, suburban healthcare access
+    Brown: 0.62        # Urban core with hospital access
+    Racine: 0.55       # Limited relative to population need
+    Kenosha: 0.57      # Moderate healthcare, limited cooling centers
+    Rock: 0.60         # Regional hospital, moderate resources
+    Walworth: 0.53     # Rural, limited public cooling infrastructure
+    Jefferson: 0.58    # Moderate rural resources, regional clinic access
+    Bayfield: 0.42     # Rural, nearest hospital 30+ miles for some areas
+    Douglas: 0.45      # Rural, limited cooling centers
+    Ashland: 0.40      # Remote, limited healthcare access
+    Iron: 0.35         # Very remote, nearest hospital 40+ miles
+    Vilas: 0.38        # Seasonal population, limited permanent resources
+    Florence: 0.32     # Most remote, minimal healthcare infrastructure
+    _default: 0.50     # Statewide median estimate
+
+# Fallback Scores
+# Used when actual data is unavailable for a domain.
+# All fallbacks use 0.5 (midpoint of 0-1 scale) to represent maximum uncertainty.
+# This is the statistically neutral choice: it does not bias the overall score
+# up or down when a domain's data is missing.
+#
+# RATIONALE: A score of 0.5 on a 0-1 scale represents "no information" —
+# the jurisdiction could be anywhere from low to high risk. Using 0.4 (as was
+# previously used for health metrics) would systematically understate risk for
+# jurisdictions with missing health data. Using 0.5 ensures that missing data
+# does not directionally bias the PHRAT score.
+fallback_scores:
+  natural_hazards: 0.5     # No hazard data → assume median risk
+  health_metrics: 0.5      # No health data → assume median risk (was 0.4)
+  active_shooter: 0.5      # No active shooter data → assume median risk
+  extreme_heat: 0.5        # No heat data → assume median risk
+  air_quality: 0.5         # No air quality data → assume median risk
+  cybersecurity: 0.5       # No cyber data → assume median risk
+  utilities: 0.5           # No utilities data → assume median risk
+  svi_theme: 0.5           # No SVI data → assume median vulnerability

@@ -1,0 +1,696 @@
+{
+  "metadata": {
+    "description": "County-level vector-borne disease case data for Wisconsin from WI DHS EPHT CSV downloads",
+    "version": "3.0.0",
+    "last_updated": "2026-03-11",
+    "data_years": "2019-2024",
+    "sources": {
+      "lyme_disease": {
+        "primary": "Wisconsin DHS Environmental Public Health Tracking Program (EPHT)",
+        "url": "https://www.dhs.wisconsin.gov/epht/lyme-county.csv",
+        "data_system": "Wisconsin Electronic Disease Surveillance System (WEDSS)",
+        "notes": "County-level confirmed/probable case counts and crude rates per 100,000. Case definition changed Jan 2022 (lab-based)."
+      },
+      "west_nile_virus": {
+        "primary": "Wisconsin DHS Environmental Public Health Tracking Program (EPHT)",
+        "url": "https://www.dhs.wisconsin.gov/epht/west-nile-data-county.csv",
+        "data_system": "Wisconsin Electronic Disease Surveillance System (WEDSS)",
+        "notes": "County-level confirmed/probable case counts. Includes neuroinvasive and non-neuroinvasive. 80% of infections asymptomatic."
+      },
+      "statewide_totals": {
+        "lyme_latest_year": 2024,
+        "lyme_latest_cases": 6469,
+        "wnv_latest_cases": 0,
+        "wnv_avg_annual": 18,
+        "source": "WI DHS EPHT CSV downloads, fetched 2026-03-11"
+      }
+    },
+    "methodology": "County-level incidence rates from official WI DHS EPHT CSV data downloads. Crude rates per 100,000 population. Multi-year averages computed from the most recent 6 years of available data."
+  },
+  "statewide_summary": {
+    "lyme": {
+      "total_cases_latest": 6469,
+      "latest_year": 2024,
+      "avg_annual_recent": 5223.0,
+      "trend": "increasing",
+      "trend_note": "Incidence has increased significantly over past 20 years per WI DHS",
+      "case_definition_change_2022": true
+    },
+    "wnv": {
+      "total_cases_latest": 0,
+      "latest_year": null,
+      "avg_annual": 18,
+      "underreporting_note": "80% of WNV infections are asymptomatic; reported cases represent severe illness"
+    }
+  },
+  "county_data": {
+    "Adams": {
+      "lyme_avg_annual_rate": 277.6,
+      "lyme_avg_annual_cases": 58.5,
+      "lyme_avg_annual_confirmed": 15.0,
+      "wnv_avg_annual_rate": 0.8,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Ashland": {
+      "lyme_avg_annual_rate": 83.8,
+      "lyme_avg_annual_cases": 13.5,
+      "lyme_avg_annual_confirmed": 2.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Barron": {
+      "lyme_avg_annual_rate": 127.3,
+      "lyme_avg_annual_cases": 59.3,
+      "lyme_avg_annual_confirmed": 4.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Bayfield": {
+      "lyme_avg_annual_rate": 195.3,
+      "lyme_avg_annual_cases": 32.3,
+      "lyme_avg_annual_confirmed": 3.3,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Brown": {
+      "lyme_avg_annual_rate": 49.1,
+      "lyme_avg_annual_cases": 132.7,
+      "lyme_avg_annual_confirmed": 21.3,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 3,
+      "wnv_avg_annual_cases": 0.5,
+      "population_2023": null
+    },
+    "Buffalo": {
+      "lyme_avg_annual_rate": 175.6,
+      "lyme_avg_annual_cases": 23.5,
+      "lyme_avg_annual_confirmed": 4.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Burnett": {
+      "lyme_avg_annual_rate": 267.6,
+      "lyme_avg_annual_cases": 45.0,
+      "lyme_avg_annual_confirmed": 8.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Calumet": {
+      "lyme_avg_annual_rate": 34.0,
+      "lyme_avg_annual_cases": 17.8,
+      "lyme_avg_annual_confirmed": 3.2,
+      "wnv_avg_annual_rate": 0.6,
+      "wnv_total_cases_5yr": 2,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Chippewa": {
+      "lyme_avg_annual_rate": 117.4,
+      "lyme_avg_annual_cases": 78.3,
+      "lyme_avg_annual_confirmed": 11.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Clark": {
+      "lyme_avg_annual_rate": 92.5,
+      "lyme_avg_annual_cases": 32.2,
+      "lyme_avg_annual_confirmed": 1.3,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Columbia": {
+      "lyme_avg_annual_rate": 115.7,
+      "lyme_avg_annual_cases": 67.2,
+      "lyme_avg_annual_confirmed": 16.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Crawford": {
+      "lyme_avg_annual_rate": 152.9,
+      "lyme_avg_annual_cases": 24.5,
+      "lyme_avg_annual_confirmed": 6.8,
+      "wnv_avg_annual_rate": 1.0,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Dane": {
+      "lyme_avg_annual_rate": 37.2,
+      "lyme_avg_annual_cases": 212.5,
+      "lyme_avg_annual_confirmed": 54.8,
+      "wnv_avg_annual_rate": 0.4,
+      "wnv_total_cases_5yr": 14,
+      "wnv_avg_annual_cases": 2.33,
+      "population_2023": null
+    },
+    "Dodge": {
+      "lyme_avg_annual_rate": 30.8,
+      "lyme_avg_annual_cases": 27.2,
+      "lyme_avg_annual_confirmed": 5.3,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Door": {
+      "lyme_avg_annual_rate": 190.9,
+      "lyme_avg_annual_cases": 57.2,
+      "lyme_avg_annual_confirmed": 23.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Douglas": {
+      "lyme_avg_annual_rate": 140.5,
+      "lyme_avg_annual_cases": 61.8,
+      "lyme_avg_annual_confirmed": 13.3,
+      "wnv_avg_annual_rate": 0.8,
+      "wnv_total_cases_5yr": 2,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Dunn": {
+      "lyme_avg_annual_rate": 155.0,
+      "lyme_avg_annual_cases": 71.0,
+      "lyme_avg_annual_confirmed": 10.2,
+      "wnv_avg_annual_rate": 0.4,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Eau Claire": {
+      "lyme_avg_annual_rate": 132.5,
+      "lyme_avg_annual_cases": 142.2,
+      "lyme_avg_annual_confirmed": 27.8,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Florence": {
+      "lyme_avg_annual_rate": 397.5,
+      "lyme_avg_annual_cases": 18.3,
+      "lyme_avg_annual_confirmed": 2.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Fond du Lac": {
+      "lyme_avg_annual_rate": 31.4,
+      "lyme_avg_annual_cases": 32.7,
+      "lyme_avg_annual_confirmed": 5.3,
+      "wnv_avg_annual_rate": 0.5,
+      "wnv_total_cases_5yr": 3,
+      "wnv_avg_annual_cases": 0.5,
+      "population_2023": null
+    },
+    "Forest": {
+      "lyme_avg_annual_rate": 172.5,
+      "lyme_avg_annual_cases": 16.2,
+      "lyme_avg_annual_confirmed": 1.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Grant": {
+      "lyme_avg_annual_rate": 67.1,
+      "lyme_avg_annual_cases": 34.7,
+      "lyme_avg_annual_confirmed": 8.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Green": {
+      "lyme_avg_annual_rate": 38.8,
+      "lyme_avg_annual_cases": 14.3,
+      "lyme_avg_annual_confirmed": 4.8,
+      "wnv_avg_annual_rate": 0.5,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Green Lake": {
+      "lyme_avg_annual_rate": 100.6,
+      "lyme_avg_annual_cases": 19.3,
+      "lyme_avg_annual_confirmed": 5.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Iowa": {
+      "lyme_avg_annual_rate": 101.1,
+      "lyme_avg_annual_cases": 24.2,
+      "lyme_avg_annual_confirmed": 2.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Iron": {
+      "lyme_avg_annual_rate": 59.2,
+      "lyme_avg_annual_cases": 3.7,
+      "lyme_avg_annual_confirmed": 0.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Jackson": {
+      "lyme_avg_annual_rate": 302.1,
+      "lyme_avg_annual_cases": 63.2,
+      "lyme_avg_annual_confirmed": 6.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Jefferson": {
+      "lyme_avg_annual_rate": 32.7,
+      "lyme_avg_annual_cases": 28.0,
+      "lyme_avg_annual_confirmed": 6.3,
+      "wnv_avg_annual_rate": 0.6,
+      "wnv_total_cases_5yr": 3,
+      "wnv_avg_annual_cases": 0.5,
+      "population_2023": null
+    },
+    "Juneau": {
+      "lyme_avg_annual_rate": 194.1,
+      "lyme_avg_annual_cases": 51.8,
+      "lyme_avg_annual_confirmed": 8.2,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Kenosha": {
+      "lyme_avg_annual_rate": 17.8,
+      "lyme_avg_annual_cases": 30.0,
+      "lyme_avg_annual_confirmed": 6.8,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 2,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Kewaunee": {
+      "lyme_avg_annual_rate": 46.0,
+      "lyme_avg_annual_cases": 9.5,
+      "lyme_avg_annual_confirmed": 1.5,
+      "wnv_avg_annual_rate": 0.8,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "La Crosse": {
+      "lyme_avg_annual_rate": 71.3,
+      "lyme_avg_annual_cases": 85.8,
+      "lyme_avg_annual_confirmed": 11.8,
+      "wnv_avg_annual_rate": 0.1,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Lafayette": {
+      "lyme_avg_annual_rate": 35.1,
+      "lyme_avg_annual_cases": 6.0,
+      "lyme_avg_annual_confirmed": 0.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Langlade": {
+      "lyme_avg_annual_rate": 143.7,
+      "lyme_avg_annual_cases": 28.0,
+      "lyme_avg_annual_confirmed": 4.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Lincoln": {
+      "lyme_avg_annual_rate": 195.0,
+      "lyme_avg_annual_cases": 55.2,
+      "lyme_avg_annual_confirmed": 9.2,
+      "wnv_avg_annual_rate": 0.6,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Manitowoc": {
+      "lyme_avg_annual_rate": 40.1,
+      "lyme_avg_annual_cases": 32.5,
+      "lyme_avg_annual_confirmed": 7.5,
+      "wnv_avg_annual_rate": 0.4,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Marathon": {
+      "lyme_avg_annual_rate": 102.9,
+      "lyme_avg_annual_cases": 142.3,
+      "lyme_avg_annual_confirmed": 25.5,
+      "wnv_avg_annual_rate": 0.1,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Marinette": {
+      "lyme_avg_annual_rate": 264.6,
+      "lyme_avg_annual_cases": 110.2,
+      "lyme_avg_annual_confirmed": 21.3,
+      "wnv_avg_annual_rate": 0.4,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Marquette": {
+      "lyme_avg_annual_rate": 313.6,
+      "lyme_avg_annual_cases": 49.3,
+      "lyme_avg_annual_confirmed": 11.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Menominee": {
+      "lyme_avg_annual_rate": 228.6,
+      "lyme_avg_annual_cases": 9.8,
+      "lyme_avg_annual_confirmed": 3.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Milwaukee": {
+      "lyme_avg_annual_rate": 14.4,
+      "lyme_avg_annual_cases": 132.8,
+      "lyme_avg_annual_confirmed": 22.2,
+      "wnv_avg_annual_rate": 0.3,
+      "wnv_total_cases_5yr": 14,
+      "wnv_avg_annual_cases": 2.5,
+      "population_2023": null
+    },
+    "Monroe": {
+      "lyme_avg_annual_rate": 122.1,
+      "lyme_avg_annual_cases": 56.5,
+      "lyme_avg_annual_confirmed": 11.3,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Oconto": {
+      "lyme_avg_annual_rate": 210.2,
+      "lyme_avg_annual_cases": 82.7,
+      "lyme_avg_annual_confirmed": 16.2,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Oneida": {
+      "lyme_avg_annual_rate": 249.7,
+      "lyme_avg_annual_cases": 94.5,
+      "lyme_avg_annual_confirmed": 18.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Outagamie": {
+      "lyme_avg_annual_rate": 36.8,
+      "lyme_avg_annual_cases": 70.7,
+      "lyme_avg_annual_confirmed": 8.8,
+      "wnv_avg_annual_rate": 0.3,
+      "wnv_total_cases_5yr": 4,
+      "wnv_avg_annual_cases": 0.67,
+      "population_2023": null
+    },
+    "Ozaukee": {
+      "lyme_avg_annual_rate": 40.8,
+      "lyme_avg_annual_cases": 37.8,
+      "lyme_avg_annual_confirmed": 6.0,
+      "wnv_avg_annual_rate": 0.4,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Pepin": {
+      "lyme_avg_annual_rate": 216.8,
+      "lyme_avg_annual_cases": 16.2,
+      "lyme_avg_annual_confirmed": 1.3,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Pierce": {
+      "lyme_avg_annual_rate": 95.2,
+      "lyme_avg_annual_cases": 40.8,
+      "lyme_avg_annual_confirmed": 7.0,
+      "wnv_avg_annual_rate": 0.4,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Polk": {
+      "lyme_avg_annual_rate": 157.3,
+      "lyme_avg_annual_cases": 71.5,
+      "lyme_avg_annual_confirmed": 11.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Portage": {
+      "lyme_avg_annual_rate": 130.2,
+      "lyme_avg_annual_cases": 92.7,
+      "lyme_avg_annual_confirmed": 18.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Price": {
+      "lyme_avg_annual_rate": 192.6,
+      "lyme_avg_annual_cases": 27.2,
+      "lyme_avg_annual_confirmed": 1.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Racine": {
+      "lyme_avg_annual_rate": 16.7,
+      "lyme_avg_annual_cases": 32.8,
+      "lyme_avg_annual_confirmed": 4.5,
+      "wnv_avg_annual_rate": 0.1,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Richland": {
+      "lyme_avg_annual_rate": 199.1,
+      "lyme_avg_annual_cases": 34.2,
+      "lyme_avg_annual_confirmed": 5.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Rock": {
+      "lyme_avg_annual_rate": 25.9,
+      "lyme_avg_annual_cases": 42.7,
+      "lyme_avg_annual_confirmed": 3.0,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 2,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Rusk": {
+      "lyme_avg_annual_rate": 111.8,
+      "lyme_avg_annual_cases": 15.8,
+      "lyme_avg_annual_confirmed": 0.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Saint Croix": {
+      "lyme_avg_annual_rate": 79.2,
+      "lyme_avg_annual_cases": 76.5,
+      "lyme_avg_annual_confirmed": 5.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Sauk": {
+      "lyme_avg_annual_rate": 129.1,
+      "lyme_avg_annual_cases": 84.8,
+      "lyme_avg_annual_confirmed": 20.3,
+      "wnv_avg_annual_rate": 0.3,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Sawyer": {
+      "lyme_avg_annual_rate": 186.0,
+      "lyme_avg_annual_cases": 34.3,
+      "lyme_avg_annual_confirmed": 3.7,
+      "wnv_avg_annual_rate": 0.9,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Shawano": {
+      "lyme_avg_annual_rate": 142.9,
+      "lyme_avg_annual_cases": 58.7,
+      "lyme_avg_annual_confirmed": 9.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Sheboygan": {
+      "lyme_avg_annual_rate": 34.2,
+      "lyme_avg_annual_cases": 40.3,
+      "lyme_avg_annual_confirmed": 3.3,
+      "wnv_avg_annual_rate": 0.3,
+      "wnv_total_cases_5yr": 2,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Taylor": {
+      "lyme_avg_annual_rate": 81.2,
+      "lyme_avg_annual_cases": 16.3,
+      "lyme_avg_annual_confirmed": 1.8,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Trempealeau": {
+      "lyme_avg_annual_rate": 155.2,
+      "lyme_avg_annual_cases": 47.7,
+      "lyme_avg_annual_confirmed": 6.2,
+      "wnv_avg_annual_rate": 0.5,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Vernon": {
+      "lyme_avg_annual_rate": 189.7,
+      "lyme_avg_annual_cases": 59.0,
+      "lyme_avg_annual_confirmed": 11.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Vilas": {
+      "lyme_avg_annual_rate": 155.9,
+      "lyme_avg_annual_cases": 37.0,
+      "lyme_avg_annual_confirmed": 6.3,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Walworth": {
+      "lyme_avg_annual_rate": 44.6,
+      "lyme_avg_annual_cases": 47.2,
+      "lyme_avg_annual_confirmed": 8.7,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Washburn": {
+      "lyme_avg_annual_rate": 288.6,
+      "lyme_avg_annual_cases": 48.3,
+      "lyme_avg_annual_confirmed": 6.5,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Washington": {
+      "lyme_avg_annual_rate": 63.9,
+      "lyme_avg_annual_cases": 88.2,
+      "lyme_avg_annual_confirmed": 10.3,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 2,
+      "wnv_avg_annual_cases": 0.33,
+      "population_2023": null
+    },
+    "Waukesha": {
+      "lyme_avg_annual_rate": 54.1,
+      "lyme_avg_annual_cases": 222.3,
+      "lyme_avg_annual_confirmed": 78.3,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 4,
+      "wnv_avg_annual_cases": 0.67,
+      "population_2023": null
+    },
+    "Waupaca": {
+      "lyme_avg_annual_rate": 170.2,
+      "lyme_avg_annual_cases": 87.3,
+      "lyme_avg_annual_confirmed": 18.7,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Waushara": {
+      "lyme_avg_annual_rate": 215.0,
+      "lyme_avg_annual_cases": 53.5,
+      "lyme_avg_annual_confirmed": 11.0,
+      "wnv_avg_annual_rate": 0.0,
+      "wnv_total_cases_5yr": 0,
+      "wnv_avg_annual_cases": 0.0,
+      "population_2023": null
+    },
+    "Winnebago": {
+      "lyme_avg_annual_rate": 29.3,
+      "lyme_avg_annual_cases": 50.3,
+      "lyme_avg_annual_confirmed": 4.5,
+      "wnv_avg_annual_rate": 0.1,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    },
+    "Wood": {
+      "lyme_avg_annual_rate": 107.2,
+      "lyme_avg_annual_cases": 79.2,
+      "lyme_avg_annual_confirmed": 16.3,
+      "wnv_avg_annual_rate": 0.2,
+      "wnv_total_cases_5yr": 1,
+      "wnv_avg_annual_cases": 0.17,
+      "population_2023": null
+    }
+  }
+}

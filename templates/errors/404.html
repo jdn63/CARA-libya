@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - CARA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    Page Not Found (404)
+                </h4>
+            </div>
+            <div class="card-body">
+                <h5>We couldn't find what you're looking for</h5>
+                <p class="mb-3">
+                    The page you requested doesn't exist or may have been moved. This could happen if:
+                </p>
+                <ul class="mb-4">
+                    <li>You typed the URL incorrectly</li>
+                    <li>You clicked on an outdated link</li>
+                    <li>The page has been moved or removed</li>
+                    <li>You don't have permission to access this resource</li>
+                </ul>
+                
+                <div class="alert alert-light">
+                    <h6>Try this instead:</h6>
+                    <ul class="mb-0">
+                        <li>Return to the <a href="/">CARA homepage</a> to select a jurisdiction</li>
+                        <li>Use the navigation menu to find what you need</li>
+                        <li>Check out our <a href="/docs/faq">FAQ page</a> for common questions</li>
+                        <li>View the <a href="/methodology">risk assessment methodology</a></li>
+                    </ul>
+                </div>
+                
+                <div class="d-flex gap-2 mt-3">
+                    <a href="/" class="btn btn-primary">
+                        Home Page
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

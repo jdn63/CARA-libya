@@ -1,0 +1,107 @@
+s
+Search
+Search
+
+Dec 9, 12:14 PM - 12:33 PM
+CST
+
+Menu
+
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/werkzeug/routing/map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+During handling of the above exception, another exception occurred:
+Traceback (most recent call last):
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/logging/handlers.py", line 73, in emit
+    if self.shouldRollover(record):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/logging/handlers.py", line 197, in shouldRollover
+    self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
+    ^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: reentrant call inside <_io.BufferedWriter name='/opt/render/project/src/logs/cara_app.log'>
+Call stack:
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/threading.py", line 995, in _bootstrap
+    self._bootstrap_inner()
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
+    self.run()
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/threading.py", line 975, in run
+    self._target(*self._args, **self._kwargs)
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/concurrent/futures/thread.py", line 83, in _worker
+    work_item.run()
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/gunicorn/workers/gthread.py", line 281, in handle
+    keepalive = self.handle_request(req, conn)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/gunicorn/workers/gthread.py", line 333, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/werkzeug/middleware/proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "/opt/render/project/src/utils/error_handlers.py", line 85, in not_found_error
+    logger.warning("Page not found",
+  File "/opt/render/project/src/utils/logging_config.py", line 110, in warning
+    self.log_with_context(logging.WARNING, message, **kwargs)
+  File "/opt/render/project/src/utils/logging_config.py", line 104, in log_with_context
+    self.logger.log(level, message, extra=extra)
+Message: 'Page not found'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/logging/handlers.py", line 73, in emit
+    if self.shouldRollover(record):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/logging/handlers.py", line 197, in shouldRollover
+    self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
+    ^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: reentrant call inside <_io.BufferedWriter name='/opt/render/project/src/logs/cara_app.log'>
+Call stack:
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/threading.py", line 995, in _bootstrap
+    self._bootstrap_inner()
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/threading.py", line 1038, in _bootstrap_inner
+    self.run()
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/threading.py", line 975, in run
+    self._target(*self._args, **self._kwargs)
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/concurrent/futures/thread.py", line 83, in _worker
+    work_item.run()
+  File "/opt/render/project/python/Python-3.11.4/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/gunicorn/workers/gthread.py", line 281, in handle
+    keepalive = self.handle_request(req, conn)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/gunicorn/workers/gthread.py", line 333, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/werkzeug/middleware/proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 920, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 941, in finalize_request
+    response = self.process_response(response)
+  File "/opt/render/project/src/.venv/lib/python3.11/site-packages/flask/app.py", line 1319, in process_response
+    response = self.ensure_sync(func)(response)
+  File "/opt/render/project/src/utils/logging_config.py", line 261, in after_request
+    logger.info("Request completed",
+  File "/opt/render/project/src/utils/logging_config.py", line 107, in info
+    self.log_with_context(logging.INFO, message, **kwargs)
+  File "/opt/render/project/src/utils/logging_config.py", line 104, in log_with_context
+    self.logger.log(level, message, extra=extra)
+Message: 'Request completed'
+Arguments: ()
+10.228.25.202 - - [09/Dec/2025:18:32:22 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+10.228.25.202 - - [09/Dec/2025:18:32:32 +0000] "GET /api/health HTTP/1.1" 404 70 "-" "Render/1.0"
+==> Timed Out
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys

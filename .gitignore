@@ -1,0 +1,16 @@
+.env
+*.pyc
+__pycache__/
+.DS_Store
+data/cache/
+data/gadm/
+logs/
+exports/
+*.log
+instance/
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+*.zip
+.local/

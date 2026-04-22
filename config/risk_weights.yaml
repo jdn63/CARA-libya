@@ -1,0 +1,51 @@
+formula: phrat
+description: >
+  PHRAT (Public Health Risk Assessment Tool) uses a quadratic mean:
+  Total = sqrt( sum( weight_i * score_i^2 ) )
+  where all weights must sum to 1.0 and all scores are on [0, 1].
+
+profiles:
+  us_state:
+    natural_hazards: 0.28
+    mass_casualty: 0.18
+    health_metrics: 0.17
+    air_quality: 0.12
+    extreme_heat: 0.11
+    dam_failure: 0.07
+    vector_borne_disease: 0.07
+
+  international:
+    natural_hazards: 0.25
+    conflict_displacement: 0.20
+    health_metrics: 0.17
+    mass_casualty: 0.12
+    air_quality: 0.10
+    extreme_heat: 0.10
+    vector_borne_disease: 0.06
+
+  # Per-jurisdiction weight overrides are not defined here.
+  # To override weights for a specific jurisdiction, add an overrides.weights
+  # block in your jurisdiction.yaml file. The load_weights() function merges
+  # those overrides on top of the active profile weights at runtime.
+  # Example jurisdiction.yaml:
+  #   overrides:
+  #     weights:
+  #       natural_hazards: 0.35
+  #       conflict_displacement: 0.15
+
+temporal_weights:
+  current_12_months: 0.50
+  historical_1_5_years: 0.30
+  historical_5_10_years: 0.20
+
+risk_thresholds:
+  critical: 0.75
+  high: 0.55
+  moderate: 0.35
+  low: 0.15
+  minimal: 0.0
+
+normalization:
+  method: z_score
+  outlier_cap_std: 3.0
+  min_observations: 3

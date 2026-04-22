@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - CARA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    Internal Server Error (500)
+                </h4>
+            </div>
+            <div class="card-body">
+                <h5>Something went wrong on our end</h5>
+                <p class="mb-3">
+                    We're sorry, but something unexpected happened while processing your request. 
+                    Our team has been automatically notified about this issue.
+                </p>
+                
+                <div class="alert alert-warning">
+                    <h6>What you can do:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Wait a moment</strong> and try again - this might be a temporary issue</li>
+                        <li><strong>Return to the homepage</strong> and start over</li>
+                        <li><strong>Contact support</strong> if the problem persists</li>
+                    </ul>
+                </div>
+                
+                <div class="alert alert-info">
+                    <h6>For Wisconsin Public Health Officials:</h6>
+                    <p class="mb-0">
+                        If you need immediate access to risk assessment data, please contact your 
+                        regional HERC coordinator or reference the Wisconsin Department of Health Services 
+                        emergency preparedness resources while we resolve this issue.
+                    </p>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <a href="/" class="btn btn-primary">
+                        Home Page
+                    </a>
+                    <a href="javascript:location.reload()" class="btn btn-outline-primary">
+                        Try Again
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

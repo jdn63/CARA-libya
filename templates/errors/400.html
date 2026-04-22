@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Bad Request - CARA{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">
+                    Bad Request (400)
+                </h4>
+            </div>
+            <div class="card-body">
+                <h5>Invalid Request</h5>
+                <p class="mb-3">
+                    The request you sent could not be understood by the server. This might be due to:
+                </p>
+                <ul class="mb-4">
+                    <li>Invalid form data or parameters</li>
+                    <li>Malformed request format</li>
+                    <li>Missing required information</li>
+                </ul>
+                
+                <div class="d-flex gap-2">
+                    <a href="javascript:history.back()" class="btn btn-warning">
+                        Go Back
+                    </a>
+                    <a href="/" class="btn btn-primary">
+                        Home Page
+                    </a>
+                    <a href="/docs/faq" class="btn btn-outline-secondary">
+                        Get Help
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

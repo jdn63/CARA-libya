@@ -1,0 +1,417 @@
+[
+    {
+        "name": "Adams",
+        "county": "Adams County Health & Human Services"
+    },
+    {
+        "name": "Ashland",
+        "county": "Ashland County Health & Human Services"
+    },
+    {
+        "name": "Barron",
+        "county": "Barron County Department of Health & Human Services"
+    },
+    {
+        "name": "Bayfield",
+        "county": "Bayfield County Health Department"
+    },
+    {
+        "name": "Brown",
+        "county": "Brown County Health & Human Services Department"
+    },
+    {
+        "name": "Brown",
+        "county": "DePere Department of Public Health"
+    },
+    {
+        "name": "Buffalo",
+        "county": "Buffalo County Health & Human Services Department"
+    },
+    {
+        "name": "Burnett",
+        "county": "Burnett County Department of Health & Human Services"
+    },
+    {
+        "name": "Calumet",
+        "county": "Appleton City Health Department"
+    },
+    {
+        "name": "Calumet",
+        "county": "Calumet County Health & Human Services"
+    },
+    {
+        "name": "Calumet",
+        "county": "City of Menasha Health Department"
+    },
+    {
+        "name": "Chippewa",
+        "county": "Chippewa County Department of Public Health"
+    },
+    {
+        "name": "Clark",
+        "county": "Clark County Health Department"
+    },
+    {
+        "name": "Columbia",
+        "county": "Columbia County Health & Human Services"
+    },
+    {
+        "name": "Crawford",
+        "county": "Crawford County Health & Human Services"
+    },
+    {
+        "name": "Dane",
+        "county": "Public Health - Madison & Dane County"
+    },
+    {
+        "name": "Dodge",
+        "county": "Dodge County Human Services & Health Department"
+    },
+    {
+        "name": "Dodge",
+        "county": "Watertown Department of Public Health"
+    },
+    {
+        "name": "Door",
+        "county": "Door County Department of Health & Human Services"
+    },
+    {
+        "name": "Douglas",
+        "county": "Douglas County Department of Health & Human Services"
+    },
+    {
+        "name": "Dunn",
+        "county": "Dunn County Health Department"
+    },
+    {
+        "name": "Eau Claire",
+        "county": "Eau Claire City-County Health Department"
+    },
+    {
+        "name": "Florence",
+        "county": "Florence County Health Department"
+    },
+    {
+        "name": "Forest",
+        "county": "Forest County Health Department"
+    },
+    {
+        "name": "Fond du Lac",
+        "county": "Fond du Lac County Health Department"
+    },
+    {
+        "name": "Grant",
+        "county": "Grant County Health Department"
+    },
+    {
+        "name": "Green",
+        "county": "Green County Public Health"
+    },
+    {
+        "name": "Green Lake",
+        "county": "Green Lake County Department of Health & Human Services"
+    },
+    {
+        "name": "Iowa",
+        "county": "Iowa County Health Department"
+    },
+    {
+        "name": "Iron",
+        "county": "Iron County Health Department"
+    },
+    {
+        "name": "Jackson",
+        "county": "Jackson County Public Health Department"
+    },
+    {
+        "name": "Jefferson",
+        "county": "Jefferson County Health Department"
+    },
+    {
+        "name": "Jefferson",
+        "county": "Watertown Department of Public Health"
+    },
+    {
+        "name": "Juneau",
+        "county": "Juneau County Health Department"
+    },
+    {
+        "name": "Kenosha",
+        "county": "Kenosha County Division of Health"
+    },
+    {
+        "name": "Kewaunee",
+        "county": "Kewaunee County Public Health Department"
+    },
+    {
+        "name": "La Crosse",
+        "county": "La Crosse County Health Department"
+    },
+    {
+        "name": "Lafayette",
+        "county": "Lafayette County Health Department"
+    },
+    {
+        "name": "Langlade",
+        "county": "Langlade County Health Department"
+    },
+    {
+        "name": "Lincoln",
+        "county": "Lincoln County Health Department"
+    },
+    {
+        "name": "Manitowoc",
+        "county": "Manitowoc County Health Department"
+    },
+    {
+        "name": "Marathon",
+        "county": "Marathon County Health Department"
+    },
+    {
+        "name": "Marinette",
+        "county": "Marinette County Health & Human Services"
+    },
+    {
+        "name": "Marquette",
+        "county": "Marquette County Health Department"
+    },
+    {
+        "name": "Menominee",
+        "county": "Shawano-Menominee Counties Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Cudahy Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Franklin Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Greendale Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Hales Corners Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Milwaukee City Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "North Shore Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Oak Creek Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "South Milwaukee/St. Francis Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Southwest Suburban Health Department"
+    },
+    {
+        "name": "Milwaukee",
+        "county": "Wauwatosa Health Department"
+    },
+    {
+        "name": "Monroe",
+        "county": "Monroe County Health Department"
+    },
+    {
+        "name": "Oconto",
+        "county": "Oconto County Health & Human Services Department, Public Health Division"
+    },
+    {
+        "name": "Oneida",
+        "county": "Oneida County Health Department"
+    },
+    {
+        "name": "Outagamie",
+        "county": "Appleton City Health Department"
+    },
+    {
+        "name": "Outagamie",
+        "county": "Outagamie County Health & Human Services"
+    },
+    {
+        "name": "Ozaukee",
+        "county": "Washington Ozaukee Public Health Department"
+    },
+    {
+        "name": "Pepin",
+        "county": "Pepin County Health Department"
+    },
+    {
+        "name": "Pierce",
+        "county": "Pierce County Public Health Department"
+    },
+    {
+        "name": "Polk",
+        "county": "Polk County Health Department"
+    },
+    {
+        "name": "Portage",
+        "county": "Portage County Health & Human Services"
+    },
+    {
+        "name": "Price",
+        "county": "Price County Health & Human Services"
+    },
+    {
+        "name": "Racine",
+        "county": "City of Racine Public Health Department"
+    },
+    {
+        "name": "Racine",
+        "county": "Racine County Public Health Division"
+    },
+    {
+        "name": "Richland",
+        "county": "Richland County Health & Human Services"
+    },
+    {
+        "name": "Rock",
+        "county": "Rock County Public Health Department"
+    },
+    {
+        "name": "Rusk",
+        "county": "Rusk County Health & Human Services"
+    },
+    {
+        "name": "Sauk",
+        "county": "Sauk County Health Department"
+    },
+    {
+        "name": "Sawyer",
+        "county": "Sawyer County Health & Human Services"
+    },
+    {
+        "name": "Shawano",
+        "county": "Shawano-Menominee Counties Health Department"
+    },
+    {
+        "name": "Sheboygan",
+        "county": "Sheboygan County Health & Human Services"
+    },
+    {
+        "name": "St. Croix",
+        "county": "St. Croix County Health & Human Services"
+    },
+    {
+        "name": "Taylor",
+        "county": "Taylor County Health Department"
+    },
+    {
+        "name": "Trempealeau",
+        "county": "Trempealeau County Health Department"
+    },
+    {
+        "name": "Vernon",
+        "county": "Vernon County Public Health Department"
+    },
+    {
+        "name": "Vilas",
+        "county": "Vilas County Public Health Department"
+    },
+    {
+        "name": "Walworth",
+        "county": "Walworth County Department of Health & Human Services"
+    },
+    {
+        "name": "Washburn",
+        "county": "Washburn County Health Department"
+    },
+    {
+        "name": "Washington",
+        "county": "Washington Ozaukee Public Health Department"
+    },
+    {
+        "name": "Waukesha",
+        "county": "Waukesha County Department of Health & Human Services"
+    },
+    {
+        "name": "Waupaca",
+        "county": "Waupaca County Department of Public Health"
+    },
+    {
+        "name": "Waushara",
+        "county": "Waushara County Health Department"
+    },
+    {
+        "name": "Winnebago",
+        "county": "Appleton City Health Department"
+    },
+    {
+        "name": "Winnebago",
+        "county": "City of Menasha Health Department"
+    },
+    {
+        "name": "Winnebago",
+        "county": "Winnebago County Health Department"
+    },
+    {
+        "name": "Wood",
+        "county": "Wood County Health Department"
+    },
+    {
+        "name": "Bad River",
+        "county": "Bad River Health and Wellness Center",
+        "is_tribal": true
+    },
+    {
+        "name": "Forest County Potawatomi",
+        "county": "Forest County Potawatomi Health & Wellness Center",
+        "is_tribal": true
+    },
+    {
+        "name": "Ho-Chunk Nation",
+        "county": "Ho-Chunk Nation Health Department",
+        "is_tribal": true
+    },
+    {
+        "name": "Lac Courte Oreilles",
+        "county": "Lac Courte Oreilles Community Health Center",
+        "is_tribal": true
+    },
+    {
+        "name": "Lac du Flambeau",
+        "county": "Peter Christensen Health Center",
+        "is_tribal": true
+    },
+    {
+        "name": "Menominee Indian Tribe",
+        "county": "Menominee Tribal Clinic",
+        "is_tribal": true
+    },
+    {
+        "name": "Oneida Nation",
+        "county": "Oneida Community Health Center",
+        "is_tribal": true
+    },
+    {
+        "name": "Red Cliff Band",
+        "county": "Red Cliff Community Health Center",
+        "is_tribal": true
+    },
+    {
+        "name": "Sokaogon Chippewa",
+        "county": "Sokaogon Chippewa Health Clinic",
+        "is_tribal": true
+    },
+    {
+        "name": "St. Croix Chippewa",
+        "county": "St. Croix Tribal Health Clinic",
+        "is_tribal": true
+    },
+    {
+        "name": "Stockbridge-Munsee",
+        "county": "Stockbridge-Munsee Health and Wellness Center",
+        "is_tribal": true
+    }
+]

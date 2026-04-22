@@ -1,0 +1,1054 @@
+/* Professional Public Health Custom Styles - Using CSS Variables */
+
+/* Import shared variables from accessibility.css */
+
+/* Enhanced map styling */
+#map {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(31, 71, 136, 0.15);
+    min-height: 400px;
+    border: 2px solid var(--border-light);
+}
+
+/* Professional card styling */
+.card {
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    background-color: var(--card-bg);
+    transition: all var(--transition-speed) var(--transition-easing);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: var(--hover-transform);
+}
+
+.card:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: var(--shadow-focus), var(--shadow-md);
+    transform: var(--hover-transform);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #e8f2f7 0%, #f8f9fa 100%);
+    border-bottom: 2px solid #0d7377;
+    color: #1f4788;
+    font-weight: 600;
+    padding: 1.25rem;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Professional table styling */
+.table {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #1f4788;
+    font-weight: 600;
+    border-bottom: 2px solid #0d7377;
+    padding: 1rem 0.75rem;
+}
+
+.table td {
+    padding: 0.875rem 0.75rem;
+    vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(232, 242, 247, 0.3);
+}
+
+/* Professional footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #1f4788 0%, #2e5fa3 100%);
+    border-top: 3px solid #0d7377;
+    color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -2px 12px rgba(31, 71, 136, 0.15);
+}
+
+/* Professional badge styling */
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+}
+
+.badge.bg-success {
+    background-color: #0d7377 !important;
+}
+
+.badge.bg-primary {
+    background-color: #1f4788 !important;
+}
+
+/* Alert styling for public health context */
+.alert {
+    border-radius: 8px;
+    border: none;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-info {
+    background-color: rgba(232, 242, 247, 0.8);
+    color: #1f4788;
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #fd7e14;
+}
+
+.alert-success {
+    background-color: rgba(13, 115, 119, 0.1);
+    color: #0d7377;
+    border-left: 4px solid #0d7377;
+}
+
+/* Professional risk level indicators */
+.risk-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.risk-level-high {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: #721c24;
+}
+
+.risk-level-medium {
+    background: linear-gradient(135deg, #fd7e14 0%, #e8690b 100%);
+    color: #8a4a00;
+}
+
+.risk-level-low {
+    background: linear-gradient(135deg, #0d7377 0%, #0a5d61 100%);
+    color: #0d7377;
+}
+
+/* Professional health metrics display */
+.health-metric {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.health-metric:hover {
+    border-color: #0d7377;
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.15);
+}
+
+.health-metric-title {
+    color: #1f4788;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.health-metric-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Professional loading states */
+.spinner-border {
+    display: none;
+    color: #1f4788;
+}
+
+.loading .spinner-border {
+    display: inline-block;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(248, 249, 250, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+/* Professional form styling */
+.form-control {
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-focus);
+}
+
+.form-control:focus-visible {
+    border-color: var(--border-focus);
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: 0;
+    box-shadow: var(--shadow-focus);
+}
+
+.form-label {
+    color: #1f4788;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-select {
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+}
+
+.form-select:focus {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-focus);
+}
+
+.form-select:focus-visible {
+    border-color: var(--border-focus);
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: 0;
+    box-shadow: var(--shadow-focus);
+}
+
+/* Professional navigation styling */
+.nav-pills .nav-link {
+    background-color: transparent;
+    border: 2px solid #dee2e6;
+    color: #1f4788;
+    border-radius: 6px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: rgba(13, 115, 119, 0.1);
+    border-color: var(--accent-green);
+}
+
+.nav-pills .nav-link:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    background-color: rgba(13, 115, 119, 0.1);
+    border-color: var(--accent-green);
+}
+
+.nav-pills .nav-link.active {
+    background: linear-gradient(135deg, #1f4788 0%, #2e5fa3 100%);
+    border-color: #1f4788;
+    color: white;
+}
+
+/* Professional progress bars */
+.progress {
+    height: 1.25rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, #0d7377 0%, #0a5d61 100%);
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.progress-bar-striped {
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+}
+
+/* Professional modal styling */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 12px 48px rgba(31, 71, 136, 0.25);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #1f4788 0%, #2e5fa3 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 1.5rem;
+    border-bottom: 2px solid #0d7377;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    background-color: #ffffff;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Professional HERC Region styles */
+.herc-label {
+    background: none;
+    border: none;
+}
+
+.herc-label div {
+    white-space: nowrap;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #0d7377;
+    border-radius: 6px;
+    padding: 6px 10px;
+    box-shadow: 0 2px 8px rgba(31, 71, 136, 0.15);
+    color: #1f4788;
+}
+
+.herc-control {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 10px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(31, 71, 136, 0.15);
+    border: 1px solid #dee2e6;
+}
+
+.herc-control label {
+    color: #1f4788;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.herc-control input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #0d7377;
+}
+
+/* Professional HERC stats panel styles */
+.herc-stats-panel {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 370px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    z-index: 2000;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #0d7377;
+    border-radius: 12px;
+    display: none;
+    box-shadow: 0 8px 32px rgba(31, 71, 136, 0.25);
+}
+
+.herc-stats-panel .card-header {
+    background: linear-gradient(135deg, #1f4788 0%, #2e5fa3 100%);
+    color: white;
+    border-bottom: 2px solid #0d7377;
+    padding: 1.25rem;
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+}
+
+.herc-stats-panel .card-body {
+    padding: 1.25rem;
+    background-color: #ffffff;
+}
+
+.herc-stats-panel h6 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: #1f4788;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+.herc-stats-panel .table {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.herc-stats-panel .table td:first-child {
+    width: 60%;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.herc-stats-panel .table td:last-child {
+    font-weight: 600;
+    color: #1f4788;
+}
+
+.herc-stats-panel .btn-close {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+}
+
+/* Professional WEM Region styles */
+.wem-label {
+    background: none;
+    border: none;
+}
+
+.wem-label div {
+    white-space: nowrap;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #2e5fa3;
+    border-radius: 6px;
+    padding: 6px 10px;
+    box-shadow: 0 2px 8px rgba(31, 71, 136, 0.15);
+    color: #1f4788;
+}
+
+.wem-control {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 10px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(31, 71, 136, 0.15);
+    border: 1px solid #dee2e6;
+    margin-top: 12px;
+}
+
+.wem-control label {
+    color: #1f4788;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.wem-control input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #2e5fa3;
+}
+
+.wem-stats-panel {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 370px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    z-index: 1000;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #2e5fa3;
+    border-radius: 12px;
+    display: none;
+    box-shadow: 0 8px 32px rgba(31, 71, 136, 0.25);
+}
+
+.wem-stats-panel .card-header {
+    background: linear-gradient(135deg, #2e5fa3 0%, #1f4788 100%);
+    color: white;
+    border-bottom: 2px solid #0d7377;
+    padding: 1.25rem;
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+}
+
+.wem-stats-panel .card-body {
+    padding: 1.25rem;
+    background-color: #ffffff;
+}
+
+.wem-stats-panel h6 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: #1f4788;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+.wem-stats-panel .table {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.wem-stats-panel .table td:first-child {
+    width: 60%;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.wem-stats-panel .table td:last-child {
+    font-weight: 600;
+    color: #1f4788;
+}
+
+.wem-stats-panel .btn-close {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+}
+
+/* Professional responsive design */
+@media (max-width: 768px) {
+    .herc-stats-panel,
+    .wem-stats-panel {
+        width: 100%;
+        right: 0;
+        left: 0;
+        top: auto;
+        bottom: 0;
+        border-radius: 12px 12px 0 0;
+        max-height: 70vh;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+    }
+
+    #map {
+        min-height: 300px;
+        border-radius: 8px;
+    }
+
+    .container {
+        padding-bottom: 70px;
+    }
+
+    .navbar {
+        padding: 0.75rem 0;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    .health-metric {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .health-metric-value {
+        font-size: 1.5rem;
+    }
+
+    .modal-dialog {
+        margin: 1rem;
+    }
+
+    .btn {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Professional print styles for official documents */
+@media print {
+    * {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+
+    body {
+        font-family: 'Times New Roman', serif;
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+
+    .navbar {
+        background: white !important;
+        border-bottom: 2px solid #000 !important;
+        padding: 0.5rem 0 !important;
+    }
+
+    .navbar-brand {
+        color: #000 !important;
+        font-size: 18pt !important;
+        font-weight: bold !important;
+    }
+
+    .footer {
+        position: static;
+        background: white !important;
+        border-top: 1px solid #000 !important;
+        margin-top: 2rem;
+    }
+
+    .herc-stats-panel,
+    .wem-stats-panel {
+        position: static !important;
+        width: 100% !important;
+        display: block !important;
+        break-inside: avoid;
+        border: 1px solid #000 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 1rem;
+    }
+
+    .card {
+        border: 1px solid #000 !important;
+        border-radius: 0 !important;
+        margin-bottom: 1rem;
+        break-inside: avoid;
+    }
+
+    .card-header {
+        background: #f0f0f0 !important;
+        border-bottom: 1px solid #000 !important;
+        font-weight: bold !important;
+        padding: 0.5rem !important;
+    }
+
+    .table {
+        border-collapse: collapse !important;
+        border: 1px solid #000 !important;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #000 !important;
+        padding: 0.25rem !important;
+    }
+
+    .table th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+    }
+
+    .risk-level-high {
+        color: #000 !important;
+        font-weight: bold !important;
+    }
+
+    .risk-level-medium {
+        color: #000 !important;
+        font-weight: bold !important;
+    }
+
+    .risk-level-low {
+        color: #000 !important;
+        font-weight: bold !important;
+    }
+
+    .btn {
+        display: none !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #000 !important;
+        font-weight: bold !important;
+        page-break-after: avoid;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Official document header */
+    @page {
+        margin: 1in;
+        @top-center {
+            content: "CARA - Wisconsin Public Health Risk Assessment";
+            font-family: 'Times New Roman', serif;
+            font-size: 10pt;
+        }
+        @bottom-center {
+            content: "Page " counter(page) " of " counter(pages);
+            font-family: 'Times New Roman', serif;
+            font-size: 10pt;
+        }
+    }
+}
+
+/* Professional cross-browser compatibility */
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Smooth scrolling for better UX */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Professional focus states - Updated with focus-visible */
+*:focus {
+    outline: none; /* Remove default focus outline */
+}
+
+*:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+    transition: outline var(--transition-speed) var(--transition-easing);
+}
+
+/* Professional selection colors */
+::selection {
+    background: rgba(13, 115, 119, 0.2);
+    color: #1f4788;
+}
+
+::-moz-selection {
+    background: rgba(13, 115, 119, 0.2);
+    color: #1f4788;
+}
+
+/* Professional scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1f4788 0%, #2e5fa3 100%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2e5fa3 0%, #1f4788 100%);
+}
+
+/* Edge-specific fixes */
+@supports (-ms-ime-align: auto) {
+    .footer {
+        position: fixed;
+    }
+
+    .container {
+        margin-bottom: 70px;
+    }
+}
+
+/* Professional animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Professional hover effects */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(31, 71, 136, 0.15);
+}
+
+.show-work-btn {
+    color: var(--primary-color, #1f4788);
+    font-size: 0.85rem;
+    vertical-align: middle;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.show-work-btn:hover,
+.show-work-btn:focus {
+    opacity: 1;
+    color: var(--primary-hover, #163564);
+    text-decoration: none;
+}
+
+.show-work-popover {
+    max-width: 420px;
+    font-size: 0.82rem;
+}
+
+.show-work-popover .popover-header {
+    background-color: var(--primary-color, #1f4788);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+}
+
+.show-work-popover .popover-body {
+    padding: 0.6rem 0.75rem;
+    line-height: 1.5;
+}
+
+.show-work-popover .formula-line {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    background: #f0f4f8;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin: 6px 0;
+    border-left: 3px solid var(--primary-color, #1f4788);
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.show-work-popover .data-source {
+    color: #6c757d;
+    font-size: 0.75rem;
+    font-style: italic;
+    margin-top: 6px;
+    padding-top: 4px;
+    border-top: 1px solid #e9ecef;
+}
+
+.show-work-popover .component-list {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0;
+}
+
+.show-work-popover .component-list li {
+    padding: 2px 0;
+    font-size: 0.8rem;
+}
+
+.show-work-popover .component-list li::before {
+    content: '\2022';
+    color: var(--primary-color, #1f4788);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+}
+/* ── Categorized compact tile layout ─────────────────────────────────────── */
+
+.category-section {
+    margin-bottom: 2rem;
+}
+
+.category-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #dc3545;
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 3px;
+    margin-bottom: 6px;
+}
+
+.category-disease,
+.category-hazards,
+.category-environmental,
+.category-safety,
+.category-community { color: #dc3545; border-color: #dc3545; }
+
+/* Compact tile overrides — applied via .compact-tile on the col div */
+.compact-tile .card {
+    margin-bottom: 0;
+    font-size: 0.78rem;
+}
+
+.compact-tile .card:hover {
+    transform: none;
+}
+
+.compact-tile .card-header {
+    padding: 0.3rem 0.6rem;
+    background: linear-gradient(135deg, #e8f2f7 0%, #f8f9fa 100%);
+}
+
+.compact-tile .card-header .card-title {
+    font-size: 0.78rem;
+    margin-bottom: 0;
+    line-height: 1.3;
+}
+
+.compact-tile .card-header .badge {
+    font-size: 0.6rem;
+}
+
+.compact-tile .card-body {
+    padding: 0.4rem 0.6rem;
+}
+
+.compact-tile h3,
+.compact-tile .card-body > .d-flex > h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.1rem;
+}
+
+.compact-tile h6 {
+    font-size: 0.72rem;
+    margin-bottom: 0.2rem;
+}
+
+.compact-tile .table {
+    font-size: 0.72rem;
+    margin-bottom: 0.25rem;
+}
+
+.compact-tile .table th,
+.compact-tile .table td {
+    padding: 0.15rem 0.3rem;
+}
+
+.compact-tile .progress {
+    height: 6px;
+    margin-bottom: 0.2rem;
+}
+
+.compact-tile .alert {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem;
+}
+
+.compact-tile .mb-3 { margin-bottom: 0.4rem !important; }
+.compact-tile .mb-4 { margin-bottom: 0.5rem !important; }
+.compact-tile .mt-3 { margin-top: 0.4rem !important; }
+
+.compact-tile .small,
+.compact-tile small {
+    font-size: 0.68rem;
+}
+
+/* Keep row tight */
+.row.g-2 > .compact-tile {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+/* ── Compact tile spacing standardization ────────────────────────────────── */
+
+/* Consistent gap between card-body sections */
+.compact-tile .card-body > div {
+    margin-bottom: 0.4rem;
+}
+.compact-tile .card-body > div:last-child {
+    margin-bottom: 0;
+}
+
+/* Score row: prevent label/value crowding */
+.compact-tile .d-flex.justify-content-between h6 {
+    font-size: 0.73rem;
+    margin-bottom: 0;
+    line-height: 1.3;
+}
+
+/* EVR component boxes: tighter padding, smaller value number */
+.compact-tile .border.rounded.text-center {
+    padding: 0.2rem 0.15rem !important;
+}
+.compact-tile .border.rounded.text-center .h5 {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    margin-bottom: 0.1rem;
+}
+.compact-tile .border.rounded.text-center .badge {
+    font-size: 0.58rem;
+    margin-bottom: 0.15rem !important;
+}
+
+/* "Risk Components" section header — tighten bottom gap */
+.compact-tile h6.text-muted {
+    font-size: 0.72rem;
+    margin-bottom: 0.2rem;
+}
+
+/* Card-body: standardize padding */
+.compact-tile .card-body {
+    padding: 0.5rem 0.65rem;
+}
+
+/* Card-header: consistent padding */
+.compact-tile .card-header {
+    padding: 0.35rem 0.65rem;
+}
+
+/* Data-source notes at bottom of tiles */
+.compact-tile .mt-3 small.text-muted {
+    font-size: 0.65rem;
+    line-height: 1.3;
+}
+
+/* Row g-2 inside compact tiles: prevent outer bleed */
+.compact-tile .row.g-2 {
+    margin-left: 0;
+    margin-right: 0;
+}

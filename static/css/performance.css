@@ -1,0 +1,154 @@
+/* Performance optimization styles - Using shared CSS variables */
+
+/* Use CSS variables for consistent theming and easier maintenance */
+
+/* Lightweight mode toggle button styling */
+#performance-toggle {
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: all var(--transition-speed, 0.3s) var(--transition-easing, ease);
+}
+
+#performance-toggle:focus-visible {
+    outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0d7377);
+    outline-offset: var(--focus-ring-offset, 2px);
+    box-shadow: var(--shadow-focus, 0 0 0 0.2rem rgba(13, 115, 119, 0.25)), 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+#performance-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Pulsing animation to draw attention to the toggle */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
+/* Styles for lightweight mode */
+body.reduce-motion {
+    /* Disable animations - respect user preferences */
+    --transition-speed: 0s !important;
+    --transition-easing: linear !important;
+    
+    /* Ensure focus-visible still works without transitions */
+    *:focus-visible {
+        transition: none !important;
+    }
+}
+
+body.reduce-effects {
+    /* Reduce visual effects */
+    --shadow-intensity: 0 !important;
+    --blur-effect: 0 !important;
+}
+
+/* Reduce motion for all elements when in lightweight mode */
+.reduce-motion * {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Simplify shadows and effects when in lightweight mode */
+.reduce-effects .card,
+.reduce-effects .btn,
+.reduce-effects .modal,
+.reduce-effects .dropdown-menu {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    
+    /* Maintain focus visibility even in reduced effects mode */
+    &:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0d7377) !important;
+        outline-offset: var(--focus-ring-offset, 2px) !important;
+    }
+}
+
+/* Optimize images for low-end devices */
+.lazy-backgrounds .bg-image {
+    background-image: none !important;
+}
+
+/* Hide non-essential decorative elements in lightweight mode */
+.reduce-effects .decorative-element {
+    display: none !important;
+}
+
+/* Style to make the toggle more visible */
+#lightweight-mode-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Cross-browser compatibility fixes */
+/* Safari and iOS */
+@supports (-webkit-touch-callout: none) {
+    /* Fix for Safari-specific issues */
+    .card {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    /* Fix for iOS text size adjustments */
+    body {
+        -webkit-text-size-adjust: 100%;
+    }
+}
+
+/* Firefox */
+@-moz-document url-prefix() {
+    /* Fix for Firefox rendering issues */
+    .progress-bar {
+        background-color: var(--bs-primary);
+    }
+}
+
+/* Older Edge and IE */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* Fallbacks for IE and older Edge */
+    .card {
+        border: 1px solid #444;
+    }
+    
+    .progress {
+        background-color: #333;
+    }
+}
+
+/* Better rendering on older/less capable devices */
+@media (max-width: 600px), (max-device-width: 600px) {
+    /* Simplify UI on very small screens or older devices */
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .card {
+        margin-bottom: 10px;
+    }
+    
+    /* Reduce shadows and transitions on older devices */
+    .card, .btn, .modal, .dropdown-menu {
+        box-shadow: none !important;
+        transition: none !important;
+    }
+    
+    /* Ensure text is readable */
+    body {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ jurisdiction_name }} - CARA Risk Assessment</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/cara.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <span class="navbar-brand">CARA - {{ jurisdiction_name }}</span>
+      <div>
+        <a href="/methodology" class="btn btn-outline-light btn-sm me-2">Methodology</a>
+        <a href="/about" class="btn btn-outline-light btn-sm">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1 class="h2 mb-2">Public Health Risk Assessment</h1>
+        <p class="text-muted mb-4">
+          Select a jurisdiction to view its comprehensive risk assessment.
+        </p>
+
+        {% if jurisdictions %}
+        <div class="card">
+          <div class="card-body">
+            <label for="jurisdiction-select" class="form-label fw-semibold">Select jurisdiction</label>
+            <select id="jurisdiction-select" class="form-select form-select-lg mb-3"
+                    onchange="if(this.value) window.location='/dashboard/'+this.value">
+              <option value="">-- Select a jurisdiction --</option>
+              {% for j in jurisdictions %}
+              <option value="{{ j.id }}">{{ j.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+          No jurisdictions configured yet.
+          Edit <code>config/jurisdiction.yaml</code> to add your jurisdictions.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  <footer class="mt-5 py-3 border-top text-center text-muted small">
+    CARA Template - Open Source Public Health Risk Assessment
+    | <a href="/methodology">Methodology</a>
+    | <a href="https://github.com/jdn63/CARA-template" target="_blank">GitHub</a>
+  </footer>
+</body>
+</html>

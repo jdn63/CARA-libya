@@ -1,0 +1,58 @@
+PS C:\Users\jaime\Documents\CARA> dir C:\Users\jaime\Documents\CARA -Force
+
+
+    Directory: C:\Users\jaime\Documents\CARA
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----          2/6/2026  11:44 PM                .github
+d-----          2/6/2026  11:44 PM                .pytest_cache
+d-----          2/6/2026  11:44 PM                attached_assets
+d-----          2/6/2026  11:44 PM                config
+d-----          2/6/2026  11:44 PM                data
+d-----          2/6/2026  11:44 PM                docs
+d-----          2/6/2026  11:44 PM                exports
+d-----          2/6/2026  11:44 PM                logs
+d-----          2/6/2026  11:44 PM                routes
+d-----          2/6/2026  11:44 PM                static
+d-----          2/6/2026  11:44 PM                templates
+d-----          2/6/2026  11:44 PM                tests
+d-----          2/6/2026  11:44 PM                utils
+-a----          2/6/2026  11:44 PM            155 .coveragerc
+-a----          2/6/2026  11:44 PM           2557 .env.example
+-a----          2/6/2026  11:44 PM           4811 .gitignore
+-a----          2/6/2026  11:44 PM           4229 agencies.txt
+-a----          2/6/2026  11:44 PM          47219 app_old.py
+-a----          2/6/2026  11:44 PM           2951 CARA_Action_Plan_Checkboxes_Analysis.md
+-a----          2/6/2026  11:44 PM           8700 CARA_DEPLOY_README.md
+-a----          2/6/2026  11:44 PM            945 CARA_requirements.txt
+-a----          2/6/2026  11:44 PM           1368 CITATION.cff
+-a----          2/6/2026  11:44 PM           5767 CODE_REVIEW_ANALYSIS.md
+-a----          2/6/2026  11:44 PM          12193 core.py
+-a----          2/6/2026  11:44 PM           4802 DEPLOYMENT_GUIDE.md
+-a----          2/6/2026  11:44 PM           1664 extract_geojson_info.py
+-a----          2/6/2026  11:44 PM           7808 feedback_update.zip
+-a----          2/6/2026  11:44 PM        1068611 generated-icon.png
+-a----          2/6/2026  11:44 PM           6798 generate_static_map.py
+-a----          2/6/2026  11:44 PM            554 gunicorn.conf.py
+-a----          2/6/2026  11:44 PM           6507 HERC_Region_1_HVA_Export.xlsx
+-a----          2/6/2026  11:44 PM           1072 main.py
+-a----          2/6/2026  11:44 PM             69 Makefile
+-a----          2/6/2026  11:44 PM          14400 models.py
+-a----          2/6/2026  11:44 PM            820 pyproject.toml
+-a----          2/6/2026  11:44 PM          13342 README.md
+-a----          2/6/2026  11:44 PM           7159 README_CARA_Application.md
+-a----          2/6/2026  11:44 PM            889 render.yaml
+-a----          2/6/2026  11:44 PM             53 requirements-dev.txt
+-a----          2/6/2026  11:44 PM            309 requirements.txt
+-a----          2/6/2026  11:44 PM            218 response.json
+-a----          2/6/2026  11:44 PM              0 tribal_territories.json
+-a----          2/6/2026  11:44 PM         280729 uv.lock
+-a----          2/6/2026  11:44 PM        3089157 wisconsin_tribal_areas.pdf
+-a----          2/6/2026  11:44 PM          10276 wi_health_departments.json
+-a----          2/6/2026  11:44 PM      163985802 zi9s9DqH
+-a----          2/6/2026  11:44 PM       69240832 zigd4p3P
+
+
+PS C:\Users\jaime\Documents\CARA>

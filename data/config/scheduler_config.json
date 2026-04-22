@@ -1,0 +1,76 @@
+{
+    "data_sources": {
+        "cdc_svi": {
+            "description": "CDC Social Vulnerability Index data (annual refresh)",
+            "refresh_interval_hours": 8760,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_cdc_svi"
+        },
+        "fema_nri": {
+            "description": "FEMA National Risk Index data (annual refresh)",
+            "refresh_interval_hours": 8760,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_fema_nri"
+        },
+        "dhs_health": {
+            "description": "Wisconsin DHS health metrics (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_dhs_health"
+        },
+        "nws_forecast": {
+            "description": "NWS weather forecasts (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_nws_forecasts"
+        },
+        "epa_air_quality": {
+            "description": "EPA AirNow air quality data (daily refresh)",
+            "refresh_interval_hours": 24,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_epa_air_quality"
+        },
+        "herc_risk_cache": {
+            "description": "HERC region pre-computed risk data",
+            "refresh_interval_hours": 4,
+            "module": "utils.herc_risk_aggregator",
+            "function": "precompute_all_herc_regions"
+        },
+        "openfema_declarations": {
+            "description": "Federal disaster declarations per county from OpenFEMA (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_openfema_declarations"
+        },
+        "openfema_nfip": {
+            "description": "NFIP flood insurance claims per county from OpenFEMA (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_openfema_nfip"
+        },
+        "openfema_hma": {
+            "description": "Hazard mitigation projects per county from OpenFEMA (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_openfema_hma"
+        },
+        "noaa_storm_events": {
+            "description": "Historical severe weather events from NOAA NCEI (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_noaa_storm_events"
+        },
+        "nid_dam_inventory": {
+            "description": "USACE National Inventory of Dams - county-level dam counts and hazard classifications (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.data_source_refresher",
+            "function": "refresh_all_nid_dam_inventory"
+        },
+        "dhs_vbd_surveillance": {
+            "description": "WI DHS EPHT vector-borne disease surveillance - county-level Lyme/WNV CSV data from dhs.wisconsin.gov/epht (weekly refresh)",
+            "refresh_interval_hours": 168,
+            "module": "utils.vbd_data_fetcher",
+            "function": "refresh_all_dhs_vbd_surveillance"
+        }
+    }
+}

@@ -1,0 +1,157 @@
+Below are fully generated, ready-to-import files for setting up unit testing with pytest and CI with GitHub Actions for your CARA application.
+
+You can copy these directly into your Replit project or GitHub repo. I've preserved the application factory structure and used minimal assumptions about your database configuration.
+
+📁 1. tests/__init__.py
+
+(Empty init to make tests a module)
+
+# tests/__init__.py
+
+📁 2. tests/conftest.py
+
+Provides the test Flask app and client using your create_app() function.
+
+# tests/conftest.py
+
+import pytest
+from app import create_app
+
+@pytest.fixture
+def app():
+    app = create_app({
+        "TESTING": True,
+        "WTF_CSRF_ENABLED": False,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:"
+    })
+    yield app
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
+
+📁 3. tests/test_basic.py
+
+A simple test to confirm the homepage loads and contains the CARA header.
+
+# tests/test_basic.py
+
+def test_homepage(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert b'CARA' in response.data
+
+📁 4. tests/test_api.py
+
+Basic API endpoint test — customize or expand for other routes.
+
+# tests/test_api.py
+
+def test_api_risk_assessment(client):
+    response = client.get('/api/risk/55001')  # Example: Adams County FIPS
+    assert response.status_code in (200, 404)  # May vary depending on DB content
+
+📁 5. .coveragerc
+
+Tells coverage.py what to exclude from reports.
+
+# .coveragerc
+
+[run]
+omit =
+    */__init__.py
+    */config.py
+    */migrations/*
+    */tests/*
+    venv/*
+
+[report]
+show_missing = True
+skip_covered = True
+
+📁 6. requirements-dev.txt
+
+Add this for Replit/CI to install test dependencies:
+
+pytest
+pytest-flask
+coverage
+flask-testing
+
+📁 7. .github/workflows/ci.yml
+
+GitHub Actions workflow file to automatically run tests on push/pull.
+
+# .github/workflows/ci.yml
+
+name: CARA CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    - name: Run tests
+      env:
+        DATABASE_URL: postgresql://testuser:testpass@localhost/testdb
+        SESSION_SECRET: testsecret
+      run: |
+        pytest --cov=app --cov-report=term-missing
+
+🧪 8. Makefile (Optional)
+
+Add test shortcut if you're using a Makefile.
+
+# Makefile
+
+test:
+	pytest --cov=app --cov-report=term-missing
+
+✅ What to Do Next
+
+✅ Add all these files to your Replit or GitHub repo.
+
+✅ Run tests locally with:
+
+pytest
+
+
+✅ Push to GitHub and confirm CI workflow triggers (check Actions tab).
+
+📈 Monitor coverage output — you’ll get hints on where to add more tests.
+
+🧪 Begin writing additional tests for each key module (e.g., risk_calculation.py, disease_surveillance.py, etc.)
