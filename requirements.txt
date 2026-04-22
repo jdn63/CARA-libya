@@ -14,3 +14,4 @@ requests
 scikit-learn
 sqlalchemy
 weasyprint
+flask-limiter

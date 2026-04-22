@@ -1,0 +1,80 @@
+jurisdiction:
+  name: "Your Jurisdiction Name"
+  short_name: "YJN"
+  profile: international
+  country_code: "XX"
+  iso3166_1: "XX"
+  language: "en"
+  timezone: "UTC"
+  population: 0
+  area_sq_km: 0
+
+  contact:
+    agency: "Your Public Health Agency"
+    website: "https://www.example.gov"
+    email: "health@example.gov"
+
+  geographic:
+    gadm_country: "XX"
+    gadm_level: 2
+    bounding_box:
+      north: 0.0
+      south: 0.0
+      east: 0.0
+      west: 0.0
+    center:
+      lat: 0.0
+      lon: 0.0
+
+  administrative_hierarchy:
+    level_0: "Country"
+    level_1: "Province / State"
+    level_2: "District / County"
+    level_3: "Municipality / Ward"
+    primary_assessment_level: 2
+
+  subdivisions:
+    - id: "district_01"
+      name: "District 1"
+      level: 2
+      gadm_gid: "XX.1.1_1"
+      population: 0
+      area_sq_km: 0
+      capital: ""
+      notes: ""
+
+  regional_groups:
+    - id: "region_north"
+      name: "Northern Region"
+      label: "Region"
+      subdivision_ids:
+        - "district_01"
+
+  acled_config:
+    country: "XX"
+    region_id: null
+    admin1_filter: null
+
+  idmc_config:
+    iso3: "XXX"
+    country_name: "Your Country"
+
+  who_gho_config:
+    country_code: "XXX"
+    country_name: "Your Country"
+
+  em_dat_config:
+    country: "Your Country"
+    iso: "XX"
+
+  worldbank_config:
+    country_code: "XX"
+
+  openaq_config:
+    country: "XX"
+    city_filter: null
+
+overrides:
+  weights: {}
+  domain_thresholds: {}
+  custom_notes: ""

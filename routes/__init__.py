@@ -7,3 +7,16 @@ This package contains all Flask blueprints organized by functionality:
 - api: REST API endpoints  
 - herc: HERC region specific functionality
 """
+
+from routes.public import public_bp
+from routes.dashboard import dashboard_bp
+from routes.api import api_bp
+from routes.herc import herc_bp
+
+
+def register_routes(app):
+    """Register all blueprints with the Flask application."""
+    app.register_blueprint(public_bp)
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(api_bp)
+    app.register_blueprint(herc_bp)

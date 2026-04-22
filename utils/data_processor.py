@@ -232,3 +232,109 @@ def _risk_level_to_class(risk_level: Optional[str]) -> str:
         "Minimal": "success",
     }
     return mapping.get(risk_level or "", "secondary")
+
+
+# ---------------------------------------------------------------------------
+# Compatibility shims for Wisconsin-specific route imports
+# ---------------------------------------------------------------------------
+
+def get_wi_jurisdictions() -> List[Dict[str, Any]]:
+    """Return a list of jurisdiction dicts with 'id' and 'name' keys."""
+    try:
+        summary = get_all_jurisdictions_summary()
+        return [{"id": j["id"], "name": j["name"]} for j in summary]
+    except Exception as e:
+        logger.error(f"get_wi_jurisdictions failed: {e}")
+        return []
+
+
+def process_risk_data(jurisdiction_id: str, **kwargs) -> Dict[str, Any]:
+    """
+    Compute risk data for a jurisdiction and return in legacy format.
+
+    Tries a cached result first; falls back to a fresh computation.
+    Maps the new pipeline output keys to the fields expected by older routes.
+    """
+    cached = get_cached_result(jurisdiction_id)
+    if cached:
+        result = cached
+    else:
+        try:
+            result = compute_risk_for_jurisdiction(jurisdiction_id)
+            cache_result(result)
+        except Exception as e:
+            logger.error(f"process_risk_data failed for {jurisdiction_id}: {e}")
+            return {}
+
+    domain_scores = result.get("domain_scores", {})
+    jconfig = {}
+    try:
+        from utils.connector_registry import load_jurisdiction_config
+        jconfig = load_jurisdiction_config()
+    except Exception:
+        pass
+    jinfo = jconfig.get("jurisdiction", {})
+
+    natural_hazards_risk = domain_scores.get(
+        "natural_hazards", domain_scores.get("hazards", 0.0)
+    )
+    health_risk = domain_scores.get(
+        "health", domain_scores.get("infectious_disease", 0.0)
+    )
+    active_shooter_risk = domain_scores.get(
+        "active_shooter", domain_scores.get("violence", 0.0)
+    )
+    total_risk_score = result.get("total_score", 0.0)
+
+    return {
+        "jurisdiction_id": jurisdiction_id,
+        "location": jinfo.get("name", jurisdiction_id),
+        "county": jinfo.get("name", jurisdiction_id),
+        "county_name": jinfo.get("name", jurisdiction_id),
+        "total_risk_score": total_risk_score,
+        "risk_level": result.get("risk_level", "Unknown"),
+        "risk_class": result.get("risk_class", "secondary"),
+        "natural_hazards_risk": natural_hazards_risk,
+        "health_risk": health_risk,
+        "active_shooter_risk": active_shooter_risk,
+        "natural_hazards": {k: v for k, v in domain_scores.items()},
+        "domain_scores": domain_scores,
+        "domain_components": result.get("domain_components", {}),
+        "data_sources_used": result.get("data_sources_used", []),
+        "data_coverage": result.get("data_coverage", 0.0),
+        "profile": result.get("profile", ""),
+        "computed_at": result.get("computed_at", ""),
+    }
+
+
+def get_historical_risk_data(jurisdiction_id: str,
+                             start_year: int = 2020,
+                             end_year: int = 2024) -> List[Dict[str, Any]]:
+    """
+    Return a list of historical risk data points for a jurisdiction.
+
+    This implementation returns a single-point snapshot of the current risk
+    scores because the generic template does not maintain a historical
+    time-series database.
+    """
+    try:
+        risk = process_risk_data(jurisdiction_id)
+        if not risk:
+            return []
+        from datetime import datetime as _dt
+        current_year = _dt.now().year
+        return [{
+            "year": current_year,
+            "total_risk_score": risk.get("total_risk_score", 0.0),
+            "natural_hazards_risk": risk.get("natural_hazards_risk", 0.0),
+            "health_risk": risk.get("health_risk", 0.0),
+            "active_shooter_risk": risk.get("active_shooter_risk", 0.0),
+        }]
+    except Exception as e:
+        logger.error(f"get_historical_risk_data failed for {jurisdiction_id}: {e}")
+        return []
+
+
+def get_em_jurisdictions() -> List[Dict[str, Any]]:
+    """Alias for get_wi_jurisdictions for EM comparison exports."""
+    return get_wi_jurisdictions()

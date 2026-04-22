@@ -13,7 +13,7 @@ from flask import Blueprint, render_template, send_from_directory, request, redi
 from utils.data_processor import get_wi_jurisdictions
 from utils.herc_data import get_all_herc_regions
 from utils.api_responses import api_not_found
-from core import db
+from app import db
 
 # Set up logger for this module
 logger = logging.getLogger(__name__)
