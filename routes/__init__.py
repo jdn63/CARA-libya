@@ -12,6 +12,7 @@ from routes.public import public_bp
 from routes.dashboard import dashboard_bp
 from routes.api import api_bp
 from routes.herc import herc_bp
+from routes.gis_export import gis_export_bp
 
 
 def register_routes(app):
@@ -20,3 +21,4 @@ def register_routes(app):
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(herc_bp)
+    app.register_blueprint(gis_export_bp)

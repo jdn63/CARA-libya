@@ -70,6 +70,7 @@ externalPort = 3000
 
 [agent]
 integrations = ["web_scraper:1.0.0"]
+expertMode = true
 
 [userenv]
 

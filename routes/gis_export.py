@@ -13,7 +13,7 @@ from datetime import datetime
 from flask import Blueprint, send_file, jsonify, request, abort, Response
 from werkzeug.exceptions import NotFound
 
-from core import db
+from app import db
 from models import ExportJob
 from utils.gis_export import CARAGISExporter
 
