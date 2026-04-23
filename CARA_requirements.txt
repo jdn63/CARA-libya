@@ -14,7 +14,7 @@ psycopg2-binary>=2.9.0
 # Data Processing
 numpy>=2.0.0
 pandas>=2.0.0
-geopandas>=1.1.0
+geopandas>=1.1.2
 shapely>=2.0.0
 pyshp>=2.3.0
 scikit-learn>=1.4.0
@@ -34,21 +34,20 @@ census>=0.8.0
 requests>=2.33.0
 
 # XML/HTML Processing
-lxml>=5.4.0
+lxml>=6.1.0
 lxml-html-clean>=0.4.2
 
 # Font Processing
 fonttools>=4.58.0
 
 # Image Processing
-pillow>=12.0.0
+pillow>=12.2.0
 
 # HTTP
-urllib3>=2.4.0
+urllib3>=2.6.3
 
 # Authentication
-pyjwt>=2.11.0
-ecdsa>=0.19.2
+pyjwt>=2.12.0
 
 # Configuration and Environment
 python-dotenv>=1.1.0
