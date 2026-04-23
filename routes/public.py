@@ -35,14 +35,9 @@ def _get_jm() -> JurisdictionManager:
 def index():
     """Libya CARA home page — municipality selector.
 
+    Access control is currently disabled (see app.py _require_login).
     Returns HTTP 200 in all cases so Replit's deployment health check passes.
-    Unauthenticated users (when CARA_ACCESS_PASSWORD is set) see the login form
-    rendered directly at '/' rather than receiving a redirect.
     """
-    cara_password = os.environ.get('CARA_ACCESS_PASSWORD', '')
-    if cara_password and not session.get('cara_authenticated'):
-        return render_template('login.html')
-
     try:
         jm = _get_jm()
         municipalities = jm.get_all()
