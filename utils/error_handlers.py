@@ -291,21 +291,33 @@ def setup_api_error_handlers(app):
     logger.info("API error handlers registered")
 
 
+def _anonymize_ip(ip):
+    """Mask the last octet (IPv4) or last group (IPv6) for privacy-preserving logging."""
+    if not ip:
+        return 'unknown'
+    if ':' in ip:
+        parts = ip.split(':')
+        return ':'.join(parts[:-1] + ['xxxx']) if len(parts) > 1 else 'xxxx'
+    parts = ip.split('.')
+    return '.'.join(parts[:-1] + ['xxx']) if len(parts) == 4 else 'unknown'
+
+
 def log_security_event(event_type, details=None):
     """Log security-related events for monitoring and analysis."""
-    
+
     logger = get_contextual_logger('security')
-    
+
     security_data = {
         'event_type': event_type,
-        'ip_address': request.remote_addr,
+        'client': _anonymize_ip(request.remote_addr),
         'user_agent': request.headers.get('User-Agent', ''),
         'url': request.url,
         'method': request.method,
         'timestamp': request.environ.get('REQUEST_TIME', 'unknown')
     }
-    
+
     if details:
-        security_data.update(details)
-    
+        safe_details = {k: v for k, v in details.items() if k not in ('client', 'ip_address', 'remote_addr')}
+        security_data.update(safe_details)
+
     logger.warning("Security event detected", **security_data)
