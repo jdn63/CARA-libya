@@ -71,6 +71,57 @@
       "module": "utils.connectors.worldwide.openaq_connector",
       "function": "fetch"
     },
+    "heigit_accessibility": {
+      "description": "HeiGIT Accessibility Indicators — Libya district-level hospital, primary healthcare, and education access scores",
+      "description_ar": "مؤشرات إمكانية الوصول — معهد هايدلبرغ — الوصول إلى المستشفيات والرعاية الصحية الأولية والتعليم على مستوى المديريات",
+      "refresh_interval_hours": 168,
+      "source": "HeiGIT / OCHA HDX",
+      "url": "https://data.humdata.org/dataset/libya-accessibility-indicators",
+      "method": "direct_cdn_cached",
+      "auth_required": false,
+      "cache_path": "data/cache/heigit/",
+      "module": "utils.connectors.worldwide.heigit_connector",
+      "function": "refresh",
+      "geographic_level": "ADM1_propagated_to_municipalities",
+      "inform_pillar": "coping_capacity",
+      "inform_sub_domain": "healthcare_access_gap"
+    },
+    "idmc_hdx": {
+      "description": "IDMC Internal Displacement — Libya annual IDPs and disaster displacement events (via OCHA HDX CSV)",
+      "description_ar": "مركز رصد النزوح الداخلي — البيانات السنوية للنازحين وأحداث الكوارث في ليبيا عبر منصة HDX",
+      "refresh_interval_hours": 168,
+      "source": "IDMC via OCHA HDX",
+      "url": "https://data.humdata.org/dataset/idmc-idp-data-lby",
+      "method": "hdx_csv_cached",
+      "auth_required": false,
+      "cache_path": "data/cache/idmc/",
+      "module": "utils.connectors.worldwide.idmc_hdx_connector",
+      "function": "refresh",
+      "replaces": "idmc direct API (returns 403 without key)",
+      "geographic_level": "national",
+      "inform_pillar": "vulnerability",
+      "inform_sub_domain": "displacement_vulnerability"
+    },
+    "who_hdx": {
+      "description": "WHO Libya Health Indicators — April 2026 export via OCHA HDX (beds, physicians, TB, child mortality, NCD burden)",
+      "description_ar": "مؤشرات الصحة لليبيا — منظمة الصحة العالمية — إصدار أبريل 2026 عبر منصة HDX",
+      "refresh_interval_hours": 720,
+      "source": "WHO via OCHA HDX",
+      "url": "https://data.humdata.org/dataset/who-data-for-lby",
+      "method": "hdx_csv_cached",
+      "auth_required": false,
+      "cache_path": "data/cache/who_hdx/",
+      "module": "utils.connectors.worldwide.who_hdx_connector",
+      "function": "refresh",
+      "replaces": "WHO GHO OData API (returns stale Libya data from 2008–2018)",
+      "geographic_level": "national",
+      "inform_pillar": "all_three",
+      "inform_indicators": [
+        "hospital_beds_per_10k", "physicians_per_10k", "uhc_service_coverage_index",
+        "tb_incidence_per_100k", "under5_mortality_rate", "ncd_mortality_30_70_pct",
+        "stunting_prevalence_pct", "measles_vaccination_pct"
+      ]
+    },
     "ncdc_libya": {
       "description": "NCDC Libya — disease surveillance data (manual upload only — no public API)",
       "description_ar": "المركز الوطني لمكافحة الأمراض — ليبيا — رفع يدوي فقط",

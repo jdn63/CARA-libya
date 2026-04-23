@@ -150,6 +150,36 @@ def _refresh_libya_hdx(app: Flask) -> None:
         except Exception as e:
             logger.error(f"Libya HDX refresh job failed: {e}")
 
+        # HeiGIT accessibility (hospital, primary care, education access by district)
+        try:
+            from utils.connectors.worldwide.heigit_connector import HeiGITAccessibilityConnector
+            heigit = HeiGITAccessibilityConnector()
+            summary = heigit.refresh()
+            logger.info(
+                f"Libya HeiGIT refresh: {summary.get('files_ok', 0)}/"
+                f"{summary.get('files_attempted', 0)} files at {summary.get('timestamp', '?')}"
+            )
+            if summary.get('errors'):
+                for err in summary['errors']:
+                    logger.warning(f"Libya HeiGIT warning: {err}")
+        except Exception as e:
+            logger.warning(f"Libya HeiGIT refresh failed: {e}")
+
+        # IDMC displacement (via HDX CSV — direct IDMC API returns 403)
+        try:
+            from utils.connectors.worldwide.idmc_hdx_connector import IDMCHDXConnector
+            idmc = IDMCHDXConnector()
+            summary = idmc.refresh()
+            logger.info(
+                f"Libya IDMC-HDX refresh: {summary.get('files_ok', 0)}/"
+                f"{summary.get('files_attempted', 0)} files at {summary.get('timestamp', '?')}"
+            )
+            if summary.get('errors'):
+                for err in summary['errors']:
+                    logger.warning(f"Libya IDMC-HDX warning: {err}")
+        except Exception as e:
+            logger.warning(f"Libya IDMC-HDX refresh failed: {e}")
+
 
 def _refresh_libya_global_connectors(app: Flask) -> None:
     """
@@ -170,7 +200,23 @@ def _refresh_libya_global_connectors(app: Flask) -> None:
                 jconfig.get("jurisdiction", {}).get("country_code", "LY")
             )
 
-            # WHO GHO
+            # WHO Health Indicators via HDX (April 2026 export — more current than GHO OData API)
+            try:
+                from utils.connectors.worldwide.who_hdx_connector import WHOHDXConnector
+                who_hdx = WHOHDXConnector()
+                summary = who_hdx.refresh()
+                logger.info(
+                    f"Libya WHO-HDX refresh: {summary.get('files_ok', 0)}/"
+                    f"{summary.get('files_attempted', 0)} files, "
+                    f"{summary.get('indicators_parsed', 0)} indicators parsed"
+                )
+                if summary.get('errors'):
+                    for err in summary['errors']:
+                        logger.warning(f"Libya WHO-HDX warning: {err}")
+            except Exception as e:
+                logger.warning(f"Libya WHO-HDX refresh failed: {e}")
+
+            # WHO GHO (legacy fallback — returns stale data for Libya but kept for non-Libya indicators)
             try:
                 from utils.connectors.worldwide.who_gho_connector import WHOGHOConnector
                 who = WHOGHOConnector(country_code=country_code)

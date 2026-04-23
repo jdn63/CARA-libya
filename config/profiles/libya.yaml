@@ -30,14 +30,16 @@ language:
 
 connectors:
   who_gho: who_gho
-  displacement: idmc
+  who_hdx: who_hdx
+  displacement: idmc_hdx
   migration: iom
   hdx: hdx
+  heigit: heigit
   air_quality: openaq
   disaster_history: em_dat
   hazard_index: em_dat
   social_vulnerability: worldbank
-  disease_surveillance: who_gho
+  disease_surveillance: who_hdx
   local_disease: ncdc_libya
   coordination_info: coi_libya
 

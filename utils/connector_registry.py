@@ -120,6 +120,18 @@ class ConnectorRegistry:
                 from utils.connectors.worldwide.hdx_connector import HDXConnector
                 return HDXConnector()
 
+            elif name == 'heigit':
+                from utils.connectors.worldwide.heigit_connector import HeiGITAccessibilityConnector
+                return HeiGITAccessibilityConnector()
+
+            elif name == 'idmc_hdx':
+                from utils.connectors.worldwide.idmc_hdx_connector import IDMCHDXConnector
+                return IDMCHDXConnector()
+
+            elif name == 'who_hdx':
+                from utils.connectors.worldwide.who_hdx_connector import WHOHDXConnector
+                return WHOHDXConnector()
+
             elif name == 'ncdc_libya':
                 from utils.connectors.libya.ncdc_connector import NCDCLibyaConnector
                 return NCDCLibyaConnector()

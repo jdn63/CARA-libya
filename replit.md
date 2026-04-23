@@ -20,10 +20,10 @@ DOCUMENTATION FORMATTING RULES (permanent, applies to every file without excepti
 - Risk Engine: utils/risk_engine.py — INFORM geometric mean formula
 - Geography: utils/geography/jurisdiction_manager.py — loads 148 municipalities from data/libya_municipalities.json, regional proxy fallback
 - Domain modules: utils/domains/ (hazard_exposure.py, vulnerability.py, coping_capacity.py)
-- Data connectors: utils/connectors/ (WHO GHO, IDMC, IOM, OpenAQ, EM-DAT, World Bank; OCHA HDX automated; NCDC Libya and COI file-upload stubs)
+- Data connectors: utils/connectors/ — see full list in Data Sources section
 - Automated refresh: APScheduler (BackgroundScheduler) — two jobs registered when CARA_PROFILE=libya:
-    - refresh_libya_hdx: every 168 hours (7 days) — downloads IOM DTM, OCHA 3W, UNHCR CSV from OCHA HDX CKAN API
-    - refresh_libya_global: every 720 hours (30 days) — refreshes WHO GHO, World Bank, OpenAQ
+    - refresh_libya_hdx: every 168 hours (7 days) — IOM DTM, OCHA 3W, UNHCR (HDX CKAN); HeiGIT accessibility CSVs; IDMC displacement CSVs (direct IDMC API returns 403)
+    - refresh_libya_global: every 720 hours (30 days) — WHO Libya via HDX (primary); WHO GHO (legacy fallback); World Bank; OpenAQ
 - CARA_PROFILE environment variable: set to "libya" in shared environment to activate Libya scheduler
 - Configuration: config/jurisdiction.yaml, config/risk_weights.yaml, config/profiles/libya.yaml
 - Routes: routes/public.py (home, methodology, about, data-sources), routes/dashboard.py, routes/api.py
@@ -58,13 +58,20 @@ Pillar 3 (Lack of Coping Capacity): emergency response time, data availability, 
 
 ## Data Sources
 
-Automated (APScheduler, no credentials required):
-- OCHA HDX (data.humdata.org/api/3/) — IOM DTM displacement, OCHA 3W presence, UNHCR Libya — weekly
-- WHO GHO (ghoapi.azureedge.net/api/) — disease burden, health indicators — monthly
+Automated (APScheduler, no credentials required) — weekly 168h job:
+- OCHA HDX (data.humdata.org/api/3/) — IOM DTM displacement, OCHA 3W presence, UNHCR Libya — cache: data/cache/hdx/
+- HeiGIT Accessibility (hot.storage.heigit.org) — hospital, primary healthcare, education access by district (22 ADM1 units, propagated to all 148 municipalities as documented proxy) — cache: data/cache/heigit/ — INFORM: Coping Capacity / healthcare_access_gap
+- IDMC via OCHA HDX (replaces direct IDMC API which returns 403) — annual conflict IDPs, IDP stock, disaster displacement events — cache: data/cache/idmc/ — INFORM: Vulnerability / displacement_vulnerability
+
+Automated — monthly 720h job:
+- WHO Libya via OCHA HDX (primary, April 2026 — replaces stale WHO GHO OData API for Libya) — 7 CSV files, 17 health indicators — cache: data/cache/who_hdx/ — INFORM: all three pillars
+- WHO GHO (ghoapi.azureedge.net/api/) — legacy fallback only; returns stale Libya data (2008–2018 vintage)
 - World Bank Open Data (api.worldbank.org/v2/) — development indicators — monthly
-- OpenAQ (api.openaq.org/v2/) — air quality — monthly
-- HDX cache directory: data/cache/hdx/ (CSV files, written by scheduler job)
+- OpenAQ (api.openaq.org/v2/) — air quality (no Libya stations confirmed as of April 2026)
 - Scheduler config: data/config/scheduler_config.json
+
+Connector registry: utils/connector_registry.py
+Registered connectors: hdx, heigit, idmc_hdx, who_hdx, iom, who_gho, worldbank, openaq, ncdc_libya, coi_libya
 
 Manual upload (no public API — restricted government data):
 - NCDC Libya: data/uploads/ncdc/ (disease surveillance CSV)
