@@ -108,6 +108,13 @@ The following Wisconsin/HERC-specific files have been permanently deleted:
 - templates/herc_dashboard.html, herc_print_summary.html, action_plan.html (Wisconsin), active_shooter_methodology.html
 - utils/wisconsin_climate_data.py, wisconsin_dhs_scraper.py, wisconsin_mapping.py
 - utils/herc_data.py, herc_risk_aggregator.py, kp_hva_export.py, hva_export.py
+Additional files deleted (April 2026):
+- utils/active_shooter_risk.py, utils/main_risk_calculator.py (imported it), routes/gis_export.py (referenced it, was unregistered)
+- utils/gva_data_processor.py, data/gva_reports/ (GunViolenceArchive data)
+- utils/natural_hazards_risk.py (called load_nri_data for US counties only)
+- attached_assets/active_shooter_risk_model_config.json, Active_Shooter_Risk_Scoring_Framework.txt
+- attached_assets/kp_incident_log_hva_(5)_1771953905117.xlsm
+- attached_assets/NRI_Table_CensusTracts_Wisconsin_FloodTornadoWinterOnly.csv
 Remaining US-specific utility files (census_data_loader.py, dhs_data.py, etc.) are inert — not imported by any active Libya code path.
 
 ## Test Suite
