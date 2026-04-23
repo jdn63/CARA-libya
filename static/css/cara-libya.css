@@ -304,3 +304,40 @@ footer .en-text { color: rgba(255,255,255,0.45); }
     font-family: var(--font-en);
     vertical-align: middle;
 }
+
+/* ─── Detailed Indicator Tiles ───────────────────────────────────── */
+.indicator-pillar-header {
+    transition: box-shadow .15s;
+}
+
+.indicator-tile {
+    transition: transform .1s, box-shadow .1s;
+    border-radius: 0.5rem !important;
+    overflow: hidden;
+}
+.indicator-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.12) !important;
+}
+
+/* Left border accent mirrors the Bootstrap badge colour */
+.indicator-tile.border-danger  { border-color: var(--bs-danger)  !important; }
+.indicator-tile.border-warning { border-color: var(--bs-warning) !important; }
+.indicator-tile.border-success { border-color: var(--bs-success) !important; }
+.indicator-tile.border-info    { border-color: var(--bs-info)    !important; }
+.indicator-tile.border-secondary{ border-color: var(--bs-secondary) !important; }
+
+/* Accordion tweaks for sub-domain sections */
+.accordion-button:not(.collapsed) {
+    color: inherit;
+    background-color: #f0f4ff;
+    box-shadow: none;
+}
+.accordion-button::after {
+    margin-right: auto;
+    margin-left: 0;
+}
+[dir="rtl"] .accordion-button::after {
+    margin-right: 0;
+    margin-left: auto;
+}

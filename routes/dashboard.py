@@ -545,6 +545,546 @@ def _build_show_work(cd: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Indicator tiles builder — granular per-indicator breakdown for dashboard
+# ---------------------------------------------------------------------------
+
+def _T(tid, la, le, value, unit, year, score, formula, source,
+       proxy=False, note='', protective=False):
+    """
+    Build a single indicator tile dict.
+    protective=True means the raw value shows a GOOD outcome (e.g. vaccination %)
+    and the score already reflects the risk direction (1 - coverage).
+    """
+    avail = value is not None
+    lev = _score_to_level(score) if score is not None else 'unavailable'
+    bdg = _level_badge(lev)
+
+    if value is None:
+        vfmt = None
+    elif isinstance(value, float):
+        if value >= 100_000:
+            vfmt = f'{value:,.0f}'
+        elif value >= 1_000:
+            vfmt = f'{value:,.0f}'
+        elif value >= 100:
+            vfmt = f'{value:.0f}'
+        elif value >= 10:
+            vfmt = f'{value:.1f}'
+        else:
+            vfmt = f'{value:.2f}'
+    else:
+        vfmt = str(value)
+
+    return {
+        'id':           tid,
+        'label_ar':     la,
+        'label_en':     le,
+        'value':        value,
+        'value_fmt':    vfmt,
+        'unit':         unit,
+        'year':         year,
+        'score':        round(float(score), 3) if score is not None else None,
+        'score_display': round(float(score) * 10, 1) if score is not None else None,
+        'level':        lev,
+        'badge':        bdg,
+        'available':    avail,
+        'proxy':        proxy,
+        'protective':   protective,
+        'source':       source,
+        'formula':      formula,
+        'note':         note,
+    }
+
+
+def _build_indicator_tiles(cd: dict) -> dict:
+    """
+    Build the full 3-pillar tile hierarchy.
+    Returns {'hazard': {...}, 'vulnerability': {...}, 'coping': {...}}
+    Each pillar has: label_ar, label_en, sections[]
+    Each section has: id, label_ar, label_en, score (from domain), tiles[]
+    Each tile is built with _T().
+    """
+    who  = cd.get('who_gho', {})
+    who_r = cd.get('who_hdx_raw', {})
+    idmc  = cd.get('idmc', {})
+    idmc_r = cd.get('idmc_raw', {})
+    hg    = cd.get('heigit', {})
+    wb    = cd.get('worldbank', {})
+    coi   = cd.get('coi_libya', {})
+
+    def _yr(key):
+        return who_r.get(key + '_year', '')
+
+    # ── shorthand values ────────────────────────────────────────────────
+    pm25           = who_r.get('pm25_annual_mean_ugm3')
+    air_mort       = who_r.get('air_pollution_mortality_per_100k')
+    u5mort         = who_r.get('under5_mortality_rate')
+    neo_mort       = who_r.get('neonatal_mortality_rate')
+    inf_mort       = who_r.get('infant_mortality_rate')
+    tb_inc         = who_r.get('tb_incidence_per_100k')
+    tb_trt         = who_r.get('tb_treatment_coverage_pct')
+    tb_succ        = who_r.get('tb_treatment_success_pct')
+    ncd_mort       = who_r.get('ncd_mortality_30_70_pct')
+    stunting       = who_r.get('stunting_prevalence_pct')
+    obesity        = who_r.get('obesity_prevalence_pct')
+    anaemia        = who_r.get('anaemia_children_prevalence_pct')
+    inactivity     = who_r.get('physical_inactivity_prevalence_pct')
+    mcv1           = who_r.get('measles_vaccination_pct')
+    mcv2           = who_r.get('measles_2nd_dose_vaccination_pct')
+    beds_10k       = who_r.get('hospital_beds_per_10k')
+    hosp_dens      = who_r.get('hospital_density_per_100k')
+    health_exp_pct = wb.get('health_expenditure_pct_gdp')
+
+    idp_stock      = idmc.get('total_idps')
+    new_conf       = idmc_r.get('new_displacements_conflict')
+    events         = idmc_r.get('recent_disaster_events', [])
+    event_displ    = sum(e.get('new_displacements', 0) or 0 for e in events)
+
+    hosp_gap       = hg.get('hospital_access_gap_pct')
+    hosp_pct       = hg.get('hospital_access_pct')
+    phc_gap        = hg.get('primary_care_access_gap_pct')
+    phc_pct        = hg.get('primary_care_access_pct')
+    edu_gap        = hg.get('education_access_gap_pct')
+    edu_pct        = hg.get('education_access_pct')
+
+    water_pct      = wb.get('access_clean_water')
+    sanit_pct      = wb.get('access_sanitation')
+    elec_pct       = wb.get('access_electricity')
+    urban_pct      = wb.get('urban_population_pct')
+    pop_density    = wb.get('population_density')
+    food_insec     = wb.get('food_insecurity_pct')
+    gdp_cap        = wb.get('gdp_per_capita')
+    vuln_idx       = wb.get('vulnerability_index')
+
+    WHO_SRC   = 'WHO Libya via OCHA HDX'
+    IDMC_SRC  = 'IDMC via OCHA HDX'
+    HEIGIT_SRC = 'HeiGIT / OCHA HDX'
+    WB_SRC    = 'World Bank'
+    EMDAT_SRC = 'EM-DAT (قيد التوصيل / pending)'
+    COI_SRC   = 'COI Libya — رفع يدوي / manual upload'
+    PROXY_SRC = 'تقدير بديل / proxy estimate'
+
+    def _fmt(v, d=1):
+        if v is None:
+            return 'N/A'
+        return f'{v:.{d}f}'
+
+    # ════════════════════════════════════════════════════════════════════
+    # PILLAR 1: HAZARD & EXPOSURE
+    # ════════════════════════════════════════════════════════════════════
+
+    # ── Natural Hazards ─────────────────────────────────────────────────
+    flood_disp  = event_displ if events else None
+    flood_score = min(1.0, float(flood_disp) / 50_000) if flood_disp else None
+    nat_tiles = [
+        _T('flooding',
+           'الفيضانات', 'Flooding',
+           flood_disp, 'نازح / displaced', idmc_r.get('data_year', ''),
+           flood_score,
+           f'min(1.0, {int(flood_disp or 0):,} / 50,000) = {flood_score:.3f}' if flood_score else 'لا بيانات EM-DAT',
+           IDMC_SRC,
+           proxy=(flood_disp is None),
+           note='حوادث 2024: فيضان مصراتة (504) + فيضان الكفرة (3,000) / 2024 events via IDMC' if events else 'يشمل أحداث درنة 2023 — بانتظار EM-DAT / Includes Derna 2023 — awaiting EM-DAT'),
+
+        _T('sandstorms',
+           'العواصف الرملية', 'Sandstorms / Dust',
+           None, '', '',
+           0.45,
+           'تقدير بديل: ليبيا في حزام الصحراء الكبرى / Proxy: Libya in Saharan dust belt',
+           PROXY_SRC, proxy=True,
+           note='لا توجد قاعدة بيانات وطنية للعواصف الرملية متاحة حتى الآن'),
+
+        _T('drought',
+           'الجفاف', 'Drought',
+           None, '', '',
+           0.35,
+           'تقدير بديل: مناخ جاف شبه صحراوي / Proxy: semi-arid climate',
+           PROXY_SRC, proxy=True),
+
+        _T('pm25',
+           'تلوث الهواء PM2.5', 'Air Pollution PM2.5',
+           pm25, 'μg/m³', _yr('pm25_annual_mean_ugm3'),
+           min(1.0, float(pm25) / 75.0) if pm25 else None,
+           f'min(1.0, {_fmt(pm25)} / 75) = {min(1.0,float(pm25)/75):.2f}' if pm25 else 'N/A',
+           WHO_SRC,
+           note='حد منظمة الصحة العالمية السنوي: 5 μg/m³ / WHO annual guideline: 5 μg/m³'),
+
+        _T('air_mort',
+           'وفيات تلوث الهواء', 'Air Pollution Mortality',
+           air_mort, 'لكل 100,000 / per 100k', _yr('air_pollution_mortality_per_100k'),
+           min(1.0, float(air_mort) / 50.0) if air_mort else None,
+           f'min(1.0, {_fmt(air_mort)} / 50) = {min(1.0,float(air_mort)/50):.3f}' if air_mort else 'N/A',
+           WHO_SRC),
+    ]
+
+    # ── Epidemiological Hazards ──────────────────────────────────────────
+    epi_tiles = [
+        _T('u5mort',
+           'وفيات الأطفال دون 5 سنوات', 'Under-5 Mortality',
+           u5mort, 'لكل 1,000 مولود / per 1,000', _yr('under5_mortality_rate'),
+           min(1.0, float(u5mort) / 50.0) if u5mort else None,
+           f'min(1.0, {_fmt(u5mort)} / 50) = {min(1.0,float(u5mort)/50):.3f}' if u5mort else 'N/A',
+           WHO_SRC,
+           note='المعدل العالمي للدول المرتفعة الدخل ≈ 4.5 / High-income country rate ≈ 4.5'),
+
+        _T('inf_mort',
+           'وفيات الرضع', 'Infant Mortality',
+           inf_mort, 'لكل 1,000 مولود / per 1,000', _yr('infant_mortality_rate'),
+           min(1.0, float(inf_mort) / 50.0) if inf_mort else None,
+           f'min(1.0, {_fmt(inf_mort)} / 50) = {min(1.0,float(inf_mort)/50):.3f}' if inf_mort else 'N/A',
+           WHO_SRC),
+
+        _T('neo_mort',
+           'وفيات حديثي الولادة', 'Neonatal Mortality',
+           neo_mort, 'لكل 1,000 مولود / per 1,000', _yr('neonatal_mortality_rate'),
+           min(1.0, float(neo_mort) / 30.0) if neo_mort else None,
+           f'min(1.0, {_fmt(neo_mort)} / 30) = {min(1.0,float(neo_mort)/30):.3f}' if neo_mort else 'N/A',
+           WHO_SRC),
+
+        _T('tb_inc',
+           'إصابات السل', 'TB Incidence',
+           tb_inc, 'لكل 100,000 / per 100k', _yr('tb_incidence_per_100k'),
+           min(1.0, float(tb_inc) / 200.0) if tb_inc else None,
+           f'min(1.0, {_fmt(tb_inc,0)} / 200) = {min(1.0,float(tb_inc)/200):.3f}' if tb_inc else 'N/A',
+           WHO_SRC,
+           note='حد الدول عالية العبء: 200/100,000 / High-burden threshold: 200/100k'),
+
+        _T('ncd_mort',
+           'وفيات الأمراض غير المعدية (30–70 سنة)', 'NCD Premature Mortality (30–70y)',
+           ncd_mort, '%', _yr('ncd_mortality_30_70_pct'),
+           min(1.0, float(ncd_mort) / 30.0) if ncd_mort else None,
+           f'min(1.0, {_fmt(ncd_mort)} / 30) = {min(1.0,float(ncd_mort)/30):.3f}' if ncd_mort else 'N/A',
+           WHO_SRC,
+           note='نسبة الوفاة بأمراض القلب والسكري والسرطان بين 30–70 عاماً'),
+
+        _T('stunting',
+           'التقزم (دون 5 سنوات)', 'Stunting Prevalence',
+           stunting, '%', _yr('stunting_prevalence_pct'),
+           min(1.0, float(stunting) / 40.0) if stunting else None,
+           f'min(1.0, {_fmt(stunting)} / 40) = {min(1.0,float(stunting)/40):.3f}' if stunting else 'N/A',
+           WHO_SRC),
+    ]
+
+    # ── Infrastructure Hazards ──────────────────────────────────────────
+    water_score = (1.0 - min(1.0, float(water_pct) / 100.0)) if water_pct else None
+    sanit_score = (1.0 - min(1.0, float(sanit_pct) / 100.0)) if sanit_pct else None
+    elec_score  = (1.0 - min(1.0, float(elec_pct)  / 100.0)) if elec_pct else None
+    beds_score  = (1.0 - min(1.0, (float(beds_10k)/10.0) / 5.0)) if beds_10k else None
+
+    infra_tiles = [
+        _T('hosp_beds',
+           'أسرة المستشفيات', 'Hospital Beds',
+           beds_10k, 'لكل 10,000 / per 10k', _yr('hospital_beds_per_10k'),
+           beds_score,
+           f'فجوة = 1 − min(1, {_fmt(beds_10k,0)}/10÷5) = {beds_score:.3f}' if beds_score else 'N/A',
+           WHO_SRC,
+           note='معيار WHO: 50 سرير/10,000 (ليبيا: 35) / WHO reference: 50 beds/10k'),
+
+        _T('hosp_dens',
+           'كثافة المستشفيات', 'Hospital Density',
+           hosp_dens, 'لكل 100,000 / per 100k', _yr('hospital_density_per_100k'),
+           (1.0 - min(1.0, float(hosp_dens) / 10.0)) if hosp_dens else None,
+           f'1 − min(1, {_fmt(hosp_dens)} / 10) = {1-min(1,float(hosp_dens)/10):.3f}' if hosp_dens else 'N/A',
+           WHO_SRC,
+           note='بيانات 2013 — بانتظار تحديث من النظام الصحي الليبي / 2013 data — awaiting Libya MoH update'),
+
+        _T('water',
+           'إمكانية الحصول على مياه نظيفة', 'Access to Clean Water',
+           water_pct, '%', '',
+           water_score,
+           f'1 − ({_fmt(water_pct)} / 100) = {water_score:.3f}' if water_score is not None else 'N/A',
+           WB_SRC, protective=True),
+
+        _T('sanitation',
+           'إمكانية الحصول على الصرف الصحي', 'Access to Sanitation',
+           sanit_pct, '%', '',
+           sanit_score,
+           f'1 − ({_fmt(sanit_pct)} / 100) = {sanit_score:.3f}' if sanit_score is not None else 'N/A',
+           WB_SRC, protective=True),
+
+        _T('electricity',
+           'إمكانية الحصول على الكهرباء', 'Access to Electricity',
+           elec_pct, '%', '',
+           elec_score,
+           f'1 − ({_fmt(elec_pct)} / 100) = {elec_score:.3f}' if elec_score is not None else 'N/A',
+           WB_SRC, protective=True,
+           note='الفجوة تعكس السكان غير المتصلين بالشبكة الكهربائية / Gap reflects population off-grid'),
+    ]
+
+    # ── Road Safety ─────────────────────────────────────────────────────
+    road_tiles = [
+        _T('road_traffic',
+           'وفيات حوادث المرور', 'Road Traffic Mortality',
+           None, 'لكل 100,000 / per 100k', '',
+           0.50,
+           'تقدير بديل — بانتظار بيانات WHO GHO / Proxy — awaiting WHO GHO data',
+           PROXY_SRC, proxy=True,
+           note='بيانات ليبيا غير متاحة من WHO GHO حتى الآن — القيمة الافتراضية 0.50'),
+    ]
+
+    # ════════════════════════════════════════════════════════════════════
+    # PILLAR 2: VULNERABILITY
+    # ════════════════════════════════════════════════════════════════════
+
+    # ── Displacement ────────────────────────────────────────────────────
+    total_pop = 7_381_023
+    idp_score = min(1.0, float(idp_stock) / (total_pop * 0.20)) if idp_stock else None
+    conf_score = min(1.0, float(new_conf) / 100_000) if new_conf else None
+    ev_score  = min(1.0, float(event_displ) / 50_000) if event_displ else None
+
+    disp_tiles = [
+        _T('idp_stock',
+           'مخزون النازحين داخلياً', 'IDP Stock',
+           idp_stock, 'نسمة / persons', idmc_r.get('data_year', ''),
+           idp_score,
+           f'min(1.0, {int(idp_stock or 0):,} / ({total_pop:,}×0.20)) = {idp_score:.4f}' if idp_score else 'N/A',
+           IDMC_SRC,
+           note=f'المجموع المُقرَّب: {int(idmc_r.get("total_displacement_rounded",0)):,} / Rounded total: {int(idmc_r.get("total_displacement_rounded",0)):,}'),
+
+        _T('conf_disp',
+           'نازحون جدد بسبب النزاع', 'New Conflict Displacements',
+           new_conf, 'نسمة / persons', idmc_r.get('data_year', ''),
+           conf_score,
+           f'min(1.0, {int(new_conf or 0):,} / 100,000) = {conf_score:.4f}' if conf_score else 'N/A',
+           IDMC_SRC),
+
+        _T('disaster_disp',
+           'نازحون بسبب الكوارث (2024)', 'Disaster Displacements (2024)',
+           event_displ if events else None,
+           'نسمة / persons', idmc_r.get('data_year', ''),
+           ev_score,
+           f'min(1.0, {int(event_displ):,} / 50,000) = {ev_score:.4f}' if ev_score else 'N/A',
+           IDMC_SRC,
+           note=f'{len(events)} حادثة مسجلة: ' + ' / '.join(
+               f'{e.get("event_name","")[:30]}' for e in events[:2]
+           ) if events else ''),
+    ]
+
+    # ── Health Unawareness ──────────────────────────────────────────────
+    mcv1_score = (1.0 - min(1.0, float(mcv1) / 100.0)) if mcv1 else None
+    mcv2_score = (1.0 - min(1.0, float(mcv2) / 100.0)) if mcv2 else None
+    obes_score = min(1.0, float(obesity) / 50.0) if obesity else None
+    anae_score = min(1.0, float(anaemia) / 50.0) if anaemia else None
+    inac_score = min(1.0, float(inactivity) / 60.0) if inactivity else None
+    food_score = min(1.0, float(food_insec) / 50.0) if food_insec else None
+
+    health_tiles = [
+        _T('mcv1',
+           'تغطية تطعيم الحصبة (الجرعة الأولى)', 'Measles Vaccination MCV1',
+           mcv1, '%', _yr('measles_vaccination_pct'),
+           mcv1_score,
+           f'عدم الوعي = 1 − ({_fmt(mcv1)} / 100) = {mcv1_score:.3f}' if mcv1_score is not None else 'N/A',
+           WHO_SRC, protective=True,
+           note='الهدف العالمي: 95% / Global target: 95%'),
+
+        _T('mcv2',
+           'تغطية تطعيم الحصبة (الجرعة الثانية)', 'Measles Vaccination MCV2',
+           mcv2, '%', _yr('measles_2nd_dose_vaccination_pct'),
+           mcv2_score,
+           f'1 − ({_fmt(mcv2)} / 100) = {mcv2_score:.3f}' if mcv2_score is not None else 'N/A',
+           WHO_SRC, protective=True),
+
+        _T('anaemia',
+           'فقر الدم لدى الأطفال', 'Anaemia in Children',
+           anaemia, '%', _yr('anaemia_children_prevalence_pct'),
+           anae_score,
+           f'min(1.0, {_fmt(anaemia)} / 50) = {anae_score:.3f}' if anae_score else 'N/A',
+           WHO_SRC),
+
+        _T('obesity',
+           'انتشار السمنة (البالغون)', 'Obesity Prevalence (Adults)',
+           obesity, '%', _yr('obesity_prevalence_pct'),
+           obes_score,
+           f'min(1.0, {_fmt(obesity)} / 50) = {obes_score:.3f}' if obes_score else 'N/A',
+           WHO_SRC,
+           note='مؤشر على أنماط الحياة وجاهزية الرعاية الصحية / Indicates lifestyle disease burden'),
+
+        _T('inactivity',
+           'الخمول البدني', 'Physical Inactivity',
+           inactivity, '%', _yr('physical_inactivity_prevalence_pct'),
+           inac_score,
+           f'min(1.0, {_fmt(inactivity)} / 60) = {inac_score:.3f}' if inac_score else 'N/A',
+           WHO_SRC),
+
+        _T('food_insec',
+           'انعدام الأمن الغذائي', 'Food Insecurity',
+           food_insec, '%', '',
+           food_score,
+           f'min(1.0, {_fmt(food_insec)} / 50) = {food_score:.3f}' if food_score else 'N/A',
+           WB_SRC),
+    ]
+
+    # ── Urban Sprawl ────────────────────────────────────────────────────
+    urb_score = min(1.0, float(urban_pct) / 100.0) * 0.6 if urban_pct else None
+    dens_score = min(1.0, float(pop_density) / 100.0) if pop_density else None
+    urban_tiles = [
+        _T('urban_pop',
+           'نسبة السكان الحضريين', 'Urban Population Share',
+           urban_pct, '%', '',
+           urb_score,
+           f'min(1, {_fmt(urban_pct)} / 100) × 0.6 = {urb_score:.3f}' if urb_score else 'N/A',
+           WB_SRC,
+           note='التمركز الحضري يزيد من تعرض البنية التحتية للصدمات / Urban concentration amplifies shock exposure'),
+
+        _T('pop_density',
+           'الكثافة السكانية', 'Population Density',
+           pop_density, 'شخص/كم² / persons/km²', '',
+           dens_score,
+           f'min(1.0, {_fmt(pop_density)} / 100) = {dens_score:.3f}' if dens_score else 'N/A',
+           WB_SRC),
+    ]
+
+    # ── Economic Vulnerability ──────────────────────────────────────────
+    gdp_score = (1.0 - min(1.0, float(gdp_cap) / 15_000.0)) if gdp_cap else None
+    vuln_score = float(vuln_idx) if vuln_idx else None
+    econ_tiles = [
+        _T('gdp_cap',
+           'الناتج المحلي الإجمالي للفرد', 'GDP per Capita',
+           gdp_cap, 'USD', '',
+           gdp_score,
+           f'1 − min(1, {_fmt(gdp_cap,0)} / 15,000) = {gdp_score:.3f}' if gdp_score else 'N/A',
+           WB_SRC,
+           note='ليبيا دولة ذات دخل متوسط أعلى / Libya is an upper-middle income country'),
+
+        _T('vuln_idx',
+           'مؤشر الهشاشة الاقتصادية', 'Economic Vulnerability Index',
+           vuln_idx, '(0–1)', '',
+           vuln_score,
+           f'مؤشر مباشر = {_fmt(vuln_idx)} / Direct index value' if vuln_score else 'N/A',
+           WB_SRC),
+    ]
+
+    # ════════════════════════════════════════════════════════════════════
+    # PILLAR 3: COPING CAPACITY
+    # ════════════════════════════════════════════════════════════════════
+
+    # ── Healthcare Access ────────────────────────────────────────────────
+    hosp_gap_score = min(1.0, float(hosp_gap) / 100.0) if hosp_gap is not None else None
+    phc_gap_score  = min(1.0, float(phc_gap) / 100.0) if phc_gap is not None else None
+    edu_gap_score  = min(1.0, float(edu_gap) / 100.0) if edu_gap is not None else None
+    health_exp_score = (1.0 - min(1.0, float(health_exp_pct) / 10.0)) if health_exp_pct else None
+
+    access_tiles = [
+        _T('hosp_access',
+           'وصول إلى المستشفيات (60 دقيقة)', 'Hospital Access (60 min)',
+           hosp_pct, '%', '',
+           hosp_gap_score,
+           f'فجوة = {_fmt(hosp_gap)} / 100 = {hosp_gap_score:.3f}' if hosp_gap_score else 'N/A',
+           HEIGIT_SRC, protective=True,
+           note='النسبة المئوية من السكان الذين يصلون إلى مستشفى خلال 60 دقيقة'),
+
+        _T('phc_access',
+           'وصول إلى الرعاية الصحية الأولية', 'Primary Healthcare Access',
+           phc_pct, '%', '',
+           phc_gap_score,
+           f'فجوة = {_fmt(phc_gap)} / 100 = {phc_gap_score:.3f}' if phc_gap_score else 'N/A',
+           HEIGIT_SRC, protective=True),
+
+        _T('edu_access',
+           'وصول إلى المدارس', 'School Accessibility',
+           edu_pct, '%', '',
+           edu_gap_score,
+           f'فجوة = {_fmt(edu_gap)} / 100 = {edu_gap_score:.3f}' if edu_gap_score else 'N/A',
+           HEIGIT_SRC, protective=True,
+           note='مؤشر إضافي — لا يدخل في حساب INFORM الحالي / Supplementary — not in current INFORM formula'),
+
+        _T('health_exp',
+           'الإنفاق الصحي كنسبة من الناتج المحلي', 'Health Expenditure (% GDP)',
+           health_exp_pct, '%', '',
+           health_exp_score,
+           f'1 − min(1, {_fmt(health_exp_pct)} / 10) = {health_exp_score:.3f}' if health_exp_score else 'N/A',
+           WB_SRC, protective=True,
+           note='نسبة 10% من الناتج المحلي تُعدّ تغطية شاملة / 10% GDP is considered universal coverage'),
+
+        _T('hosp_beds_coping',
+           'أسرة المستشفيات (قدرة الاستجابة)', 'Hospital Beds (Response Capacity)',
+           beds_10k, 'لكل 10,000 / per 10k', _yr('hospital_beds_per_10k'),
+           beds_score,
+           f'فجوة = 1 − min(1, {_fmt(beds_10k,0)}/10÷5) = {beds_score:.3f}' if beds_score else 'N/A',
+           WHO_SRC),
+    ]
+
+    # ── Data Availability ────────────────────────────────────────────────
+    n_sources = sum(1 for v in cd.values() if isinstance(v, dict) and v.get('available'))
+    n_total   = 8
+    data_score = round(1.0 - min(1.0, n_sources / n_total), 3)
+    data_tiles = [
+        _T('data_avail',
+           'توافر مصادر البيانات', 'Data Source Availability',
+           n_sources, f'مصادر من أصل {n_total} / sources of {n_total}', '',
+           data_score,
+           f'1 − ({n_sources} / {n_total}) = {data_score:.3f}',
+           'CARA — محسوب ذاتياً / self-computed',
+           note='الدرجة 0.0 = جميع المصادر متاحة / Score 0.0 = all sources available'),
+    ]
+
+    # ── Community Support ────────────────────────────────────────────────
+    ngo_score = coi.get('ngo_presence_score')
+    comm_tiles = [
+        _T('ngo',
+           'حضور المنظمات غير الحكومية', 'NGO / Organization Presence',
+           None, '', '',
+           0.55 if not ngo_score else (1.0 - float(ngo_score)),
+           'بانتظار بيانات COI Libya / Awaiting COI Libya data',
+           COI_SRC, proxy=True,
+           note='يتطلب رفع ملف COI Libya يدوياً / Requires COI Libya manual upload'),
+    ]
+
+    # ── Economic Coping ──────────────────────────────────────────────────
+    poverty_tiles = [
+        _T('gdp_coping',
+           'الناتج المحلي للفرد (قدرة التعافي)', 'GDP per Capita (Recovery Capacity)',
+           gdp_cap, 'USD', '',
+           gdp_score,
+           f'1 − min(1, {_fmt(gdp_cap,0)} / 15,000) = {gdp_score:.3f}' if gdp_score else 'N/A',
+           WB_SRC),
+
+        _T('food_coping',
+           'انعدام الأمن الغذائي (قدرة الصمود)', 'Food Insecurity (Resilience)',
+           food_insec, '%', '',
+           food_score,
+           f'min(1.0, {_fmt(food_insec)} / 50) = {food_score:.3f}' if food_score else 'N/A',
+           WB_SRC),
+    ]
+
+    # ════════════════════════════════════════════════════════════════════
+    # Assemble hierarchy
+    # ════════════════════════════════════════════════════════════════════
+    return {
+        'hazard': {
+            'label_ar': 'المخاطر والتعرض',
+            'label_en': 'Hazard & Exposure',
+            'sections': [
+                {'id': 'natural',    'label_ar': 'الكوارث الطبيعية',    'label_en': 'Natural Hazards',         'tiles': nat_tiles},
+                {'id': 'epi',        'label_ar': 'الأمراض المعدية',     'label_en': 'Epidemiological Hazards', 'tiles': epi_tiles},
+                {'id': 'infra',      'label_ar': 'مخاطر البنية التحتية','label_en': 'Infrastructure Hazards',  'tiles': infra_tiles},
+                {'id': 'road',       'label_ar': 'سلامة الطرق',         'label_en': 'Road Safety',             'tiles': road_tiles},
+            ],
+        },
+        'vulnerability': {
+            'label_ar': 'الهشاشة',
+            'label_en': 'Vulnerability',
+            'sections': [
+                {'id': 'displacement','label_ar': 'هشاشة النزوح',      'label_en': 'Displacement',            'tiles': disp_tiles},
+                {'id': 'health_aware','label_ar': 'الوعي الصحي',       'label_en': 'Health & Lifestyle',      'tiles': health_tiles},
+                {'id': 'urban',       'label_ar': 'التوسع العمراني',    'label_en': 'Urban Sprawl',            'tiles': urban_tiles},
+                {'id': 'economic',    'label_ar': 'الهشاشة الاقتصادية','label_en': 'Economic Fragility',      'tiles': econ_tiles},
+            ],
+        },
+        'coping': {
+            'label_ar': 'القدرة على المواجهة',
+            'label_en': 'Coping Capacity',
+            'sections': [
+                {'id': 'access',     'label_ar': 'إمكانية الوصول',     'label_en': 'Service Accessibility',  'tiles': access_tiles},
+                {'id': 'data',       'label_ar': 'توافر البيانات',      'label_en': 'Data Availability',      'tiles': data_tiles},
+                {'id': 'community',  'label_ar': 'الدعم المجتمعي',      'label_en': 'Community Support',      'tiles': comm_tiles},
+                {'id': 'economic_c', 'label_ar': 'المرونة الاقتصادية',  'label_en': 'Economic Resilience',    'tiles': poverty_tiles},
+            ],
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # Pillar runner
 # ---------------------------------------------------------------------------
 
@@ -685,8 +1225,10 @@ def dashboard(jurisdiction_id):
             jurisdiction_config = jm.get_country_config()
             is_national = False
 
-        pillar_data = _run_pillars(jurisdiction_id, jurisdiction_config)
-        show_work   = _build_show_work(pillar_data.get('connector_data', {}))
+        pillar_data     = _run_pillars(jurisdiction_id, jurisdiction_config)
+        cd              = pillar_data.get('connector_data', {})
+        show_work       = _build_show_work(cd)
+        indicator_tiles = _build_indicator_tiles(cd)
 
         return render_template(
             'dashboard.html',
@@ -694,6 +1236,7 @@ def dashboard(jurisdiction_id):
             is_national=is_national,
             pillar_data=pillar_data,
             show_work=show_work,
+            indicator_tiles=indicator_tiles,
             now=datetime.utcnow(),
             level_labels_ar=LEVEL_LABELS_AR,
             level_labels_en=LEVEL_LABELS_EN,
