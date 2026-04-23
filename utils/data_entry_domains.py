@@ -282,8 +282,8 @@ MNCH = DomainSpec(
     nav_ar="صحة الأم والطفل",
     nav_en="Maternal & Child Health",
     icon="fas fa-baby",
-    inform_pillar_ar="ركيزة قابلية التأثّر — الفئات الهشّة",
-    inform_pillar_en="Vulnerability pillar — Vulnerable groups",
+    inform_pillar_ar="السكان — رعاية ذات أولوية",
+    inform_pillar_en="Population — priority care",
     inform_role_ar=(
         "ارتفاع وفيات الأمهات والمواليد وانخفاض تغطية التطعيم يَعكس ضعف "
         "النظام الصحي ويرفع قابلية التأثّر في مؤشر INFORM."
