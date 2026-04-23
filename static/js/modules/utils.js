@@ -175,14 +175,28 @@ export const DomUtils = {
     },
 
     /**
-     * Update element content safely
+     * Update element text content safely (plain text only — no HTML interpretation)
      * @param {string} id - Element ID
-     * @param {string} content - HTML content
+     * @param {string} content - Plain text content
      */
     updateElementContent(id, content) {
         const element = this.getElementById(id);
         if (element) {
-            element.innerHTML = content;
+            element.textContent = content;
+        }
+    },
+
+    /**
+     * Update element with trusted application-generated HTML
+     * Only call this with strings built entirely from application constants,
+     * never with user-supplied input.
+     * @param {string} id - Element ID
+     * @param {string} html - Trusted HTML string from application code
+     */
+    updateElementHtml(id, html) {
+        const element = this.getElementById(id);
+        if (element) {
+            element.innerHTML = html;
         }
     },
 

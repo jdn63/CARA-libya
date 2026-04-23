@@ -103,6 +103,13 @@ def data_sources():
         return render_template('error.html', message="Failed to load data sources page.")
 
 
+def _safe_next(url: str) -> str:
+    """Return url only if it is a safe relative path, otherwise '/'."""
+    if url and url.startswith('/') and not url.startswith('//'):
+        return url
+    return '/'
+
+
 @public_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """Bilingual login page — validates CARA_ACCESS_PASSWORD session secret."""
@@ -110,20 +117,17 @@ def login():
 
     if not cara_password:
         session['cara_authenticated'] = True
-        return redirect(request.args.get('next') or '/')
+        return redirect(_safe_next(request.args.get('next', '/')))
 
     if session.get('cara_authenticated'):
-        return redirect(request.args.get('next') or '/')
+        return redirect(_safe_next(request.args.get('next', '/')))
 
     if request.method == 'POST':
         entered = request.form.get('password', '')
         if entered == cara_password:
             session['cara_authenticated'] = True
             session.permanent = False
-            next_url = request.args.get('next', '/')
-            if not next_url.startswith('/'):
-                next_url = '/'
-            return redirect(next_url)
+            return redirect(_safe_next(request.args.get('next', '/')))
         flash('كلمة المرور غير صحيحة / Incorrect password — please try again.', 'danger')
         logger.warning("Failed login attempt from %s", request.remote_addr)
 
