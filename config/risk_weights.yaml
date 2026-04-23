@@ -1,11 +1,138 @@
-formula: phrat
+formula: inform
 description: >
-  PHRAT (Public Health Risk Assessment Tool) uses a quadratic mean:
-  Total = sqrt( sum( weight_i * score_i^2 ) )
-  where all weights must sum to 1.0 and all scores are on [0, 1].
+  INFORM Risk Index: composite score using geometric mean of three pillars.
+
+  Formula:
+    INFORM_Risk = (Hazard_Exposure × Vulnerability × Coping_Capacity_Gap) ^ (1/3)
+
+  Each pillar is itself a weighted average of its sub-indicators, scored [0, 1].
+  A score of 1.0 = maximum risk; 0.0 = no risk.
+
+  This formula is the authoritative INFORM methodology published by the
+  European Commission's Joint Research Centre (JRC) and the Inter-Agency
+  Standing Committee (IASC). See: https://drmkc.jrc.ec.europa.eu/inform-index
+
+  Sendai Framework Alignment:
+    Priority 1 (Understanding risk) → Hazard & Exposure + Vulnerability pillars
+    Priority 2 (Governance)         → Coping Capacity pillar
+    Priority 3 (Investment in DRR)  → Coping Capacity: institutional_capacity
+    Priority 4 (Preparedness)       → Coping Capacity: emergency_response
+
+phrat_formula_retained: true
+phrat_description: >
+  The original PHRAT quadratic mean formula (sqrt(sum(w*s^2))) is retained
+  for reference but is NOT the active formula for Libya deployments.
+  Use profile 'libya' to activate INFORM scoring.
 
 profiles:
+  libya:
+    formula: inform
+    sendai_aligned: true
+
+    hazard_exposure:
+      weight: 0.333
+      sub_domains:
+        infrastructure_hazard:
+          weight: 0.25
+          label_ar: "مخاطر البنية التحتية"
+          label_en: "Infrastructure Hazard"
+          components:
+            dam_safety:       { weight: 0.333, label_ar: "سلامة السدود",          label_en: "Dam Safety" }
+            electric_grid:    { weight: 0.333, label_ar: "شبكة الكهرباء",         label_en: "Electric Grid Reliability" }
+            water_sewage:     { weight: 0.333, label_ar: "أنظمة المياه والصرف",   label_en: "Water & Sewage Systems" }
+
+        natural_hazard:
+          weight: 0.25
+          label_ar: "المخاطر الطبيعية"
+          label_en: "Natural Hazard"
+          components:
+            flooding:         { weight: 0.30, label_ar: "الفيضانات",             label_en: "Flooding" }
+            wildfire:         { weight: 0.20, label_ar: "حرائق الغابات والأراضي","label_en": "Wildfires" }
+            extreme_cold:     { weight: 0.25, label_ar: "موجات البرد الشديد",    label_en: "Extreme Cold Events" }
+            sandstorm:        { weight: 0.25, label_ar: "العواصف الرملية",       label_en: "Sandstorms" }
+
+        epidemiological_hazard:
+          weight: 0.25
+          label_ar: "المخاطر الوبائية"
+          label_en: "Epidemiological Hazard"
+          components:
+            infectious_disease: { weight: 0.60, label_ar: "الأمراض المعدية والناشئة",  label_en: "Infectious & Emerging Diseases" }
+            vector_borne:       { weight: 0.40, label_ar: "الأمراض المنقولة بالنواقل", label_en: "Vector-Borne Diseases" }
+
+        road_safety_hazard:
+          weight: 0.25
+          label_ar: "مخاطر حوادث الطرق"
+          label_en: "Road Safety Hazard"
+          components:
+            accident_rate:    { weight: 1.00, label_ar: "معدل حوادث السير",       label_en: "Road Accident Rate" }
+
+    vulnerability:
+      weight: 0.333
+      label_ar: "الهشاشة"
+      label_en: "Vulnerability"
+      sub_indicators:
+        agency_capacity_gap:
+          weight: 0.20
+          label_ar: "نقص قدرة الأجهزة الاستجابة"
+          label_en: "Response Agency Capacity Gap"
+          note_en: "Understaffing, underfunding of emergency response agencies"
+        urban_sprawl:
+          weight: 0.20
+          label_ar: "التوسع العمراني العشوائي"
+          label_en: "Urban Sprawl / Ad Hoc Construction"
+          note_en: "Rapid unplanned residential building increases structural risk"
+        displacement_vulnerability:
+          weight: 0.20
+          label_ar: "هشاشة النازحين والمهاجرين"
+          label_en: "Displacement & Migration Vulnerability"
+          note_en: "IDPs, migrants (including illegal immigration) face compounded risks"
+        health_unawareness:
+          weight: 0.20
+          label_ar: "انخفاض الوعي الصحي"
+          label_en: "Lack of Health Awareness"
+          note_en: "Low health literacy amplifies disease burden and slow response"
+        security_vulnerability:
+          weight: 0.20
+          label_ar: "هشاشة الأمن والسلامة"
+          label_en: "Security & Safety Vulnerability"
+          note_en: "Rate of violence and insecurity; armed clashes domain omitted pending review"
+
+    coping_capacity:
+      weight: 0.333
+      label_ar: "القدرة على المواجهة (العكسية)"
+      label_en: "Lack of Coping Capacity"
+      note_en: >
+        Scores represent LACK of coping capacity (high score = low resilience).
+        Each indicator is inverted from its positive form before aggregation.
+      sub_indicators:
+        response_time_gap:
+          weight: 0.20
+          label_ar: "قصور وقت الاستجابة الطارئة"
+          label_en: "Emergency Response Time Gap"
+          note_en: "Longer ambulance/response times = higher lack of coping capacity"
+        data_availability_gap:
+          weight: 0.20
+          label_ar: "نقص توافر البيانات"
+          label_en: "Lack of Data Availability"
+          note_en: "Limited historical disaster data and interoperability reduces resilience"
+        community_support_gap:
+          weight: 0.20
+          label_ar: "نقص الدعم المجتمعي"
+          label_en: "Lack of Community Support (NGOs/Volunteers)"
+          note_en: "Absence of NGO presence and volunteer networks reduces coping"
+        healthcare_access_gap:
+          weight: 0.20
+          label_ar: "محدودية الوصول للرعاية الصحية"
+          label_en: "Healthcare Access Gap"
+          note_en: "Distance and scarcity of health facilities increases vulnerability"
+        poverty_vulnerability:
+          weight: 0.20
+          label_ar: "معدلات الفقر"
+          label_en: "Poverty Rate"
+          note_en: "Higher poverty = lower capacity to cope with or recover from disasters"
+
   us_state:
+    formula: phrat
     natural_hazards: 0.28
     mass_casualty: 0.18
     health_metrics: 0.17
@@ -15,6 +142,7 @@ profiles:
     vector_borne_disease: 0.07
 
   international:
+    formula: phrat
     natural_hazards: 0.25
     conflict_displacement: 0.20
     health_metrics: 0.17
@@ -23,16 +151,6 @@ profiles:
     extreme_heat: 0.10
     vector_borne_disease: 0.06
 
-  # Per-jurisdiction weight overrides are not defined here.
-  # To override weights for a specific jurisdiction, add an overrides.weights
-  # block in your jurisdiction.yaml file. The load_weights() function merges
-  # those overrides on top of the active profile weights at runtime.
-  # Example jurisdiction.yaml:
-  #   overrides:
-  #     weights:
-  #       natural_hazards: 0.35
-  #       conflict_displacement: 0.15
-
 temporal_weights:
   current_12_months: 0.50
   historical_1_5_years: 0.30
@@ -40,10 +158,24 @@ temporal_weights:
 
 risk_thresholds:
   critical: 0.75
-  high: 0.55
+  high:     0.55
   moderate: 0.35
-  low: 0.15
-  minimal: 0.0
+  low:      0.15
+  minimal:  0.0
+
+risk_labels_ar:
+  critical: "بالغ الخطورة"
+  high:     "مرتفع"
+  moderate: "متوسط"
+  low:      "منخفض"
+  minimal:  "ضئيل"
+
+risk_labels_en:
+  critical: "Critical"
+  high:     "High"
+  moderate: "Moderate"
+  low:      "Low"
+  minimal:  "Minimal"
 
 normalization:
   method: z_score

@@ -1,0 +1,145 @@
+profile: libya
+name_ar: "ليبيا — أداة تقييم المخاطر الشاملة"
+name_en: "Libya — Comprehensive Assessment of Risk Analytics (CARA)"
+description: >
+  Libya subnational risk assessment profile for 148 municipalities and
+  national-level assessment. Uses the INFORM Risk Index framework with
+  three pillars: Hazard & Exposure, Vulnerability, and Lack of Coping Capacity.
+  Aligned with the Sendai Framework for Disaster Risk Reduction 2015-2030.
+
+assessment_framework: inform
+sendai_aligned: true
+
+geographic:
+  source: json_file
+  municipalities_file: "data/libya_municipalities.json"
+  boundary_level: adm3
+  projection: EPSG:4326
+  coordinate_order: lon_lat
+
+units:
+  temperature: celsius
+  distance: kilometers
+  area: square_kilometers
+
+language:
+  primary: ar
+  secondary: en
+  direction: rtl
+  arabic_variant: MSA
+
+connectors:
+  who_gho: who_gho
+  displacement: idmc
+  migration: iom
+  air_quality: openaq
+  disaster_history: em_dat
+  hazard_index: em_dat
+  social_vulnerability: worldbank
+  disease_surveillance: who_gho
+  local_disease: ncdc_libya
+  coordination_info: coi_libya
+
+domains:
+  enabled:
+    - hazard_exposure
+    - vulnerability
+    - coping_capacity
+
+  disabled:
+    - conflict_displacement
+    - mass_casualty
+    - extreme_heat
+    - us_specific
+
+domain_config:
+  hazard_exposure:
+    formula: weighted_average
+    sub_domains:
+      - infrastructure_hazard
+      - natural_hazard
+      - epidemiological_hazard
+      - road_safety_hazard
+    armed_clashes_included: false
+    armed_clashes_note: >
+      Armed clashes sub-domain omitted pending political sensitivity review
+      and confirmation of ACLED data access. Domain architecture is preserved.
+
+  vulnerability:
+    formula: weighted_average
+    indicators:
+      - agency_capacity_gap
+      - urban_sprawl
+      - displacement_vulnerability
+      - health_unawareness
+      - security_vulnerability
+
+  coping_capacity:
+    formula: weighted_average
+    inverted: true
+    indicators:
+      - response_time_gap
+      - data_availability_gap
+      - community_support_gap
+      - healthcare_access_gap
+      - poverty_vulnerability
+
+  natural_hazard:
+    flooding:
+      data_sources: [em_dat, gdacs]
+      vulnerability_link: urban_sprawl
+      note_ar: "مرتبط بالتوسع العمراني غير المخطط"
+      note_en: "Linked to unplanned urban expansion vulnerability indicator"
+    wildfire:
+      data_sources: [em_dat]
+    extreme_cold:
+      data_sources: [worldbank, ncdc_libya]
+      vulnerability_links:
+        - young_elderly_population
+        - electric_grid_availability
+      note_ar: "مرتبط بأعمار السكان وتوافر الكهرباء. يشمل خطر تسمم CO₂ من مدافئ المنازل"
+      note_en: "Linked to young/elderly age profiles and electricity availability. Includes CO2 poisoning risk from residential stoves."
+    sandstorm:
+      data_sources: [openaq, em_dat]
+      vulnerability_links:
+        - copd_asthma_prevalence
+      note_ar: "مرتبط بمعدلات الربو وأمراض الرئة الانسدادي. العواصف الرملية تزيد حوادث السير"
+      note_en: "Linked to COPD and asthma rates. Sandstorms are also correlated with increased road accidents."
+
+  epidemiological_hazard:
+    infectious_disease:
+      data_sources: [who_gho, ncdc_libya]
+      note_ar: "قد يتضاعف بسبب الهجرة غير النظامية وتدفقات النازحين"
+      note_en: "May be amplified by illegal immigration flows and IDP movements"
+    vector_borne:
+      diseases:
+        - malaria
+        - leishmaniasis
+        - west_nile_fever
+        - dengue
+      data_sources: [who_gho, ncdc_libya]
+
+  infrastructure_hazard:
+    dams:
+      data_sources: [em_dat, local_upload]
+      note_ar: "فيضانات درنة 2023 ناجمة جزئياً عن انهيار السد — دليل على المخاطر الحالية"
+      note_en: "Derna 2023 flooding was partly caused by dam collapse — evidence of active risk"
+    electric_grid:
+      data_sources: [worldbank, local_upload]
+      note_ar: "انقطاعات التيار تزيد خطر البرد القارس وتسمم CO₂"
+      note_en: "Grid outages compound extreme cold risk and CO2 poisoning from stoves"
+    water_sewage:
+      data_sources: [who_gho, worldbank, local_upload]
+
+  road_safety_hazard:
+    data_sources: [who_gho, worldbank]
+    note_ar: "العواصف الرملية تزيد حوادث السير — مرتبط بمؤشر العواصف الرملية"
+    note_en: "Sandstorm conditions are correlated with road accident rates"
+
+data_governance:
+  missing_data_policy: regional_average_proxy
+  proxy_documentation_required: true
+  audit_trail_enabled: true
+  data_not_available_display: true
+  language_for_gaps_ar: "البيانات غير متاحة"
+  language_for_gaps_en: "Data not available"

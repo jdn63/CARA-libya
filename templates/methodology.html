@@ -1,227 +1,217 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Methodology - CARA</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/css/cara.css">
-</head>
-<body>
-  <nav class="navbar navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="/">CARA - {{ jurisdiction_name }}</a>
-      <div>
-        <a href="/methodology" class="btn btn-outline-light btn-sm active me-2">Methodology</a>
-        <a href="/about" class="btn btn-outline-light btn-sm">About</a>
-      </div>
+{% extends "base.html" %}
+
+{% block title %}المنهجية — أداة CARA ليبيا{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="cara-heading mb-4">
+        <span class="ar-text">منهجية التقييم ومصادر البيانات</span>
+        <span class="en-text">Assessment Methodology & Data Provenance</span>
     </div>
-  </nav>
 
-  <main class="container mt-4 mb-5">
-    <h1 class="h2 mb-1">CARA Methodology</h1>
-    <p class="text-muted mb-4">How risk scores are calculated and what they mean</p>
-
-    <div class="row g-4">
-      <div class="col-lg-9">
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 card-title">PHRAT Formula</h2>
-            <p>
-              All domain scores are combined using the PHRAT (Public Health Risk Assessment Tool)
-              quadratic mean formula:
-            </p>
-            <blockquote class="blockquote bg-light border-start border-4 border-secondary ps-3 py-2 my-3">
-              <p class="mb-0 font-monospace">Total Score = sqrt( sum( weight_i x score_i^2 ) )</p>
-            </blockquote>
-            <p>
-              Each domain score is on [0, 1]. Domain weights are configured per profile and
-              optionally per jurisdiction. The quadratic mean penalizes concentrated risk in a
-              single domain more than a linear mean would, which better reflects the amplifying
-              effect of compound vulnerabilities in public health emergencies.
-            </p>
-            <p>
-              The final composite score is also on [0, 1] and maps to five risk tiers
-              (matching <code>classify_risk()</code> in <code>utils/risk_engine.py</code>):
-              Minimal (0.00-0.14), Low (0.15-0.34), Moderate (0.35-0.54),
-              High (0.55-0.74), and Critical (0.75-1.00).
-            </p>
-            <p class="mb-0">
-              When one or more domains have no data for a jurisdiction, PHRAT excludes them
-              and rescales the surviving weights so the formula remains comparable across
-              jurisdictions. The breakdown returned by <code>calculate_phrat()</code> includes
-              <code>data_coverage</code> (the fraction of total weight that contributed to the
-              score). Treat scores from low-coverage jurisdictions cautiously; a coverage value
-              below 0.7 indicates that the composite is based on less than 70 percent of the
-              configured domain weight.
-            </p>
-          </div>
+    <!-- INFORM formula card -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0">
+                <span class="ar-text">مؤشر INFORM للمخاطر</span>
+                <span class="en-text">INFORM Risk Index</span>
+            </h5>
         </div>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 card-title">EVR Framework</h2>
-            <p>
-              Each domain score is computed using the EVR (Exposure-Vulnerability-Resilience)
-              framework, which reflects the internationally accepted hazard risk model described
-              in the Sendai Framework for Disaster Risk Reduction and WHO IHR guidance:
+        <div class="card-body">
+            <p class="ar-text mb-3">
+                يعتمد هذا التقييم على مؤشر INFORM للمخاطر، الذي طورته اللجنة الدائمة المشتركة بين الوكالات ومركز أبحاث المفوضية الأوروبية (JRC). تُحسب درجة المخاطر وفق المعادلة التالية:
             </p>
-            <ul>
-              <li>
-                <strong>Exposure</strong> - the degree to which a population encounters a hazard
-                (event frequency, concentration, proximity)
-              </li>
-              <li>
-                <strong>Vulnerability</strong> - the susceptibility of that population to harm
-                (demographic factors, chronic disease burden, social determinants)
-              </li>
-              <li>
-                <strong>Resilience</strong> - the capacity of the system to absorb, adapt, and
-                recover (health infrastructure, preparedness, mitigation investment)
-              </li>
-            </ul>
-            <p class="mb-0">
-              A health impact factor is applied to domains where data on direct health outcomes
-              (excess mortality, ED visits, displacement) is available.
-            </p>
-          </div>
-        </div>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 card-title">Active risk domains</h2>
-            {% if domains %}
-            <div class="table-responsive">
-              <table class="table table-sm table-bordered mb-0">
-                <thead class="table-light">
-                  <tr>
-                    <th>Domain</th>
-                    <th>Weight</th>
-                    <th>Primary data source</th>
-                    <th>Update frequency</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for d in domains %}
-                  <tr>
-                    <td>{{ d.label }}</td>
-                    <td>{{ (d.weight * 100) | round(0) | int }}%</td>
-                    <td>{{ d.source }}</td>
-                    <td>{{ d.frequency }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+            <div class="inform-formula my-3">
+                INFORM Risk = (Hazard &amp; Exposure × Vulnerability × Lack of Coping Capacity)<sup>1/3</sup>
             </div>
-            {% else %}
-            <p class="text-muted mb-0">Domain configuration not available.</p>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 card-title">Assessment framework: {{ framework_name | default('Not configured') }}</h2>
-            {% if profile == 'international' or framework_key == 'who_ihr' %}
-            <p>
-              Action plans and capability assessments are aligned with the
-              WHO International Health Regulations (IHR 2005) core capacities.
-              Each action plan item is tagged to one of the 19 IHR core capacities
-              and, where applicable, to the corresponding Joint External Evaluation (JEE) indicator.
+            <p class="small text-muted mt-2" dir="ltr" style="text-align:left">
+                Each pillar is scored [0–1]. The geometric mean ensures that a very low score in any
+                single pillar cannot be compensated by high scores in others — all three dimensions
+                must be addressed to reduce overall risk.
             </p>
-            <p>
-              The IHR core capacities cover: legislation and policy, coordination and EOC,
-              zoonotic disease, food safety, laboratory, surveillance, reporting, point of entry,
-              chemical events, radiation emergencies, risk communication, human resources,
-              preparedness, emergency response, linking public health to security authorities,
-              medical countermeasures, and means of deployment.
-            </p>
-            {% else %}
-            <p>
-              Action plans and capability assessments are aligned with the
-              CDC Public Health Emergency Preparedness (PHEP) capabilities.
-              Each action plan item is tagged to one of the 15 CDC PHEP core capabilities.
-            </p>
-            <p>
-              The 15 PHEP capabilities are: Community Preparedness, Community Recovery,
-              Emergency Operations Coordination, Emergency Public Information and Warning,
-              Fatality Management, Information Sharing, Mass Care, Medical Countermeasure
-              Dispensing, Medical Materiel Management, Medical Surge, Non-Pharmaceutical
-              Interventions, Public Health Laboratory Testing, Public Health Surveillance,
-              Responder Safety and Health, and Volunteer Management.
-            </p>
-            {% endif %}
-          </div>
+            <div class="row g-3 mt-2">
+                <div class="col-md-4">
+                    <div class="risk-pillar-card inform-pillar-hazard h-100">
+                        <h6 class="fw-bold text-danger">
+                            <i class="fas fa-bolt me-1"></i>
+                            <span class="ar-text">1. المخاطر والتعرض</span>
+                        </h6>
+                        <ul class="small mb-0 ar-text">
+                            <li>مخاطر البنية التحتية (السدود، الكهرباء، المياه)</li>
+                            <li>الكوارث الطبيعية (فيضانات، حرائق، عواصف رملية، برد)</li>
+                            <li>الأمراض المعدية والمنقولة بالنواقل</li>
+                            <li>حوادث الطرق</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="risk-pillar-card inform-pillar-vulnerability h-100">
+                        <h6 class="fw-bold text-warning">
+                            <i class="fas fa-users me-1"></i>
+                            <span class="ar-text">2. الهشاشة</span>
+                        </h6>
+                        <ul class="small mb-0 ar-text">
+                            <li>نقص قدرة أجهزة الاستجابة</li>
+                            <li>التوسع العمراني العشوائي</li>
+                            <li>النازحون والمهاجرون</li>
+                            <li>انخفاض الوعي الصحي</li>
+                            <li>الهشاشة الأمنية</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="risk-pillar-card inform-pillar-coping h-100">
+                        <h6 class="fw-bold text-success">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            <span class="ar-text">3. ضعف القدرة على المواجهة</span>
+                        </h6>
+                        <ul class="small mb-0 ar-text">
+                            <li>قصور وقت الاستجابة الطارئة</li>
+                            <li>نقص توافر البيانات</li>
+                            <li>غياب المنظمات والمتطوعين</li>
+                            <li>محدودية الرعاية الصحية</li>
+                            <li>معدلات الفقر</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 card-title">Data sources and attribution</h2>
-            {% if data_source_detail %}
-            <dl>
-              {% for src in data_source_detail %}
-              <dt>{{ src.name }}</dt>
-              <dd>{{ src.description }} - <a href="{{ src.url }}" target="_blank" rel="noopener">{{ src.url }}</a></dd>
-              {% endfor %}
-            </dl>
-            {% else %}
-            <p class="text-muted mb-0">
-              Data source details are listed in <code>config/profiles/{{ profile | default('us_state') }}.yaml</code>.
-              See the <a href="https://github.com/jdn63/CARA-template/blob/main/docs/configuration_reference.md">configuration reference</a>
-              for attribution requirements for each connector.
-            </p>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="h5 card-title">Limitations</h2>
-            <ul class="mb-0">
-              <li>
-                CARA scores represent relative risk within the jurisdiction set and are not
-                absolute measures of hazard probability or expected loss.
-              </li>
-              <li>
-                Data availability and recency vary by connector and jurisdiction.
-                Scores for jurisdictions with limited monitoring data should be interpreted
-                cautiously.
-              </li>
-              <li>
-                The PHRAT formula and domain weights represent policy choices and should be
-                reviewed and validated by public health officials familiar with the jurisdiction.
-              </li>
-              <li>
-                CARA does not replace clinical, epidemiological, or operational judgment.
-                It is a decision support tool, not a decision-making tool.
-              </li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="col-lg-3">
-        <div class="card mb-3 sticky-top" style="top: 1rem;">
-          <div class="card-body">
-            <h2 class="h6 card-title">On this page</h2>
-            <ul class="list-unstyled small mb-0">
-              <li class="mb-1"><a href="#" class="text-decoration-none">PHRAT formula</a></li>
-              <li class="mb-1"><a href="#" class="text-decoration-none">EVR framework</a></li>
-              <li class="mb-1"><a href="#" class="text-decoration-none">Active domains</a></li>
-              <li class="mb-1"><a href="#" class="text-decoration-none">Assessment framework</a></li>
-              <li class="mb-1"><a href="#" class="text-decoration-none">Data sources</a></li>
-              <li><a href="#" class="text-decoration-none">Limitations</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
-  </main>
 
-  <footer class="py-3 border-top text-center text-muted small">
-    CARA Template - Open Source Public Health Risk Assessment | AGPLv3
-  </footer>
-</body>
-</html>
+    <!-- Sendai alignment -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0">
+                <span class="ar-text">التوافق مع إطار سنداي 2015-2030</span>
+                <span class="en-text">Sendai Framework Alignment</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-sm-6">
+                    <div class="bg-light rounded p-2 small">
+                        <strong class="ar-text">الأولوية 1:</strong>
+                        <span class="ar-text"> فهم مخاطر الكوارث ← ركيزتا المخاطر والهشاشة</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="bg-light rounded p-2 small">
+                        <strong class="ar-text">الأولوية 2:</strong>
+                        <span class="ar-text"> تعزيز الحوكمة ← ركيزة القدرة على المواجهة</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="bg-light rounded p-2 small">
+                        <strong class="ar-text">الأولوية 3:</strong>
+                        <span class="ar-text"> الاستثمار في الحد من المخاطر ← الطاقة المؤسسية</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="bg-light rounded p-2 small">
+                        <strong class="ar-text">الأولوية 4:</strong>
+                        <span class="ar-text"> التأهب للاستجابة ← وقت الاستجابة، توافر البيانات</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data sources table -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0">
+                <span class="ar-text">مصادر البيانات</span>
+                <span class="en-text">Data Sources</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ar-text">المصدر</th>
+                            <th class="ar-text">نوع البيانات</th>
+                            <th class="ar-text">طريقة الوصول</th>
+                            <th class="ar-text">التحديث</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WHO GHO</strong></td>
+                            <td class="ar-text">مؤشرات الصحة، الوفيات، البنية التحتية</td>
+                            <td><span class="badge bg-success">API مفتوح</span></td>
+                            <td class="ar-text">سنوي</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IDMC</strong></td>
+                            <td class="ar-text">النازحون داخلياً، الكوارث والنزاعات</td>
+                            <td><span class="badge bg-success">API مفتوح</span></td>
+                            <td class="ar-text">سنوي</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IOM DTM</strong></td>
+                            <td class="ar-text">المهاجرون، بيانات النزوح</td>
+                            <td><span class="badge bg-warning text-dark ar-text">رفع ملفات</span></td>
+                            <td class="ar-text">ربع سنوي</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EM-DAT</strong></td>
+                            <td class="ar-text">أحداث الكوارث التاريخية، الوفيات</td>
+                            <td><span class="badge bg-primary">API</span></td>
+                            <td class="ar-text">شهري</td>
+                        </tr>
+                        <tr>
+                            <td><strong>World Bank</strong></td>
+                            <td class="ar-text">الفقر، نمو المدن، الحوكمة</td>
+                            <td><span class="badge bg-success">API مفتوح</span></td>
+                            <td class="ar-text">سنوي</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OpenAQ</strong></td>
+                            <td class="ar-text">جودة الهواء (وكيل العواصف الرملية)</td>
+                            <td><span class="badge bg-success">API مفتوح</span></td>
+                            <td class="ar-text">يومي</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NCDC ليبيا</strong></td>
+                            <td class="ar-text">مراقبة الأمراض المعدية</td>
+                            <td><span class="badge bg-warning text-dark ar-text">رفع ملفات</span></td>
+                            <td class="ar-text">دوري</td>
+                        </tr>
+                        <tr>
+                            <td><strong>مركز تنسيق المعلومات</strong></td>
+                            <td class="ar-text">وقت الاستجابة، القدرات</td>
+                            <td><span class="badge bg-warning text-dark ar-text">رفع ملفات</span></td>
+                            <td class="ar-text">دوري</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Missing data policy -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0">
+                <span class="ar-text">سياسة البيانات غير المتاحة</span>
+                <span class="en-text">Missing Data Policy</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning mb-3">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span class="ar-text fw-bold">الشفافية الكاملة: </span>
+                <span class="ar-text">عندما لا تتوفر بيانات لمؤشر ما على مستوى البلدية، يُعرض "البيانات غير متاحة" بوضوح. يُستخدم متوسط المنطقة كبديل موثق عند الضرورة مع الإشارة الصريحة إلى ذلك. لا يتم اختلاق بيانات في أي حال.</span>
+            </div>
+            <p class="small text-muted" dir="ltr" style="text-align:left">
+                When municipal-level data is unavailable, this tool displays "Data not available" 
+                (البيانات غير متاحة) honestly. Where a regional average proxy is used, it is 
+                explicitly flagged in reports. No data is fabricated or silently substituted. 
+                This policy is consistent with the INFORM methodology for data-sparse contexts.
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

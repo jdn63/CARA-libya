@@ -1,58 +1,294 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ jurisdiction_name }} - CARA Risk Assessment</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/css/cara.css">
-</head>
-<body>
-  <nav class="navbar navbar-dark bg-dark">
-    <div class="container">
-      <span class="navbar-brand">CARA - {{ jurisdiction_name }}</span>
-      <div>
-        <a href="/methodology" class="btn btn-outline-light btn-sm me-2">Methodology</a>
-        <a href="/about" class="btn btn-outline-light btn-sm">About</a>
-      </div>
-    </div>
-  </nav>
+{% extends "base.html" %}
 
-  <main class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <h1 class="h2 mb-2">Public Health Risk Assessment</h1>
-        <p class="text-muted mb-4">
-          Select a jurisdiction to view its comprehensive risk assessment.
-        </p>
+{% block title %}أداة تقييم المخاطر الشاملة — ليبيا{% endblock %}
 
-        {% if jurisdictions %}
-        <div class="card">
-          <div class="card-body">
-            <label for="jurisdiction-select" class="form-label fw-semibold">Select jurisdiction</label>
-            <select id="jurisdiction-select" class="form-select form-select-lg mb-3"
-                    onchange="if(this.value) window.location='/dashboard/'+this.value">
-              <option value="">-- Select a jurisdiction --</option>
-              {% for j in jurisdictions %}
-              <option value="{{ j.id }}">{{ j.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
+{% block content %}
+<div class="container py-4">
+
+    <!-- Page header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="cara-heading mb-1">
+                <span class="ar-text">أداة تقييم المخاطر الشاملة — ليبيا</span>
+                <span class="en-text">Libya Comprehensive Assessment of Risk Analytics (CARA)</span>
+            </div>
+            <p class="text-muted mb-0">
+                <span class="ar-text d-inline">تقييم المخاطر على المستوى الوطني و148 بلدية ليبية</span>
+                <span class="en-text d-inline ms-2" style="font-size:0.85rem">National and 148-municipality subnational risk assessment</span>
+            </p>
         </div>
-        {% else %}
-        <div class="alert alert-warning">
-          No jurisdictions configured yet.
-          Edit <code>config/jurisdiction.yaml</code> to add your jurisdictions.
-        </div>
-        {% endif %}
-      </div>
     </div>
-  </main>
 
-  <footer class="mt-5 py-3 border-top text-center text-muted small">
-    CARA Template - Open Source Public Health Risk Assessment
-    | <a href="/methodology">Methodology</a>
-    | <a href="https://github.com/jdn63/CARA-template" target="_blank">GitHub</a>
-  </footer>
-</body>
-</html>
+    <!-- Framework badge row -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <span class="badge bg-primary py-2 px-3">
+                    <i class="fas fa-chart-bar me-1"></i>
+                    <span class="ar-text d-inline">مؤشر INFORM للمخاطر</span>
+                </span>
+                <span class="badge bg-success py-2 px-3">
+                    <i class="fas fa-leaf me-1"></i>
+                    <span class="ar-text d-inline">إطار سنداي 2015-2030</span>
+                </span>
+                <span class="badge bg-secondary py-2 px-3">
+                    <i class="fas fa-building me-1"></i>
+                    <span class="ar-text d-inline">{{ municipalities|length if municipalities else 0 }} بلدية</span>
+                </span>
+                <span class="badge bg-warning text-dark py-2 px-3">
+                    <i class="fas fa-lock me-1"></i>
+                    <span class="ar-text d-inline">للاستخدام الرسمي فقط</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Libya national assessment card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <a href="/dashboard/LY" class="d-flex align-items-center gap-3 p-4 text-decoration-none text-dark cara-national-link">
+                        <div class="flex-shrink-0">
+                            <div class="risk-score-badge risk-unavailable" id="national-score-badge" title="تحميل...">
+                                <i class="fas fa-globe-africa fs-4"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold fs-5">
+                                <span class="ar-text">التقييم الوطني — ليبيا</span>
+                                <span class="en-text">National Assessment — Libya</span>
+                            </div>
+                            <small class="text-muted">
+                                <span class="ar-text d-inline">تقييم المخاطر على المستوى الوطني الشامل</span>
+                            </small>
+                        </div>
+                        <div class="flex-shrink-0 text-muted">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Municipality selector -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div>
+                            <h5 class="mb-0">
+                                <span class="ar-text">اختر البلدية</span>
+                                <span class="en-text">Select Municipality</span>
+                            </h5>
+                        </div>
+                        <!-- Region filters -->
+                        <div class="d-flex gap-2 flex-wrap" id="region-filters">
+                            <button class="region-badge active" data-region="all">
+                                <span class="ar-text">الكل</span>
+                            </button>
+                            <button class="region-badge" data-region="west">
+                                <span class="ar-text">الغرب</span>
+                                <span class="en-text d-inline">West</span>
+                            </button>
+                            <button class="region-badge" data-region="east">
+                                <span class="ar-text">الشرق</span>
+                                <span class="en-text d-inline">East</span>
+                            </button>
+                            <button class="region-badge" data-region="south">
+                                <span class="ar-text">الجنوب</span>
+                                <span class="en-text d-inline">South</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if municipalities %}
+                    <div class="row g-3">
+                        <!-- Searchable select -->
+                        <div class="col-md-8">
+                            <label for="municipality-select" class="form-label fw-semibold">
+                                <span class="ar-text">ابحث عن بلدية أو اختر من القائمة</span>
+                                <span class="en-text">Search or select a municipality</span>
+                            </label>
+                            <select id="municipality-select" class="form-select municipality-select form-select-lg">
+                                <option value="">— اختر البلدية / Select Municipality —</option>
+                                <optgroup label="الغرب / Western Libya">
+                                    {% for j in municipalities if j.region == 'west' %}
+                                    <option value="{{ j.id }}" data-region="west">
+                                        {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup label="الشرق / Eastern Libya">
+                                    {% for j in municipalities if j.region == 'east' %}
+                                    <option value="{{ j.id }}" data-region="east">
+                                        {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup label="الجنوب / Southern Libya">
+                                    {% for j in municipalities if j.region == 'south' %}
+                                    <option value="{{ j.id }}" data-region="south">
+                                        {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" id="view-municipality-btn" disabled>
+                                <i class="fas fa-chart-line me-2"></i>
+                                <span class="ar-text">عرض التقييم</span>
+                                <span class="en-text d-inline ms-1">View Assessment</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Municipality count by region -->
+                    <div class="mt-3 d-flex gap-3 flex-wrap small text-muted">
+                        <span>
+                            <i class="fas fa-map-marker-alt me-1 text-danger"></i>
+                            <span class="ar-text d-inline">الغرب:</span>
+                            <strong>{{ municipalities | selectattr('region', 'eq', 'west') | list | length }}</strong>
+                        </span>
+                        <span>
+                            <i class="fas fa-map-marker-alt me-1 text-primary"></i>
+                            <span class="ar-text d-inline">الشرق:</span>
+                            <strong>{{ municipalities | selectattr('region', 'eq', 'east') | list | length }}</strong>
+                        </span>
+                        <span>
+                            <i class="fas fa-map-marker-alt me-1 text-warning"></i>
+                            <span class="ar-text d-inline">الجنوب:</span>
+                            <strong>{{ municipalities | selectattr('region', 'eq', 'south') | list | length }}</strong>
+                        </span>
+                        <span class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <span class="ar-text d-inline">المجموع: {{ municipalities|length }} من أصل 148 بلدية</span>
+                        </span>
+                    </div>
+
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span class="ar-text">لم يتم تحميل بيانات البلديات بعد. يرجى التحقق من ملف</span>
+                        <code>data/libya_municipalities.json</code>
+                        <span class="ar-text"> أو </span>
+                        <code>config/jurisdiction.yaml</code>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFORM methodology quick reference -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0">
+                        <span class="ar-text">منهجية التقييم — مؤشر INFORM</span>
+                        <span class="en-text">Assessment Methodology — INFORM Risk Index</span>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="risk-pillar-card inform-pillar-hazard h-100">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="fas fa-bolt text-danger mt-1"></i>
+                                    <div>
+                                        <div class="fw-bold">
+                                            <span class="ar-text">المخاطر والتعرض</span>
+                                            <span class="en-text">Hazard & Exposure</span>
+                                        </div>
+                                        <small class="text-muted">
+                                            <span class="ar-text">البنية التحتية · الكوارث الطبيعية · الأوبئة · حوادث الطرق</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="risk-pillar-card inform-pillar-vulnerability h-100">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="fas fa-users text-warning mt-1"></i>
+                                    <div>
+                                        <div class="fw-bold">
+                                            <span class="ar-text">الهشاشة</span>
+                                            <span class="en-text">Vulnerability</span>
+                                        </div>
+                                        <small class="text-muted">
+                                            <span class="ar-text">نقص القدرات · النزوح · التوسع العمراني · الوعي الصحي</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="risk-pillar-card inform-pillar-coping h-100">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="fas fa-shield-alt text-success mt-1"></i>
+                                    <div>
+                                        <div class="fw-bold">
+                                            <span class="ar-text">ضعف القدرة على المواجهة</span>
+                                            <span class="en-text">Lack of Coping Capacity</span>
+                                        </div>
+                                        <small class="text-muted">
+                                            <span class="ar-text">وقت الاستجابة · البيانات · الرعاية الصحية · الفقر</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="inform-formula">
+                            INFORM Risk = (Hazard &amp; Exposure × Vulnerability × Lack of Coping Capacity)<sup>1/3</sup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const sel = document.getElementById('municipality-select');
+    const btn = document.getElementById('view-municipality-btn');
+    const filters = document.querySelectorAll('.region-badge');
+
+    if (sel) {
+        sel.addEventListener('change', function () {
+            btn.disabled = !this.value;
+        });
+        btn.addEventListener('click', function () {
+            if (sel.value) window.location.href = '/dashboard/' + sel.value;
+        });
+    }
+
+    filters.forEach(function (badge) {
+        badge.addEventListener('click', function () {
+            filters.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const region = this.dataset.region;
+            if (!sel) return;
+            Array.from(sel.options).forEach(function (opt) {
+                if (!opt.value) return;
+                const r = opt.dataset.region || '';
+                opt.hidden = region !== 'all' && r !== region;
+            });
+            sel.value = '';
+            btn.disabled = true;
+        });
+    });
+});
+</script>
+{% endblock %}

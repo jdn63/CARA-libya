@@ -1,47 +1,78 @@
-<!-- Footer -->
-<footer class="bg-dark text-light py-4 mt-auto">
+<!-- Libya CARA Footer -->
+<footer class="py-4 mt-auto" dir="rtl">
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h6 class="fw-bold">CARA Platform</h6>
-                <p class="small mb-2">
-                    Disclaimer: This Comprehensive Automated Risk Assessment (CARA) tool was developed by Jaime Niedermeier, PHEP Coordinator at the Wisconsin Department of Health Services, in her capacity as a graduate student at Georgetown University. The CARA tool is not affiliated with, nor a reflection of or recommendation by, the Wisconsin Department of Health Services.
+        <div class="row g-3">
+            <div class="col-md-4">
+                <h6 class="text-white fw-bold mb-2">
+                    <span class="cara-logo-badge small">CARA</span>
+                    <span class="ms-2 ar-text">ليبيا</span>
+                </h6>
+                <p class="small mb-1 text-white-75">
+                    <span class="ar-text">أداة تقييم المخاطر الشاملة على مستوى البلديات الليبية</span>
                 </p>
-                <p class="small text-warning mb-0">
-                    <strong>Research Tool:</strong> Verify critical information with authoritative sources before major decisions.
+                <p class="small" style="color:rgba(255,255,255,0.45)">
+                    Libya Comprehensive Assessment of Risk Analytics
+                </p>
+                <p class="small mt-2" style="color:rgba(255,255,255,0.5)">
+                    <i class="fas fa-lock me-1 text-warning"></i>
+                    <span class="ar-text">للاستخدام الحكومي الرسمي فقط — غير متاح للعموم</span>
                 </p>
             </div>
-            <div class="col-md-3">
-                <h6 class="fw-bold">Resources</h6>
-                <ul class="list-unstyled small">
-                    <li><a href="/methodology" target="_blank" class="text-light">Risk Methodology</a></li>
-                    <li><a href="/docs/faq" target="_blank" class="text-light">FAQ</a></li>
-                    <li><a href="/docs/quick_start_guide" target="_blank" class="text-light">Quick Start Guide</a></li>
+            <div class="col-md-4">
+                <h6 class="text-white fw-bold mb-2">
+                    <span class="ar-text">المنهجية والإطار</span>
+                    <span class="en-text d-block">Methodology & Framework</span>
+                </h6>
+                <ul class="list-unstyled small mb-0">
+                    <li class="mb-1">
+                        <a href="/methodology" class="text-decoration-none" style="color:var(--cara-gold)">
+                            <span class="ar-text">المنهجية ومصادر البيانات</span>
+                        </a>
+                    </li>
+                    <li class="mb-1">
+                        <a href="https://drmkc.jrc.ec.europa.eu/inform-index" target="_blank" rel="noopener" class="text-decoration-none" style="color:var(--cara-gold)">
+                            <span class="ar-text">مؤشر INFORM الدولي ↗</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.undrr.org/implementing-sendai-framework" target="_blank" rel="noopener" class="text-decoration-none" style="color:var(--cara-gold)">
+                            <span class="ar-text">إطار سنداي ↗</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
-            <div class="col-md-3">
-                <h6 class="fw-bold">Coverage</h6>
-                <ul class="list-unstyled small">
-                    <li>84 Local Health Departments</li>
-                    <li>11 Tribal Health Centers</li>
-                    <li>7 HERC Regions</li>
-                    <li>Statewide Wisconsin Coverage</li>
+            <div class="col-md-4">
+                <h6 class="text-white fw-bold mb-2">
+                    <span class="ar-text">ملاحظات بيانات</span>
+                    <span class="en-text d-block">Data Notes</span>
+                </h6>
+                <ul class="list-unstyled small mb-0" style="color:rgba(255,255,255,0.65)">
+                    <li class="mb-1">
+                        <i class="fas fa-info-circle me-1 text-warning"></i>
+                        <span class="ar-text">البيانات غير المتاحة تُعرض بصراحة</span>
+                    </li>
+                    <li class="mb-1">
+                        <i class="fas fa-balance-scale me-1 text-warning"></i>
+                        <span class="ar-text">يُستخدم متوسط المنطقة كبديل موثق عند الضرورة</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-map-marker-alt me-1 text-warning"></i>
+                        <span class="ar-text">106 من أصل 148 بلدية (قيد الاكتمال)</span>
+                    </li>
                 </ul>
             </div>
         </div>
-        <hr class="border-secondary">
-        <div class="row">
-            <div class="col-md-8">
-                <p class="small mb-0">
-                    © {{ current_year }} Georgetown University. 
-                    Wisconsin jurisdiction data provided by Wisconsin Department of Health Services.
-                </p>
-            </div>
-            <div class="col-md-4 text-end">
-                <p class="small mb-0">
-                    Version 2.4 | Updated {{ last_updated }}
-                </p>
-            </div>
+        <hr style="border-color:rgba(255,255,255,0.15)">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <small style="color:rgba(255,255,255,0.45)">
+                <span class="ar-text">مبني على هيكل CARA مفتوح المصدر</span>
+                <span class="en-text d-inline ms-1">— Built on the open-source CARA template</span>
+            </small>
+            <small style="color:rgba(255,255,255,0.45)">
+                <a href="/methodology" class="text-decoration-none" style="color:rgba(255,255,255,0.5)">Methodology</a>
+                <span class="mx-2">·</span>
+                <a href="/about" class="text-decoration-none" style="color:rgba(255,255,255,0.5)">About</a>
+            </small>
         </div>
     </div>
 </footer>

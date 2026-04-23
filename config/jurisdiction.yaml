@@ -1,78 +1,225 @@
 jurisdiction:
-  name: "Your Jurisdiction Name"
-  short_name: "YJN"
-  profile: international
-  country_code: "XX"
-  iso3166_1: "XX"
-  language: "en"
-  timezone: "UTC"
-  population: 0
-  area_sq_km: 0
+  name: "ليبيا / Libya"
+  name_ar: "ليبيا"
+  name_en: "Libya"
+  short_name: "LY"
+  profile: libya
+  country_code: "LY"
+  iso3166_1: "LY"
+  iso3166_1_alpha3: "LBY"
+  language: "ar"
+  language_secondary: "en"
+  timezone: "Africa/Tripoli"
+  population: 7100000
+  area_sq_km: 1759540
+  assessment_framework: inform
 
   contact:
-    agency: "Your Public Health Agency"
-    website: "https://www.example.gov"
-    email: "health@example.gov"
+    agency_ar: "الجهات الحكومية الليبية"
+    agency_en: "Libyan Government Agencies"
+    website: ""
+    email: ""
 
   geographic:
-    gadm_country: "XX"
-    gadm_level: 2
+    gadm_country: "LBY"
+    gadm_level: 3
+    municipalities_file: "data/libya_municipalities.json"
     bounding_box:
-      north: 0.0
-      south: 0.0
-      east: 0.0
-      west: 0.0
+      north: 33.17
+      south: 19.50
+      east:  25.17
+      west:  9.39
     center:
-      lat: 0.0
-      lon: 0.0
+      lat: 26.3
+      lon: 17.2
 
   administrative_hierarchy:
-    level_0: "Country"
-    level_1: "Province / State"
-    level_2: "District / County"
-    level_3: "Municipality / Ward"
-    primary_assessment_level: 2
-
-  subdivisions:
-    - id: "district_01"
-      name: "District 1"
-      level: 2
-      gadm_gid: "XX.1.1_1"
-      population: 0
-      area_sq_km: 0
-      capital: ""
-      notes: ""
+    level_0_ar: "دولة"
+    level_0_en: "Country"
+    level_1_ar: "منطقة / إقليم"
+    level_1_en: "Region / Historical Province"
+    level_2_ar: "منطقة / مقاطعة"
+    level_2_en: "District (Mantiqa)"
+    level_3_ar: "بلدية"
+    level_3_en: "Municipality (Baladiyya)"
+    primary_assessment_level: 3
 
   regional_groups:
-    - id: "region_north"
-      name: "Northern Region"
-      label: "Region"
+    - id: "west"
+      name_ar: "طرابلس / الغرب"
+      name_en: "Tripolitania (Western Libya)"
       subdivision_ids:
-        - "district_01"
+        - LY-001
+        - LY-002
+        - LY-003
+        - LY-004
+        - LY-005
+        - LY-006
+        - LY-007
+        - LY-008
+        - LY-009
+        - LY-010
+        - LY-011
+        - LY-012
+        - LY-013
+        - LY-014
+        - LY-015
+        - LY-016
+        - LY-017
+        - LY-018
+        - LY-019
+        - LY-020
+        - LY-021
+        - LY-022
+        - LY-023
+        - LY-024
+        - LY-025
+        - LY-026
+        - LY-027
+        - LY-028
+        - LY-029
+        - LY-030
+        - LY-031
+        - LY-032
+        - LY-033
+        - LY-034
+        - LY-035
+        - LY-036
+        - LY-037
+        - LY-038
+        - LY-039
+        - LY-040
+        - LY-041
+        - LY-042
+        - LY-043
+        - LY-044
+        - LY-045
+        - LY-046
+        - LY-047
+        - LY-048
+        - LY-049
+        - LY-050
+        - LY-051
+        - LY-052
 
-  acled_config:
-    country: "XX"
-    region_id: null
-    admin1_filter: null
+    - id: "east"
+      name_ar: "برقة / الشرق"
+      name_en: "Cyrenaica (Eastern Libya)"
+      subdivision_ids:
+        - LY-053
+        - LY-054
+        - LY-055
+        - LY-056
+        - LY-057
+        - LY-058
+        - LY-059
+        - LY-060
+        - LY-061
+        - LY-062
+        - LY-063
+        - LY-064
+        - LY-065
+        - LY-066
+        - LY-067
+        - LY-068
+        - LY-069
+        - LY-070
+        - LY-071
+        - LY-072
+        - LY-073
+        - LY-074
+        - LY-075
+        - LY-076
+        - LY-077
+        - LY-078
+        - LY-079
+        - LY-080
+        - LY-081
+        - LY-082
+        - LY-083
+        - LY-084
+        - LY-085
+        - LY-086
+
+    - id: "south"
+      name_ar: "فزان / الجنوب"
+      name_en: "Fezzan (Southern Libya)"
+      subdivision_ids:
+        - LY-087
+        - LY-088
+        - LY-089
+        - LY-090
+        - LY-091
+        - LY-092
+        - LY-093
+        - LY-094
+        - LY-095
+        - LY-096
+        - LY-097
+        - LY-098
+        - LY-099
+        - LY-100
+        - LY-101
+        - LY-102
+        - LY-103
+        - LY-104
+        - LY-105
+        - LY-106
 
   idmc_config:
-    iso3: "XXX"
-    country_name: "Your Country"
+    iso3: "LBY"
+    country_name: "Libya"
 
   who_gho_config:
-    country_code: "XXX"
-    country_name: "Your Country"
+    country_code: "LBY"
+    country_name: "Libya"
 
   em_dat_config:
-    country: "Your Country"
-    iso: "XX"
+    country: "Libya"
+    iso: "LY"
 
   worldbank_config:
-    country_code: "XX"
+    country_code: "LY"
 
   openaq_config:
-    country: "XX"
+    country: "LY"
     city_filter: null
+
+  iom_config:
+    country: "Libya"
+    dtm_country_code: "LBY"
+
+  ncdc_config:
+    data_upload_path: "data/uploads/ncdc"
+    notes: "Libya National Centre for Disease Control. Data loaded via manual file upload."
+
+  coi_config:
+    data_upload_path: "data/uploads/coi"
+    notes: "Centre for Coordination of Information (Libya). Data loaded via manual file upload."
+
+methodology:
+  framework: "INFORM Risk Index"
+  framework_url: "https://drmkc.jrc.ec.europa.eu/inform-index"
+  sendai_alignment: true
+  sendai_priorities:
+    - "Understanding disaster risk"
+    - "Strengthening disaster risk governance"
+    - "Investing in disaster risk reduction"
+    - "Enhancing disaster preparedness"
+  missing_data_policy: "regional_average_proxy"
+  missing_data_policy_ar: "متوسط المنطقة كبديل موثق"
+  missing_data_policy_note: >
+    When municipal-level data is unavailable for an indicator, the regional
+    average for that indicator (Tripolitania, Cyrenaica, or Fezzan) is used
+    as a proxy. This substitution is always flagged explicitly in output
+    reports and the methodology documentation. National averages are used
+    when regional data is also unavailable. This policy is consistent with
+    INFORM Index methodology for data-sparse contexts.
+  armed_clashes_domain_status: "omitted_pending_review"
+  armed_clashes_domain_note: >
+    The armed clashes hazard domain has been omitted pending review of
+    political sensitivity considerations and data source access confirmation.
+    The domain architecture is preserved in the codebase for future activation.
 
 overrides:
   weights: {}

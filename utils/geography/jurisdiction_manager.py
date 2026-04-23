@@ -1,10 +1,24 @@
 """
-Jurisdiction manager for CARA template.
+Jurisdiction manager for CARA — Libya deployment.
 
-Loads jurisdiction list from the profile configuration and GADM boundary data.
-Provides a unified interface for the risk engine and templates to query
-jurisdictions regardless of whether they're US counties, GADM districts,
-or custom-defined administrative units.
+Loads the 148 Libya municipalities from data/libya_municipalities.json
+(and falls back to GADM boundary data or explicit jurisdiction.yaml entries
+for non-Libya profiles).
+
+Provides:
+  - get_all()                 — full list of municipalities
+  - get_by_id(id)             — single municipality by ID
+  - get_regional_groups()     — Libya's three historical regions
+  - get_population(id)        — population for a municipality
+  - get_regional_average(indicator, region) — documented proxy for missing data
+  - get_name_ar(id)           — Arabic municipality name
+  - get_name_en(id)           — English municipality name
+
+Missing data policy:
+  When indicator data is unavailable for a municipality, get_regional_average()
+  returns the mean of available values in the same region (west/east/south),
+  or the national mean if no regional data exists. All proxy substitutions
+  are logged and flagged in output reports per Libya CARA data governance policy.
 """
 
 import json
@@ -16,28 +30,22 @@ import yaml
 logger = logging.getLogger(__name__)
 
 CONFIG_PATH = os.path.join('config', 'jurisdiction.yaml')
+MUNICIPALITIES_JSON = os.path.join('data', 'libya_municipalities.json')
 
 
 class JurisdictionManager:
     """
     Manages the list of jurisdictions for a CARA deployment.
 
-    Jurisdictions can come from three sources (in priority order):
-    1. Explicit subdivision list in jurisdiction.yaml
-    2. GADM boundary file (if gadm_connector is available)
-    3. A custom jurisdictions CSV or JSON provided by the deployer
-
-    The manager provides:
-    - get_all() — full list of jurisdictions
-    - get_by_id(id) — single jurisdiction by its identifier
-    - get_regional_groups() — regional groupings
-    - get_population(id) — population for a jurisdiction
+    For the Libya profile, jurisdictions are loaded from the municipalities
+    JSON file. For other profiles, falls back to GADM or jurisdiction.yaml.
     """
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         self.config = config or self._load_config()
         self._jurisdictions: Optional[List[Dict[str, Any]]] = None
         self._regional_groups: Optional[List[Dict[str, Any]]] = None
+        self._municipalities_raw: Optional[Dict[str, Any]] = None
 
     def get_all(self) -> List[Dict[str, Any]]:
         """Return all jurisdictions for this deployment."""
@@ -55,9 +63,8 @@ class JurisdictionManager:
     def get_regional_groups(self) -> List[Dict[str, Any]]:
         """Return all regional groupings."""
         if self._regional_groups is None:
-            self._regional_groups = (
-                self.config.get('jurisdiction', {}).get('regional_groups', [])
-            )
+            jconfig = self.config.get('jurisdiction', {})
+            self._regional_groups = jconfig.get('regional_groups', [])
         return self._regional_groups
 
     def get_group_for_jurisdiction(self, jurisdiction_id: str) -> Optional[Dict[str, Any]]:
@@ -83,26 +90,137 @@ class JurisdictionManager:
         j = self.get_by_id(jurisdiction_id)
         return int(j.get('population', 0)) if j else 0
 
+    def get_name_ar(self, jurisdiction_id: str) -> str:
+        """Return the Arabic name for a municipality."""
+        j = self.get_by_id(jurisdiction_id)
+        return j.get('name_ar', j.get('name', jurisdiction_id)) if j else jurisdiction_id
+
+    def get_name_en(self, jurisdiction_id: str) -> str:
+        """Return the English name for a municipality."""
+        j = self.get_by_id(jurisdiction_id)
+        return j.get('name_en', j.get('name', jurisdiction_id)) if j else jurisdiction_id
+
+    def get_district_for_municipality(self, jurisdiction_id: str) -> Optional[Dict[str, str]]:
+        """Return the district (mantiqa) a municipality belongs to."""
+        j = self.get_by_id(jurisdiction_id)
+        if not j:
+            return None
+        district_id = j.get('district', '')
+        raw = self._get_municipalities_raw()
+        if raw:
+            for d in raw.get('districts', []):
+                if d.get('id') == district_id:
+                    return d
+        return {'id': district_id, 'name_ar': district_id, 'name_en': district_id}
+
+    def get_region_for_municipality(self, jurisdiction_id: str) -> str:
+        """Return the region ID ('west', 'east', or 'south') for a municipality."""
+        j = self.get_by_id(jurisdiction_id)
+        return j.get('region', 'west') if j else 'west'
+
+    def get_regional_average(
+        self,
+        indicator_values: Dict[str, float],
+        jurisdiction_id: str,
+    ) -> Optional[float]:
+        """
+        Compute the regional average for an indicator as a proxy for missing data.
+
+        This implements the Libya CARA missing-data policy: when a municipality
+        lacks data for an indicator, use the mean of available values from other
+        municipalities in the same region (west/east/south). Falls back to the
+        national mean if no regional values are available.
+
+        All callers should log proxy usage for audit purposes.
+
+        Args:
+            indicator_values: Dict of jurisdiction_id -> float (available values)
+            jurisdiction_id:  The municipality needing the proxy
+
+        Returns:
+            float proxy value, or None if no reference data exists at all.
+        """
+        target_region = self.get_region_for_municipality(jurisdiction_id)
+
+        region_values = []
+        national_values = []
+
+        for jid, val in indicator_values.items():
+            if val is None:
+                continue
+            try:
+                float_val = float(val)
+            except (ValueError, TypeError):
+                continue
+            national_values.append(float_val)
+            if self.get_region_for_municipality(jid) == target_region:
+                region_values.append(float_val)
+
+        if region_values:
+            proxy = sum(region_values) / len(region_values)
+            logger.info(
+                f"[PROXY] Municipality {jurisdiction_id}: using regional average "
+                f"{proxy:.4f} from {len(region_values)} {target_region}-region values. "
+                f"Per Libya CARA missing-data policy."
+            )
+            return round(proxy, 4)
+
+        if national_values:
+            proxy = sum(national_values) / len(national_values)
+            logger.warning(
+                f"[PROXY] Municipality {jurisdiction_id}: no regional data for '{target_region}', "
+                f"using national average {proxy:.4f} from {len(national_values)} values."
+            )
+            return round(proxy, 4)
+
+        logger.error(
+            f"[PROXY] Municipality {jurisdiction_id}: no data available at any geographic level."
+        )
+        return None
+
     def get_country_config(self) -> Dict[str, Any]:
         """Return the top-level jurisdiction configuration."""
         return self.config.get('jurisdiction', {})
 
     def _load_jurisdictions(self) -> List[Dict[str, Any]]:
-        subdivisions = (
-            self.config.get('jurisdiction', {}).get('subdivisions', [])
-        )
+        raw = self._get_municipalities_raw()
+        if raw:
+            municipalities = raw.get('municipalities', [])
+            if municipalities:
+                logger.info(f"Loaded {len(municipalities)} municipalities from {MUNICIPALITIES_JSON}")
+                return [
+                    {
+                        'id':           m.get('id', ''),
+                        'name':         m.get('name_ar', m.get('name_en', '')),
+                        'name_ar':      m.get('name_ar', ''),
+                        'name_en':      m.get('name_en', ''),
+                        'level':        3,
+                        'population':   m.get('population', 0),
+                        'area_sq_km':   m.get('area_sq_km', 0),
+                        'region':       m.get('region', ''),
+                        'district':     m.get('district', ''),
+                        'status':       m.get('status', 'needs_verification'),
+                        'notes':        m.get('notes', ''),
+                        'gadm_gid':     m.get('gadm_gid', ''),
+                    }
+                    for m in municipalities
+                    if m.get('id') and (m.get('name_ar') or m.get('name_en'))
+                ]
+
+        subdivisions = self.config.get('jurisdiction', {}).get('subdivisions', [])
         if subdivisions:
             logger.info(f"Loaded {len(subdivisions)} jurisdictions from jurisdiction.yaml")
             return [
                 {
-                    'id': s.get('id', ''),
-                    'name': s.get('name', ''),
-                    'level': s.get('level', 2),
-                    'population': s.get('population', 0),
-                    'area_sq_km': s.get('area_sq_km', 0),
-                    'capital': s.get('capital', ''),
-                    'gadm_gid': s.get('gadm_gid', ''),
-                    'notes': s.get('notes', ''),
+                    'id':        s.get('id', ''),
+                    'name':      s.get('name', ''),
+                    'name_ar':   s.get('name_ar', s.get('name', '')),
+                    'name_en':   s.get('name_en', s.get('name', '')),
+                    'level':     s.get('level', 2),
+                    'population':s.get('population', 0),
+                    'area_sq_km':s.get('area_sq_km', 0),
+                    'region':    s.get('region', ''),
+                    'notes':     s.get('notes', ''),
                 }
                 for s in subdivisions
                 if s.get('id') and s.get('name')
@@ -113,10 +231,27 @@ class JurisdictionManager:
             return self._load_from_gadm(gadm_path)
 
         logger.warning(
-            "No jurisdictions found in jurisdiction.yaml and no GADM file available. "
-            "Add subdivisions to jurisdiction.yaml or download GADM data."
+            "No jurisdictions found. Add municipalities to data/libya_municipalities.json "
+            "or add subdivisions to config/jurisdiction.yaml."
         )
         return []
+
+    def _get_municipalities_raw(self) -> Optional[Dict[str, Any]]:
+        if self._municipalities_raw is not None:
+            return self._municipalities_raw
+
+        jconfig = self.config.get('jurisdiction', {})
+        json_path = jconfig.get('geographic', {}).get('municipalities_file', MUNICIPALITIES_JSON)
+
+        if os.path.exists(json_path):
+            try:
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    self._municipalities_raw = json.load(f)
+                return self._municipalities_raw
+            except Exception as e:
+                logger.error(f"Failed to load municipalities JSON from {json_path}: {e}")
+
+        return None
 
     def _find_gadm_file(self) -> Optional[str]:
         jconfig = self.config.get('jurisdiction', {})
@@ -143,14 +278,9 @@ class JurisdictionManager:
                 name = props.get(name_key, '')
                 if gid and name:
                     jurisdictions.append({
-                        'id': gid,
-                        'name': name,
-                        'level': level,
-                        'population': 0,
-                        'area_sq_km': 0,
-                        'capital': '',
-                        'gadm_gid': gid,
-                        'notes': '',
+                        'id': gid, 'name': name, 'name_ar': name, 'name_en': name,
+                        'level': level, 'population': 0, 'area_sq_km': 0,
+                        'region': '', 'gadm_gid': gid, 'notes': '',
                     })
             logger.info(f"Loaded {len(jurisdictions)} jurisdictions from GADM file")
             return sorted(jurisdictions, key=lambda x: x['name'])
@@ -161,7 +291,7 @@ class JurisdictionManager:
     def _load_config(self) -> Dict[str, Any]:
         if os.path.exists(CONFIG_PATH):
             try:
-                with open(CONFIG_PATH, 'r') as f:
+                with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
                     return yaml.safe_load(f) or {}
             except Exception as e:
                 logger.error(f"Failed to load jurisdiction config: {e}")

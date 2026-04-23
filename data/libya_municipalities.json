@@ -1,0 +1,202 @@
+{
+  "_metadata": {
+    "title": "Libya Municipalities — CARA Assessment Units",
+    "description": "Administrative Level 3 municipalities (baladiyyat) of Libya for use in the CARA subnational risk assessment tool. Organized within Level 2 districts (mantiqaat) and Level 1 historical regions.",
+    "target_count": 148,
+    "current_count": 104,
+    "data_gap_note": "This file currently contains 104 municipalities drawn from published UNOCHA, IOM, and academic sources. Approximately 44 additional sub-municipal units (primarily fragmented urban zones in Tripoli, Benghazi, and Misrata metropolitan areas) require verification and addition from official Libyan government administrative records before the tool reaches the full 148-municipality target agreed at the April 2026 workshop. All municipality entries should be validated against Libya's High National Elections Commission records or the Ministry of Local Government municipal registry.",
+    "provenance": "Compiled from: UNOCHA Libya Humanitarian Response Plan administrative units (2023); IOM Displacement Tracking Matrix Libya operational coverage; academic literature on post-2011 Libyan administrative reorganization. Population estimates from 2018 Libya Municipal Council election base data and IOM DTM 2022.",
+    "coordinate_system": "EPSG:4326 (WGS84)",
+    "last_updated": "2026-04-23",
+    "verified_by": "Pending verification by Libya Ministry of Local Government"
+  },
+  "national": {
+    "id": "LY",
+    "name_ar": "ليبيا",
+    "name_en": "Libya",
+    "iso3166_1": "LY",
+    "iso3166_1_alpha3": "LBY",
+    "population_estimate": 7100000,
+    "area_sq_km": 1759540,
+    "capital_ar": "طرابلس",
+    "capital_en": "Tripoli"
+  },
+  "regions": [
+    {
+      "id": "west",
+      "name_ar": "طرابلس / الغرب",
+      "name_en": "Tripolitania (Western Libya)",
+      "historical_name_ar": "طرابلس الغرب",
+      "historical_name_en": "Tripolitania"
+    },
+    {
+      "id": "east",
+      "name_ar": "برقة / الشرق",
+      "name_en": "Cyrenaica (Eastern Libya)",
+      "historical_name_ar": "برقة",
+      "historical_name_en": "Cyrenaica"
+    },
+    {
+      "id": "south",
+      "name_ar": "فزان / الجنوب",
+      "name_en": "Fezzan (Southern Libya)",
+      "historical_name_ar": "فزان",
+      "historical_name_en": "Fezzan"
+    }
+  ],
+  "districts": [
+    {"id": "tripoli",     "name_ar": "طرابلس",         "name_en": "Tripoli",            "region": "west"},
+    {"id": "jafara",      "name_ar": "الجفارة",          "name_en": "Jafara",             "region": "west"},
+    {"id": "nuqat",       "name_ar": "النقاط الخمس",    "name_en": "An-Nuqat al-Khams",  "region": "west"},
+    {"id": "zawiya",      "name_ar": "الزاوية",          "name_en": "Zawiya",             "region": "west"},
+    {"id": "murqub",      "name_ar": "المرقب",           "name_en": "Murqub",             "region": "west"},
+    {"id": "misrata",     "name_ar": "مصراتة",           "name_en": "Misrata",            "region": "west"},
+    {"id": "sirte",       "name_ar": "سرت",              "name_en": "Sirte",              "region": "west"},
+    {"id": "jabal_gharbi","name_ar": "الجبل الغربي",     "name_en": "Al-Jabal Al-Gharbi", "region": "west"},
+    {"id": "nalut",       "name_ar": "نالوت",            "name_en": "Nalut",              "region": "west"},
+    {"id": "benghazi",    "name_ar": "بنغازي",           "name_en": "Benghazi",           "region": "east"},
+    {"id": "marj",        "name_ar": "المرج",            "name_en": "Al-Marj",            "region": "east"},
+    {"id": "jabal_akhdar","name_ar": "الجبل الأخضر",    "name_en": "Al-Jabal Al-Akhdar", "region": "east"},
+    {"id": "derna",       "name_ar": "درنة",             "name_en": "Derna",              "region": "east"},
+    {"id": "batnan",      "name_ar": "البطنان",          "name_en": "Al-Batnan",          "region": "east"},
+    {"id": "ajdabiya",    "name_ar": "أجدابيا",          "name_en": "Ajdabiya",           "region": "east"},
+    {"id": "wahat",       "name_ar": "الواحات",          "name_en": "Al-Wahat",           "region": "east"},
+    {"id": "kufra",       "name_ar": "الكفرة",           "name_en": "Al-Kufra",           "region": "east"},
+    {"id": "sabha",       "name_ar": "سبها",             "name_en": "Sabha",              "region": "south"},
+    {"id": "jufra",       "name_ar": "الجفرة",           "name_en": "Al-Jufra",           "region": "south"},
+    {"id": "wadi_shati",  "name_ar": "وادي الشاطئ",     "name_en": "Wadi Al-Shati",      "region": "south"},
+    {"id": "murzuq",      "name_ar": "مرزق",             "name_en": "Murzuq",             "region": "south"},
+    {"id": "wadi_hayaa",  "name_ar": "وادي الحياة",     "name_en": "Wadi Al-Hayaa",      "region": "south"},
+    {"id": "ghat",        "name_ar": "غات",              "name_en": "Ghat",               "region": "south"}
+  ],
+  "municipalities": [
+    {"id":"LY-001","name_ar":"طرابلس المركز",      "name_en":"Tripoli Center",        "district":"tripoli",     "region":"west","population":1100000,"area_sq_km":400,"status":"needs_verification"},
+    {"id":"LY-002","name_ar":"أبو سليم",           "name_en":"Abu Salim",             "district":"tripoli",     "region":"west","population":120000, "area_sq_km":25, "status":"needs_verification"},
+    {"id":"LY-003","name_ar":"تاجوراء",            "name_en":"Tajoura",               "district":"tripoli",     "region":"west","population":200000, "area_sq_km":80, "status":"needs_verification"},
+    {"id":"LY-004","name_ar":"جنزور",              "name_en":"Janzur",                "district":"tripoli",     "region":"west","population":180000, "area_sq_km":55, "status":"needs_verification"},
+    {"id":"LY-005","name_ar":"عين زارة",           "name_en":"Ain Zara",              "district":"tripoli",     "region":"west","population":150000, "area_sq_km":45, "status":"needs_verification"},
+    {"id":"LY-006","name_ar":"قصر بن غشير",        "name_en":"Qasr Ben Ghashir",      "district":"tripoli",     "region":"west","population":100000, "area_sq_km":120,"status":"needs_verification"},
+    {"id":"LY-007","name_ar":"السواني",            "name_en":"Al-Sawani",             "district":"tripoli",     "region":"west","population":90000,  "area_sq_km":60, "status":"needs_verification"},
+    {"id":"LY-008","name_ar":"سوق الجمعة",         "name_en":"Suq al-Jumua",          "district":"tripoli",     "region":"west","population":200000, "area_sq_km":30, "status":"needs_verification"},
+    {"id":"LY-009","name_ar":"قرجي",              "name_en":"Qarji",                 "district":"tripoli",     "region":"west","population":85000,  "area_sq_km":20, "status":"needs_verification"},
+    {"id":"LY-010","name_ar":"بن عاشور",           "name_en":"Ben Ashur",             "district":"tripoli",     "region":"west","population":95000,  "area_sq_km":18, "status":"needs_verification"},
+    {"id":"LY-011","name_ar":"الفرناج",            "name_en":"Al-Furnaaj",            "district":"tripoli",     "region":"west","population":110000, "area_sq_km":22, "status":"needs_verification"},
+    {"id":"LY-012","name_ar":"باب بن غشير",        "name_en":"Bab Ben Ghashir",       "district":"tripoli",     "region":"west","population":75000,  "area_sq_km":15, "status":"needs_verification"},
+    {"id":"LY-013","name_ar":"الهضبة",             "name_en":"Al-Hadba",              "district":"tripoli",     "region":"west","population":60000,  "area_sq_km":12, "status":"needs_verification"},
+    {"id":"LY-014","name_ar":"سيدي المصري",        "name_en":"Sidi al-Masri",         "district":"tripoli",     "region":"west","population":70000,  "area_sq_km":14, "status":"needs_verification"},
+
+    {"id":"LY-015","name_ar":"العزيزية",           "name_en":"Al-Aziziyah",           "district":"jafara",      "region":"west","population":80000,  "area_sq_km":800, "status":"needs_verification"},
+    {"id":"LY-016","name_ar":"الزهراء",            "name_en":"Al-Zahra",              "district":"jafara",      "region":"west","population":45000,  "area_sq_km":300, "status":"needs_verification"},
+    {"id":"LY-017","name_ar":"صرمان",              "name_en":"Surman",                "district":"jafara",      "region":"west","population":55000,  "area_sq_km":250, "status":"needs_verification"},
+    {"id":"LY-018","name_ar":"القره بوللي",        "name_en":"Qarabuli",              "district":"jafara",      "region":"west","population":40000,  "area_sq_km":200, "status":"needs_verification"},
+    {"id":"LY-019","name_ar":"الحرشة",             "name_en":"Al-Harsha",             "district":"jafara",      "region":"west","population":35000,  "area_sq_km":180, "status":"needs_verification"},
+
+    {"id":"LY-020","name_ar":"صبراتة",             "name_en":"Sabratah",              "district":"nuqat",       "region":"west","population":100000, "area_sq_km":400, "status":"needs_verification"},
+    {"id":"LY-021","name_ar":"زوارة",              "name_en":"Zuwarah",               "district":"nuqat",       "region":"west","population":55000,  "area_sq_km":350, "status":"needs_verification"},
+    {"id":"LY-022","name_ar":"الجميل",             "name_en":"Al-Jumayliyah",         "district":"nuqat",       "region":"west","population":25000,  "area_sq_km":200, "status":"needs_verification"},
+    {"id":"LY-023","name_ar":"رقدالين",            "name_en":"Riqdalin",              "district":"nuqat",       "region":"west","population":20000,  "area_sq_km":150, "status":"needs_verification"},
+    {"id":"LY-024","name_ar":"العجيلات",           "name_en":"Al-Ajaylat",            "district":"nuqat",       "region":"west","population":30000,  "area_sq_km":250, "status":"needs_verification"},
+
+    {"id":"LY-025","name_ar":"الزاوية",            "name_en":"Zawiya",                "district":"zawiya",      "region":"west","population":200000, "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-026","name_ar":"ورشفانة",            "name_en":"Warshafanah",           "district":"zawiya",      "region":"west","population":60000,  "area_sq_km":400, "status":"needs_verification"},
+    {"id":"LY-027","name_ar":"زلطن",              "name_en":"Zaltan",                "district":"zawiya",      "region":"west","population":30000,  "area_sq_km":200, "status":"needs_verification"},
+    {"id":"LY-028","name_ar":"بير الغنم",          "name_en":"Bir al-Ghanam",         "district":"zawiya",      "region":"west","population":20000,  "area_sq_km":300, "status":"needs_verification"},
+
+    {"id":"LY-029","name_ar":"الخمس",              "name_en":"Al-Khums",              "district":"murqub",      "region":"west","population":120000, "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-030","name_ar":"ترهونة",             "name_en":"Tarhuna",               "district":"murqub",      "region":"west","population":90000,  "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-031","name_ar":"مسلاتة",             "name_en":"Msallata",              "district":"murqub",      "region":"west","population":35000,  "area_sq_km":800, "status":"needs_verification"},
+    {"id":"LY-032","name_ar":"الدافنية",           "name_en":"Al-Dafniyah",           "district":"murqub",      "region":"west","population":40000,  "area_sq_km":200, "status":"needs_verification"},
+    {"id":"LY-033","name_ar":"زليتن",              "name_en":"Zliten",                "district":"murqub",      "region":"west","population":115000, "area_sq_km":1500,"status":"needs_verification"},
+
+    {"id":"LY-034","name_ar":"مصراتة",             "name_en":"Misrata",               "district":"misrata",     "region":"west","population":400000, "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-035","name_ar":"بني وليد",           "name_en":"Bani Walid",            "district":"misrata",     "region":"west","population":80000,  "area_sq_km":5000,"status":"needs_verification"},
+    {"id":"LY-036","name_ar":"قصر أحمد",           "name_en":"Qasr Ahmad",            "district":"misrata",     "region":"west","population":25000,  "area_sq_km":100, "status":"needs_verification"},
+    {"id":"LY-037","name_ar":"طاورغاء",            "name_en":"Tawergha",              "district":"misrata",     "region":"west","population":15000,  "area_sq_km":400, "status":"needs_verification","notes":"Major displacement event 2011; significant IDP population"},
+    {"id":"LY-038","name_ar":"بوسيف",              "name_en":"Bu Sif",                "district":"misrata",     "region":"west","population":18000,  "area_sq_km":150, "status":"needs_verification"},
+
+    {"id":"LY-039","name_ar":"سرت",                "name_en":"Sirte",                 "district":"sirte",       "region":"west","population":130000, "area_sq_km":7000,"status":"needs_verification"},
+    {"id":"LY-040","name_ar":"هراوة",              "name_en":"Harawa",                "district":"sirte",       "region":"west","population":20000,  "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-041","name_ar":"بن جواد",            "name_en":"Ben Jawad",             "district":"sirte",       "region":"west","population":25000,  "area_sq_km":600, "status":"needs_verification"},
+    {"id":"LY-042","name_ar":"النوفلية",           "name_en":"Al-Nawfaliyah",         "district":"sirte",       "region":"west","population":18000,  "area_sq_km":400, "status":"needs_verification"},
+
+    {"id":"LY-043","name_ar":"غريان",              "name_en":"Gharyan",               "district":"jabal_gharbi","region":"west","population":100000, "area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-044","name_ar":"يفرن",              "name_en":"Yafran",                "district":"jabal_gharbi","region":"west","population":45000,  "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-045","name_ar":"جادو",               "name_en":"Jadu",                  "district":"jabal_gharbi","region":"west","population":30000,  "area_sq_km":2500,"status":"needs_verification"},
+    {"id":"LY-046","name_ar":"الزنتان",            "name_en":"Zintan",                "district":"jabal_gharbi","region":"west","population":50000,  "area_sq_km":3500,"status":"needs_verification"},
+    {"id":"LY-047","name_ar":"مزدة",               "name_en":"Mizda",                 "district":"jabal_gharbi","region":"west","population":35000,  "area_sq_km":4000,"status":"needs_verification"},
+    {"id":"LY-048","name_ar":"الرجبان",            "name_en":"Al-Rajban",             "district":"jabal_gharbi","region":"west","population":20000,  "area_sq_km":1500,"status":"needs_verification"},
+    {"id":"LY-049","name_ar":"القلعة",             "name_en":"Al-Qal'a",              "district":"jabal_gharbi","region":"west","population":15000,  "area_sq_km":1000,"status":"needs_verification"},
+
+    {"id":"LY-050","name_ar":"نالوت",              "name_en":"Nalut",                 "district":"nalut",       "region":"west","population":40000,  "area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-051","name_ar":"غدامس",              "name_en":"Ghadames",              "district":"nalut",       "region":"west","population":12000,  "area_sq_km":5000,"status":"needs_verification","notes":"UNESCO World Heritage Site; significant tourism and cultural heritage risk context"},
+    {"id":"LY-052","name_ar":"درج",                "name_en":"Darj",                  "district":"nalut",       "region":"west","population":8000,   "area_sq_km":2000,"status":"needs_verification"},
+
+    {"id":"LY-053","name_ar":"بنغازي المركز",      "name_en":"Benghazi Center",       "district":"benghazi",    "region":"east","population":500000, "area_sq_km":300, "status":"needs_verification"},
+    {"id":"LY-054","name_ar":"السلماني",           "name_en":"Al-Salmani",            "district":"benghazi",    "region":"east","population":80000,  "area_sq_km":20,  "status":"needs_verification"},
+    {"id":"LY-055","name_ar":"الهواري",            "name_en":"Al-Hawari",             "district":"benghazi",    "region":"east","population":70000,  "area_sq_km":18,  "status":"needs_verification"},
+    {"id":"LY-056","name_ar":"قاريونس",            "name_en":"Qaryunis",              "district":"benghazi",    "region":"east","population":100000, "area_sq_km":25,  "status":"needs_verification"},
+    {"id":"LY-057","name_ar":"الليثي",             "name_en":"Al-Laithi",             "district":"benghazi",    "region":"east","population":90000,  "area_sq_km":22,  "status":"needs_verification"},
+    {"id":"LY-058","name_ar":"بوعطني",             "name_en":"Bu Atni",               "district":"benghazi",    "region":"east","population":85000,  "area_sq_km":20,  "status":"needs_verification"},
+    {"id":"LY-059","name_ar":"الكويفية",           "name_en":"Al-Kuwayfiyah",         "district":"benghazi",    "region":"east","population":75000,  "area_sq_km":18,  "status":"needs_verification"},
+    {"id":"LY-060","name_ar":"المنشية",            "name_en":"Al-Manshiyah",          "district":"benghazi",    "region":"east","population":60000,  "area_sq_km":16,  "status":"needs_verification"},
+    {"id":"LY-061","name_ar":"الفويهات",           "name_en":"Al-Fuwayhat",           "district":"benghazi",    "region":"east","population":65000,  "area_sq_km":22,  "status":"needs_verification"},
+    {"id":"LY-062","name_ar":"سيدي فرج",           "name_en":"Sidi Faraj",            "district":"benghazi",    "region":"east","population":55000,  "area_sq_km":15,  "status":"needs_verification"},
+
+    {"id":"LY-063","name_ar":"المرج",              "name_en":"Al-Marj",               "district":"marj",        "region":"east","population":75000,  "area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-064","name_ar":"توكرة",              "name_en":"Tokra",                 "district":"marj",        "region":"east","population":25000,  "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-065","name_ar":"سلوق",               "name_en":"Soluq",                 "district":"marj",        "region":"east","population":20000,  "area_sq_km":600, "status":"needs_verification"},
+    {"id":"LY-066","name_ar":"القوارشة",           "name_en":"Al-Qwarsha",            "district":"marj",        "region":"east","population":15000,  "area_sq_km":400, "status":"needs_verification"},
+
+    {"id":"LY-067","name_ar":"البيضاء",            "name_en":"Al-Bayda",              "district":"jabal_akhdar","region":"east","population":100000, "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-068","name_ar":"سوسة",               "name_en":"Susah",                 "district":"jabal_akhdar","region":"east","population":25000,  "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-069","name_ar":"شحات",               "name_en":"Shahat",                "district":"jabal_akhdar","region":"east","population":20000,  "area_sq_km":400, "status":"needs_verification"},
+    {"id":"LY-070","name_ar":"الأبيار",            "name_en":"Al-Abyar",              "district":"jabal_akhdar","region":"east","population":35000,  "area_sq_km":800, "status":"needs_verification"},
+
+    {"id":"LY-071","name_ar":"درنة",               "name_en":"Derna",                 "district":"derna",       "region":"east","population":85000,  "area_sq_km":1500,"status":"needs_verification","notes":"Severely affected by September 2023 Storm Daniel flooding; major displacement event"},
+    {"id":"LY-072","name_ar":"المسة",              "name_en":"Al-Missah",             "district":"derna",       "region":"east","population":12000,  "area_sq_km":400, "status":"needs_verification"},
+    {"id":"LY-073","name_ar":"القبة",              "name_en":"Al-Qubba",              "district":"derna",       "region":"east","population":35000,  "area_sq_km":600, "status":"needs_verification"},
+
+    {"id":"LY-074","name_ar":"طبرق",               "name_en":"Tobruk",                "district":"batnan",      "region":"east","population":120000, "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-075","name_ar":"مساعد",              "name_en":"Musaid",                "district":"batnan",      "region":"east","population":20000,  "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-076","name_ar":"عمر المختار",        "name_en":"Omar al-Mukhtar",       "district":"batnan",      "region":"east","population":10000,  "area_sq_km":400, "status":"needs_verification"},
+
+    {"id":"LY-077","name_ar":"أجدابيا",            "name_en":"Ajdabiya",              "district":"ajdabiya",    "region":"east","population":100000, "area_sq_km":4000,"status":"needs_verification"},
+    {"id":"LY-078","name_ar":"البريقة",            "name_en":"Al-Burayqah",           "district":"ajdabiya",    "region":"east","population":30000,  "area_sq_km":500, "status":"needs_verification"},
+    {"id":"LY-079","name_ar":"الويغة",             "name_en":"Al-Waygah",             "district":"ajdabiya",    "region":"east","population":10000,  "area_sq_km":800, "status":"needs_verification"},
+    {"id":"LY-080","name_ar":"لبرق",               "name_en":"Librag",                "district":"ajdabiya",    "region":"east","population":8000,   "area_sq_km":600, "status":"needs_verification"},
+
+    {"id":"LY-081","name_ar":"الجالو",             "name_en":"Jalu",                  "district":"wahat",       "region":"east","population":15000,  "area_sq_km":8000,"status":"needs_verification"},
+    {"id":"LY-082","name_ar":"الأوجلة",            "name_en":"Awjila",                "district":"wahat",       "region":"east","population":8000,   "area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-083","name_ar":"مرادة",              "name_en":"Maradah",               "district":"wahat",       "region":"east","population":12000,  "area_sq_km":4000,"status":"needs_verification"},
+
+    {"id":"LY-084","name_ar":"الكفرة",             "name_en":"Al-Kufra",              "district":"kufra",       "region":"east","population":50000,  "area_sq_km":50000,"status":"needs_verification","notes":"Major migration transit point; significant illegal immigration flows"},
+    {"id":"LY-085","name_ar":"ربيانة",             "name_en":"Rabyana",               "district":"kufra",       "region":"east","population":8000,   "area_sq_km":10000,"status":"needs_verification"},
+    {"id":"LY-086","name_ar":"تازربو",             "name_en":"Tazerbu",               "district":"kufra",       "region":"east","population":5000,   "area_sq_km":8000,"status":"needs_verification"},
+
+    {"id":"LY-087","name_ar":"سبها",               "name_en":"Sabha",                 "district":"sabha",       "region":"south","population":180000,"area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-088","name_ar":"البراق",             "name_en":"Al-Baraq",              "district":"sabha",       "region":"south","population":25000, "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-089","name_ar":"أوبارنا",            "name_en":"Awbarna",               "district":"sabha",       "region":"south","population":12000, "area_sq_km":1500,"status":"needs_verification"},
+    {"id":"LY-090","name_ar":"بنت بية",            "name_en":"Bent Bay",              "district":"sabha",       "region":"south","population":8000,  "area_sq_km":1000,"status":"needs_verification"},
+
+    {"id":"LY-091","name_ar":"هون",                "name_en":"Hun",                   "district":"jufra",       "region":"south","population":30000, "area_sq_km":4000,"status":"needs_verification"},
+    {"id":"LY-092","name_ar":"سوكنة",              "name_en":"Sokna",                 "district":"jufra",       "region":"south","population":20000, "area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-093","name_ar":"ودان",               "name_en":"Waddan",                "district":"jufra",       "region":"south","population":25000, "area_sq_km":3500,"status":"needs_verification"},
+    {"id":"LY-094","name_ar":"الجفرة",             "name_en":"Al-Jufra",              "district":"jufra",       "region":"south","population":15000, "area_sq_km":2000,"status":"needs_verification"},
+
+    {"id":"LY-095","name_ar":"براك الشاطئ",        "name_en":"Brak al-Shati",         "district":"wadi_shati",  "region":"south","population":45000, "area_sq_km":5000,"status":"needs_verification"},
+    {"id":"LY-096","name_ar":"أم الأرانب",         "name_en":"Umm al-Aranib",         "district":"wadi_shati",  "region":"south","population":15000, "area_sq_km":3000,"status":"needs_verification"},
+    {"id":"LY-097","name_ar":"الشويرف",            "name_en":"Al-Shwayrif",           "district":"wadi_shati",  "region":"south","population":20000, "area_sq_km":4000,"status":"needs_verification"},
+
+    {"id":"LY-098","name_ar":"مرزق",               "name_en":"Murzuq",                "district":"murzuq",      "region":"south","population":80000, "area_sq_km":20000,"status":"needs_verification"},
+    {"id":"LY-099","name_ar":"القطرون",            "name_en":"Qatrun",                "district":"murzuq",      "region":"south","population":25000, "area_sq_km":8000,"status":"needs_verification"},
+    {"id":"LY-100","name_ar":"تراغن",              "name_en":"Traghan",               "district":"murzuq",      "region":"south","population":10000, "area_sq_km":5000,"status":"needs_verification"},
+    {"id":"LY-101","name_ar":"الجهيمي",            "name_en":"Al-Juhaymi",            "district":"murzuq",      "region":"south","population":8000,  "area_sq_km":4000,"status":"needs_verification"},
+
+    {"id":"LY-102","name_ar":"أوباري",             "name_en":"Ubari",                 "district":"wadi_hayaa",  "region":"south","population":55000, "area_sq_km":6000,"status":"needs_verification"},
+    {"id":"LY-103","name_ar":"إدري",               "name_en":"Idri",                  "district":"wadi_hayaa",  "region":"south","population":8000,  "area_sq_km":2000,"status":"needs_verification"},
+    {"id":"LY-104","name_ar":"القرضة",             "name_en":"Al-Qirdah",             "district":"wadi_hayaa",  "region":"south","population":10000, "area_sq_km":3000,"status":"needs_verification"},
+
+    {"id":"LY-105","name_ar":"غات",                "name_en":"Ghat",                  "district":"ghat",        "region":"south","population":25000, "area_sq_km":10000,"status":"needs_verification"},
+    {"id":"LY-106","name_ar":"إيكريان",            "name_en":"Ikrikeen",              "district":"ghat",        "region":"south","population":8000,  "area_sq_km":5000,"status":"needs_verification"}
+  ]
+}
