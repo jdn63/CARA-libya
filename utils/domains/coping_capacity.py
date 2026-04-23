@@ -226,3 +226,13 @@ class CopingCapacityDomain(BaseDomain):
             return 0.0, 0.0
         coverage = weight_sum / sum(weights.values()) if weights else 0.0
         return round(min(1.0, total / weight_sum * sum(weights.values())), 4), round(coverage, 4)
+
+    def domain_info(self) -> dict:
+        return {
+            'id': 'coping_capacity',
+            'label': 'Lack of Coping Capacity',
+            'label_ar': 'ضعف القدرة على المواجهة',
+            'description': 'Response time gaps, data availability, community support, healthcare access, poverty.',
+            'methodology': 'Equal-weighted mean of five indicators (0.20 each).',
+            'applicable_profiles': ['libya'],
+        }

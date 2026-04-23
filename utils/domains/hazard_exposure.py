@@ -252,3 +252,13 @@ class HazardExposureDomain(BaseDomain):
             total = total / weight_sum * sum(weights.values())
         coverage = weight_sum / sum(weights.values()) if weights else 0.0
         return round(min(1.0, total), 4), round(coverage, 4)
+
+    def domain_info(self) -> dict:
+        return {
+            'id': 'hazard_exposure',
+            'label': 'Hazard & Exposure',
+            'label_ar': 'المخاطر والتعرض',
+            'description': 'Infrastructure, natural hazards, epidemiological hazards, and road safety.',
+            'methodology': 'Equal-weighted mean of four sub-domains (0.25 each).',
+            'applicable_profiles': ['libya'],
+        }
