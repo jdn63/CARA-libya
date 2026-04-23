@@ -13,7 +13,7 @@
     --cara-card-bg:       #ffffff;
     --cara-border:        #dee2e6;
     --cara-text-ar:       #1a1a2e;
-    --cara-text-en:       #6c757d;
+    --cara-text-en:       #495057;
     --risk-critical:      #8B0000;
     --risk-high:          #CC3300;
     --risk-moderate:      #FF8800;
@@ -245,7 +245,12 @@ footer {
     margin-top: auto;
 }
 footer a { color: var(--cara-gold); }
-footer .en-text { color: rgba(255,255,255,0.45); }
+footer .en-text { color: rgba(255,255,255,0.6); }
+footer .text-white-75 { color: rgba(255,255,255,0.75) !important; }
+
+/* Framework bar — en-text and ar-text must be light on dark background */
+.cara-framework-bar .en-text,
+.cara-framework-bar .ar-text { color: rgba(255,255,255,0.55); }
 
 /* ─── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
