@@ -77,37 +77,14 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-bottom py-3">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <div>
-                            <h5 class="mb-0">
-                                <span class="ar-text">اختر البلدية</span>
-                                <span class="en-text">Select Municipality</span>
-                            </h5>
-                        </div>
-                        <!-- Region filters -->
-                        <div class="d-flex gap-2 flex-wrap" id="region-filters">
-                            <button class="region-badge active" data-region="all">
-                                <span class="ar-text">الكل</span>
-                            </button>
-                            <button class="region-badge" data-region="west">
-                                <span class="ar-text">الغرب</span>
-                                <span class="en-text d-inline">West</span>
-                            </button>
-                            <button class="region-badge" data-region="east">
-                                <span class="ar-text">الشرق</span>
-                                <span class="en-text d-inline">East</span>
-                            </button>
-                            <button class="region-badge" data-region="south">
-                                <span class="ar-text">الجنوب</span>
-                                <span class="en-text d-inline">South</span>
-                            </button>
-                        </div>
-                    </div>
+                    <h5 class="mb-0">
+                        <span class="ar-text">اختر البلدية</span>
+                        <span class="en-text">Select Municipality</span>
+                    </h5>
                 </div>
                 <div class="card-body">
                     {% if municipalities %}
                     <div class="row g-3">
-                        <!-- Searchable select -->
                         <div class="col-md-8">
                             <label for="municipality-select" class="form-label fw-semibold">
                                 <span class="ar-text">ابحث عن بلدية أو اختر من القائمة</span>
@@ -115,27 +92,11 @@
                             </label>
                             <select id="municipality-select" class="form-select municipality-select form-select-lg">
                                 <option value="">— اختر البلدية / Select Municipality —</option>
-                                <optgroup label="الغرب / Western Libya">
-                                    {% for j in municipalities if j.region == 'west' %}
-                                    <option value="{{ j.id }}" data-region="west">
-                                        {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
-                                    </option>
-                                    {% endfor %}
-                                </optgroup>
-                                <optgroup label="الشرق / Eastern Libya">
-                                    {% for j in municipalities if j.region == 'east' %}
-                                    <option value="{{ j.id }}" data-region="east">
-                                        {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
-                                    </option>
-                                    {% endfor %}
-                                </optgroup>
-                                <optgroup label="الجنوب / Southern Libya">
-                                    {% for j in municipalities if j.region == 'south' %}
-                                    <option value="{{ j.id }}" data-region="south">
-                                        {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
-                                    </option>
-                                    {% endfor %}
-                                </optgroup>
+                                {% for j in municipalities %}
+                                <option value="{{ j.id }}">
+                                    {{ j.name_ar }}{% if j.name_en %} — {{ j.name_en }}{% endif %}
+                                </option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
@@ -147,27 +108,9 @@
                         </div>
                     </div>
 
-                    <!-- Municipality count by region -->
-                    <div class="mt-3 d-flex gap-3 flex-wrap small text-muted">
-                        <span>
-                            <i class="fas fa-map-marker-alt me-1 text-danger"></i>
-                            <span class="ar-text d-inline">الغرب:</span>
-                            <strong>{{ municipalities | selectattr('region', 'eq', 'west') | list | length }}</strong>
-                        </span>
-                        <span>
-                            <i class="fas fa-map-marker-alt me-1 text-primary"></i>
-                            <span class="ar-text d-inline">الشرق:</span>
-                            <strong>{{ municipalities | selectattr('region', 'eq', 'east') | list | length }}</strong>
-                        </span>
-                        <span>
-                            <i class="fas fa-map-marker-alt me-1 text-warning"></i>
-                            <span class="ar-text d-inline">الجنوب:</span>
-                            <strong>{{ municipalities | selectattr('region', 'eq', 'south') | list | length }}</strong>
-                        </span>
-                        <span class="text-muted">
-                            <i class="fas fa-info-circle me-1"></i>
-                            <span class="ar-text d-inline">المجموع: {{ municipalities|length }} من أصل 148 بلدية</span>
-                        </span>
+                    <div class="mt-3 small text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        <span class="ar-text d-inline">المجموع: {{ municipalities|length }} من أصل 148 بلدية</span>
                     </div>
 
                     {% else %}
@@ -261,11 +204,10 @@
 {% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const sel = document.getElementById('municipality-select');
-    const btn = document.getElementById('view-municipality-btn');
-    const filters = document.querySelectorAll('.region-badge');
+    var sel = document.getElementById('municipality-select');
+    var btn = document.getElementById('view-municipality-btn');
 
-    if (sel) {
+    if (sel && btn) {
         sel.addEventListener('change', function () {
             btn.disabled = !this.value;
         });
@@ -273,22 +215,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (sel.value) window.location.href = '/dashboard/' + sel.value;
         });
     }
-
-    filters.forEach(function (badge) {
-        badge.addEventListener('click', function () {
-            filters.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            const region = this.dataset.region;
-            if (!sel) return;
-            Array.from(sel.options).forEach(function (opt) {
-                if (!opt.value) return;
-                const r = opt.dataset.region || '';
-                opt.hidden = region !== 'all' && r !== region;
-            });
-            sel.value = '';
-            btn.disabled = true;
-        });
-    });
 });
 </script>
 {% endblock %}
