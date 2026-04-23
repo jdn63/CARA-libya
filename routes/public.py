@@ -90,12 +90,13 @@ def about():
 
 @public_bp.route('/data-sources')
 def data_sources():
-    """Data sources and provenance."""
-    try:
-        return render_template('data_sources.html', current_year=datetime.utcnow().year)
-    except Exception as e:
-        logger.error(f"Error loading data sources page: {e}")
-        return render_template('error.html', message="Failed to load data sources page.")
+    """Permanent redirect to the Data Sources section of the Methodology page.
+
+    The data sources, governance, and integration-status content lives in a
+    single place (templates/methodology.html, anchor #data-sources) so that
+    there is one source of truth for external partners.
+    """
+    return redirect('/methodology#data-sources', code=301)
 
 
 _ALLOWED_POST_LOGIN_PATHS = {
