@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block title %}إدخال بيانات الأمراض المعدية — CARA ليبيا{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="cara-heading mb-4">
+    <span class="ar-text">إدخال بيانات الأمراض المعدية — الجهات المحلية</span>
+    <span class="en-text">Infectious Disease Data Entry — Local Agencies</span>
+  </div>
+
+  {# ─── Flash messages ─────────────────────────────────────────────── #}
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in msgs %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  {# ─── Overview ──────────────────────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <p class="ar-text mb-2">
+        تتيح هذه الصفحة للجهات المحلية المشاركة في الاستجابة (مديريات الصحة، المركز الوطني لمكافحة الأمراض، المنظمات غير الحكومية الصحية) رفع بيانات الأمراض المعدية على مستوى البلدية. ستُدمَج البيانات في مؤشرات «المخاطر الوبائية» ضمن ركيزة المخاطر والتعرض في مؤشر INFORM.
+      </p>
+      <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+        This page lets local response agencies (health offices, NCDC, health
+        NGOs) upload municipal-level infectious disease data. Submitted data
+        feeds the "epidemiological hazard" indicators in the Hazard &amp;
+        Exposure pillar of the INFORM Risk Index.
+      </p>
+    </div>
+  </div>
+
+  {# ─── Step 1: Download template ─────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <h5 class="mb-0">
+        <span class="badge bg-primary me-2">1</span>
+        <span class="ar-text">تنزيل القالب</span>
+        <span class="en-text">Download the Template</span>
+      </h5>
+      <a class="btn btn-primary"
+         href="{{ url_for('data_entry.infectious_disease_template') }}">
+        <i class="fas fa-file-excel me-1"></i>
+        <span class="ar-text">تنزيل قالب Excel</span>
+        <span class="en-text">Download Excel Template</span>
+      </a>
+    </div>
+    <div class="card-body">
+      <p class="ar-text mb-2">
+        يحتوي القالب على صفّ مُسبَّق لكل بلدية ليبية (106 بلدية) مع رمزها واسمها بالعربية والإنجليزية. على الجهة الـمُبلِّغة فقط ملء تاريخ جمع البيانات والمعدلات والملاحظات.
+      </p>
+      <p class="small text-muted mb-2" dir="ltr" style="text-align:left">
+        The template ships with one pre-populated row per Libyan municipality
+        (106 rows) including the municipality ID and bilingual name. Reporting
+        agencies only need to fill in the capture date, the rates, and any
+        notes.
+      </p>
+      <ul class="small ar-text mb-1">
+        <li>جميع المعدلات لكل 100 ألف نسمة.</li>
+        <li>المؤشرات المطلوبة لكلٍّ من فيروس نقص المناعة (HIV)، التهاب الكبد بي (HBV)، التهاب الكبد سي (HCV)، السل (TB):
+          <ul>
+            <li>معدل الانتشار (الحالات الجديدة)</li>
+            <li>معدل المرضية (الحالات النشطة)</li>
+            <li>معدل الوفيات</li>
+          </ul>
+        </li>
+        <li>اترك الخلية فارغة إذا لم تتوفر البيانات — لا تَكتب صفراً.</li>
+        <li>استخدم حقل «الملاحظات» للإشارة إلى أيّ تباين أو ظرف خاص.</li>
+      </ul>
+      <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+        Rates are per 100 000. Required metrics per disease (HIV, HBV, HCV,
+        TB): incidence (new cases), morbidity (active cases), mortality
+        (deaths). Leave a cell empty if data is unavailable — never enter zero.
+        Use the Notes field to flag discrepancies or special circumstances.
+      </p>
+    </div>
+  </div>
+
+  {# ─── Step 2: Upload completed file ─────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3">
+      <h5 class="mb-0">
+        <span class="badge bg-primary me-2">2</span>
+        <span class="ar-text">رفع الملف المُكتمل</span>
+        <span class="en-text">Upload the Completed File</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <form method="POST"
+            action="{{ url_for('data_entry.infectious_disease_upload') }}"
+            enctype="multipart/form-data"
+            class="row g-2 align-items-end">
+        <div class="col-md-8">
+          <label for="workbook" class="form-label small">
+            <span class="ar-text">اختر ملف Excel (xlsx.) — الحد الأقصى 10 ميغابايت</span>
+            <span class="en-text">Select an .xlsx file (max 10 MB)</span>
+          </label>
+          <input class="form-control" type="file" id="workbook" name="workbook"
+                 accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                 required>
+        </div>
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-success w-100">
+            <i class="fas fa-upload me-1"></i>
+            <span class="ar-text">رفع</span>
+            <span class="en-text">Upload</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# ─── Step 3: Comparison table ─────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <h5 class="mb-0">
+        <span class="badge bg-primary me-2">3</span>
+        <span class="ar-text">جدول مقارنة الأمراض المعدية بين البلديات</span>
+        <span class="en-text">Cross-Municipality Comparison Table</span>
+      </h5>
+      <a class="btn btn-outline-success"
+         href="{{ url_for('data_entry.infectious_disease_export') }}">
+        <i class="fas fa-file-export me-1"></i>
+        <span class="ar-text">تصدير الجدول إلى Excel</span>
+        <span class="en-text">Export Table to Excel</span>
+      </a>
+    </div>
+    <div class="card-body">
+
+      {# Freshness banner — always rendered so the operator sees the status. #}
+      <div class="alert alert-info py-2 small mb-3">
+        {% if table.freshness %}
+          <i class="fas fa-clock me-1"></i>
+          <strong class="ar-text">أحدث تاريخ جمع للبيانات:</strong>
+          <span dir="ltr">{{ table.freshness.isoformat() }}</span>
+          <span class="text-muted mx-2">|</span>
+          <strong class="en-text">Latest capture date:</strong>
+          <span dir="ltr">{{ table.freshness.isoformat() }}</span>
+          <span class="text-muted mx-2">|</span>
+          <span class="ar-text">عدد الملفات المُدمَجة:</span>
+          <span dir="ltr">{{ table.upload_count }}</span>
+          {% if table.last_upload_at %}
+            <span class="text-muted mx-2">|</span>
+            <span class="ar-text">آخر رفع:</span>
+            <span dir="ltr">{{ table.last_upload_at.strftime('%Y-%m-%d %H:%M UTC') }}</span>
+          {% endif %}
+        {% else %}
+          <i class="fas fa-info-circle me-1"></i>
+          <span class="ar-text fw-bold">البيانات لم تُرفع بعد —</span>
+          <span class="ar-text">
+            الجدول أدناه نموذج توضيحي لشكل المخرجات بعد ورود أوّل ملف من جهة محلية.
+          </span>
+          <br>
+          <span class="en-text">
+            <strong>Data not yet uploaded</strong> — the table below is a
+            placeholder showing the layout that will appear once the first
+            local-agency file is received.
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle small mb-0">
+          <thead class="table-light">
+            <tr>
+              <th rowspan="2" class="align-middle">
+                <span class="ar-text">البلدية</span>
+                <span class="en-text">Municipality</span>
+              </th>
+              <th rowspan="2" class="align-middle text-nowrap">
+                <span class="ar-text">تاريخ الجمع</span>
+                <span class="en-text">Capture Date</span>
+              </th>
+              <th rowspan="2" class="align-middle">
+                <span class="ar-text">الجهة</span>
+                <span class="en-text">Agency</span>
+              </th>
+              {% for d_code, d_ar, d_en in diseases %}
+                <th colspan="{{ metrics|length }}" class="text-center border-start">
+                  <span class="ar-text">{{ d_ar }}</span>
+                  <span class="en-text">{{ d_en }}</span>
+                </th>
+              {% endfor %}
+              <th rowspan="2" class="align-middle border-start">
+                <span class="ar-text">ملاحظات</span>
+                <span class="en-text">Notes</span>
+              </th>
+            </tr>
+            <tr>
+              {% for d_code, _da, _de in diseases %}
+                {% for m_code, m_ar, m_en in metrics %}
+                  <th class="text-center text-muted small {% if loop.first %}border-start{% endif %}">
+                    <span class="ar-text">{{ m_ar.split('(')[0]|trim }}</span>
+                    <span class="en-text">{{ m_en.split('(')[0]|trim }}</span>
+                  </th>
+                {% endfor %}
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% if table.rows %}
+              {% for row in table.rows %}
+                <tr>
+                  <td>
+                    <div class="ar-text fw-semibold">{{ row.name_ar or '—' }}</div>
+                    <div class="en-text small text-muted">{{ row.name_en or row.municipality_id }}</div>
+                  </td>
+                  <td class="text-nowrap" dir="ltr">{{ row.capture_date.isoformat() if row.capture_date else '—' }}</td>
+                  <td class="small">{{ row.agency_name or '—' }}</td>
+                  {% for d_code, _da, _de in diseases %}
+                    {% for m_code, _ma, _me in metrics %}
+                      {% set v = row.metrics.get(d_code ~ '_' ~ m_code) %}
+                      <td class="text-center {% if loop.first %}border-start{% endif %}">
+                        {% if v is none %}
+                          <span class="text-muted" title="Data not available">—</span>
+                        {% else %}
+                          <span dir="ltr">{{ '{:.1f}'.format(v) }}</span>
+                        {% endif %}
+                      </td>
+                    {% endfor %}
+                  {% endfor %}
+                  <td class="small text-muted border-start">{{ row.notes or '' }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              {# Placeholder rows — three sample municipalities with em dashes
+                 so external partners can visualise the planned layout. #}
+              {% set placeholder = [
+                ('طرابلس المركز',     'Tripoli Center',  'LY-001'),
+                ('بنغازي',            'Benghazi',        'LY-024'),
+                ('سبها',              'Sabha',           'LY-079'),
+              ] %}
+              {% for ar, en, mid in placeholder %}
+                <tr class="text-muted fst-italic">
+                  <td>
+                    <div class="ar-text">{{ ar }}</div>
+                    <div class="en-text small">{{ en }}</div>
+                  </td>
+                  <td dir="ltr">—</td>
+                  <td>—</td>
+                  {% for d_code, _da, _de in diseases %}
+                    {% for m_code, _ma, _me in metrics %}
+                      <td class="text-center {% if loop.first %}border-start{% endif %}">—</td>
+                    {% endfor %}
+                  {% endfor %}
+                  <td class="border-start">—</td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td colspan="{{ 4 + (diseases|length * metrics|length) }}"
+                    class="text-center text-muted small fst-italic py-3">
+                  <span class="ar-text">سيُعرَض هنا صفٌّ لكل بلدية وردت بياناتها.</span>
+                  <span class="en-text">A row will appear here for each municipality whose data has been received.</span>
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="small text-muted mt-3 mb-0 ar-text">
+        ملاحظة: الجدول يَعرض أحدث صفٍّ لكل بلدية بحسب «تاريخ جمع البيانات». الرفعات الأقدم تُحفَظ ولا تُحذَف، ويمكن مراجعتها لاحقاً للتدقيق.
+      </p>
+      <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+        Note: the table shows the most recent row per municipality based on the
+        Date of Data Capture. Older uploads are retained — never deleted — and
+        remain available for audit.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
