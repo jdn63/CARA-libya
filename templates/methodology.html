@@ -116,79 +116,432 @@
         </div>
     </div>
 
-    <!-- Data sources table -->
+    <!-- Data sources — status legend -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white border-bottom py-3">
             <h5 class="mb-0">
-                <span class="ar-text">مصادر البيانات</span>
-                <span class="en-text">Data Sources</span>
+                <span class="ar-text">مصادر البيانات — حالة التكامل</span>
+                <span class="en-text">Data Sources — Integration Status</span>
             </h5>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ar-text">المصدر</th>
-                            <th class="ar-text">نوع البيانات</th>
-                            <th class="ar-text">طريقة الوصول</th>
-                            <th class="ar-text">التحديث</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>WHO GHO</strong></td>
-                            <td class="ar-text">مؤشرات الصحة، الوفيات، البنية التحتية</td>
-                            <td><span class="badge bg-success">API مفتوح</span></td>
-                            <td class="ar-text">سنوي</td>
-                        </tr>
-                        <tr>
-                            <td><strong>IDMC</strong></td>
-                            <td class="ar-text">النازحون داخلياً، الكوارث والنزاعات</td>
-                            <td><span class="badge bg-success">API مفتوح</span></td>
-                            <td class="ar-text">سنوي</td>
-                        </tr>
-                        <tr>
-                            <td><strong>IOM DTM</strong></td>
-                            <td class="ar-text">المهاجرون، بيانات النزوح</td>
-                            <td><span class="badge bg-warning text-dark ar-text">رفع ملفات</span></td>
-                            <td class="ar-text">ربع سنوي</td>
-                        </tr>
-                        <tr>
-                            <td><strong>EM-DAT</strong></td>
-                            <td class="ar-text">أحداث الكوارث التاريخية، الوفيات</td>
-                            <td><span class="badge bg-primary">API</span></td>
-                            <td class="ar-text">شهري</td>
-                        </tr>
-                        <tr>
-                            <td><strong>World Bank</strong></td>
-                            <td class="ar-text">الفقر، نمو المدن، الحوكمة</td>
-                            <td><span class="badge bg-success">API مفتوح</span></td>
-                            <td class="ar-text">سنوي</td>
-                        </tr>
-                        <tr>
-                            <td><strong>OpenAQ</strong></td>
-                            <td class="ar-text">جودة الهواء (وكيل العواصف الرملية)</td>
-                            <td><span class="badge bg-success">API مفتوح</span></td>
-                            <td class="ar-text">يومي</td>
-                        </tr>
-                        <tr>
-                            <td><strong>NCDC ليبيا</strong></td>
-                            <td class="ar-text">مراقبة الأمراض المعدية</td>
-                            <td><span class="badge bg-warning text-dark ar-text">رفع ملفات</span></td>
-                            <td class="ar-text">دوري</td>
-                        </tr>
-                        <tr>
-                            <td><strong>مركز تنسيق المعلومات</strong></td>
-                            <td class="ar-text">وقت الاستجابة، القدرات</td>
-                            <td><span class="badge bg-warning text-dark ar-text">رفع ملفات</span></td>
-                            <td class="ar-text">دوري</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <p class="small text-muted mb-3" dir="ltr" style="text-align:left">
+                Every data source feeding the INFORM Risk Index is listed below with its
+                current integration status, the specific indicators it supplies, the
+                pillar it informs, and a direct link to the upstream dataset. This is
+                the transparency contract between this tool and its users — no
+                indicator appears in a score without a documented source.
+            </p>
+            <div class="d-flex flex-wrap gap-2 mb-2">
+                <span class="badge bg-success">Live API</span>
+                <span class="badge bg-info text-dark">Cached file (auto-refreshed)</span>
+                <span class="badge bg-warning text-dark">Manual upload required</span>
+                <span class="badge bg-secondary">Stub — awaiting data</span>
+                <span class="badge bg-light text-dark border">Planned — not started</span>
             </div>
+            <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+                "Cached file" sources are downloaded periodically by a background
+                scheduler and read from local disk during web requests, allowing the
+                tool to operate in low-connectivity settings.
+            </p>
         </div>
     </div>
+
+    <!-- Section A: Incorporated sources -->
+    <h5 class="mt-4 mb-3">
+        <span class="ar-text">أ. مصادر البيانات المُدمَجة حالياً</span>
+        <span class="en-text d-block text-muted small">A. Currently Incorporated Data Sources</span>
+    </h5>
+
+    {# ---------- SOURCE CARD MACRO ---------- #}
+    {% macro source_card(name_en, name_ar, provider, status_label, status_class, url, indicators_en, pillar, access, cadence, resolution, caveats_en) -%}
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
+          <div>
+            <h6 class="mb-0 fw-bold" dir="ltr" style="text-align:left">{{ name_en }}</h6>
+            <div class="small text-muted ar-text">{{ name_ar }} — {{ provider }}</div>
+          </div>
+          <span class="badge {{ status_class }}">{{ status_label }}</span>
+        </div>
+        <dl class="row mb-0 small" dir="ltr" style="text-align:left">
+          <dt class="col-sm-3 text-muted">Indicators supplied</dt>
+          <dd class="col-sm-9">{{ indicators_en|safe }}</dd>
+
+          <dt class="col-sm-3 text-muted">INFORM pillar</dt>
+          <dd class="col-sm-9">{{ pillar }}</dd>
+
+          <dt class="col-sm-3 text-muted">Access method</dt>
+          <dd class="col-sm-9">{{ access }}</dd>
+
+          <dt class="col-sm-3 text-muted">Update cadence</dt>
+          <dd class="col-sm-9">{{ cadence }}</dd>
+
+          <dt class="col-sm-3 text-muted">Geographic resolution</dt>
+          <dd class="col-sm-9">{{ resolution }}</dd>
+
+          <dt class="col-sm-3 text-muted">Source link</dt>
+          <dd class="col-sm-9"><a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ url }}</a></dd>
+
+          {% if caveats_en %}
+          <dt class="col-sm-3 text-muted">Caveats</dt>
+          <dd class="col-sm-9 text-warning-emphasis">{{ caveats_en|safe }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+    {%- endmacro %}
+
+    {# ---------- HAZARD & EXPOSURE PILLAR ---------- #}
+    <h6 class="mt-3 mb-2 text-danger">
+      <i class="fas fa-bolt me-1"></i>
+      <span class="en-text">Hazard &amp; Exposure</span>
+      <span class="ar-text">— ركيزة المخاطر والتعرض</span>
+    </h6>
+
+    {{ source_card(
+      "EM-DAT (Emergency Events Database)",
+      "قاعدة بيانات أحداث الطوارئ",
+      "CRED — UC Louvain, Belgium",
+      "Manual upload",
+      "bg-warning text-dark",
+      "https://www.emdat.be/",
+      "Natural and technological disaster events; deaths, affected persons, and economic damage by event type. Storm Daniel 2023 record drives the flood/storm sub-domain.",
+      "Hazard &amp; Exposure → natural_hazard, infrastructure_hazard",
+      "Public Excel export (no API key). Operator downloads from emdat.be and places the file at <code>data/emdat_libya.xlsx</code>. <strong>Currently loaded</strong> from your April 23, 2026 upload.",
+      "Manual refresh — recommended every 6 months or after a major event.",
+      "National (event-level, not municipal). Events with location text are mapped to admin-1 where possible.",
+      "Coverage threshold of 10+ deaths or 100+ affected may miss smaller localized events. National totals only — municipal allocation uses event-location parsing where available."
+    ) }}
+
+    {{ source_card(
+      "OpenAQ",
+      "أوبن إيه كيو — جودة الهواء العالمية",
+      "OpenAQ Inc. (open-data community)",
+      "Live API",
+      "bg-success",
+      "https://docs.openaq.org/",
+      "PM2.5, PM10, NO₂, O₃, SO₂ from government monitoring stations. Used as proxy for sandstorm/dust exposure and chronic air pollution health burden.",
+      "Hazard &amp; Exposure → natural_hazard (dust/sandstorm proxy)",
+      "Public REST API; optional free key for higher rate limits (<code>OPENAQ_API_KEY</code>).",
+      "Hourly to daily depending on station.",
+      "Point measurements (monitoring stations). Sparse coverage in Libya — only major coastal cities. Used as a national signal, not municipal.",
+      "Libya has very few active stations on OpenAQ. Considered a signal, not a definitive exposure measure."
+    ) }}
+
+    {{ source_card(
+      "GADM (Global Administrative Areas)",
+      "حدود الإدارية العالمية",
+      "UC Davis Geospatial Consortium",
+      "Cached file",
+      "bg-info text-dark",
+      "https://gadm.org/",
+      "Administrative boundary GeoJSON (national, governorate, municipality polygons). Powers all map rendering and spatial joins.",
+      "Cross-cutting (geographic substrate)",
+      "Public direct download from <code>geodata.ucdavis.edu/gadm/gadm4.1/json/</code>. Auto-cached on first use.",
+      "Static — GADM 4.1 is the current release.",
+      "Admin-0 through admin-3 (municipality / baladiya).",
+      "Not all Libyan municipalities map cleanly to GADM admin-3 polygons — 42 of 148 currently flagged for boundary verification."
+    ) }}
+
+    {{ source_card(
+      "NOAA GSOD (Global Surface Summary of Day)",
+      "ملخص سطح الأرض اليومي",
+      "NOAA / NCEI, USA",
+      "Stub",
+      "bg-secondary",
+      "https://www.ncei.noaa.gov/data/global-summary-of-the-day/",
+      "Daily temperature, precipitation, and wind from global weather stations. Planned use: extreme heat / cold exposure indicators.",
+      "Hazard &amp; Exposure → natural_hazard (extreme temperature)",
+      "Bulk file access (no API key). Optional NOAA CDO token (<code>NOAA_CDO_TOKEN</code>) for the higher-rate metadata API.",
+      "Daily.",
+      "Point (weather station). Libya has ~10 reporting stations.",
+      "Connector implemented but not yet wired into a scoring indicator — extreme temperature is currently in the disabled-domains list pending workshop confirmation."
+    ) }}
+
+    {# ---------- VULNERABILITY PILLAR ---------- #}
+    <h6 class="mt-4 mb-2 text-warning">
+      <i class="fas fa-users me-1"></i>
+      <span class="en-text">Vulnerability</span>
+      <span class="ar-text">— ركيزة الهشاشة</span>
+    </h6>
+
+    {{ source_card(
+      "IDMC via OCHA HDX",
+      "مركز رصد النزوح الداخلي — عبر HDX",
+      "Internal Displacement Monitoring Centre (Geneva)",
+      "Cached file",
+      "bg-info text-dark",
+      "https://data.humdata.org/dataset/idmc-idp-data-lby",
+      "Annual new conflict and disaster displacements; total IDP stock; event-level displacement updates (2011–present).",
+      "Vulnerability → displacement_vulnerability",
+      "OCHA HDX CSV download (no key). Used in place of the direct IDMC API which now returns 403 without registration.",
+      "Annual stocks; event records as published.",
+      "National (Libya, ISO3=LBY).",
+      "Sub-national displacement breakdown not available — national figures applied as documented proxy to municipalities."
+    ) }}
+
+    {{ source_card(
+      "IOM DTM (Displacement Tracking Matrix)",
+      "مصفوفة تتبع النزوح — المنظمة الدولية للهجرة",
+      "International Organization for Migration",
+      "Manual upload",
+      "bg-warning text-dark",
+      "https://displacement.iom.int/libya",
+      "Migrant population estimates, IDP flows, transit migrants, shelter assessments by Libyan municipality.",
+      "Vulnerability → displacement_vulnerability, urban_sprawl",
+      "DTM API requires registration; falls back to manual CSV upload to <code>data/uploads/iom/</code>.",
+      "Round-based (typically every 4–8 weeks).",
+      "Admin-1 to admin-3 (municipal where reported).",
+      "Coverage varies by round — not all 148 municipalities are surveyed every cycle. Missing municipalities use regional averages with explicit flags."
+    ) }}
+
+    {{ source_card(
+      "OCHA HDX (Humanitarian Data Exchange)",
+      "منصة تبادل البيانات الإنسانية — أوتشا",
+      "UN Office for the Coordination of Humanitarian Affairs",
+      "Cached file",
+      "bg-info text-dark",
+      "https://data.humdata.org/group/lby",
+      "OCHA 3W operational presence (NGO/agency footprint by location), UNHCR returnee data, miscellaneous humanitarian datasets.",
+      "Vulnerability + Coping Capacity (cross-cutting humanitarian context)",
+      "CKAN REST API at <code>data.humdata.org/api/3/action/</code>. No authentication required for public datasets.",
+      "Weekly background refresh (APScheduler) into <code>data/cache/hdx/</code>.",
+      "Varies by dataset — usually admin-1 or admin-2.",
+      "Dataset availability and coverage on HDX changes month to month — connector logs which datasets were retrieved."
+    ) }}
+
+    {{ source_card(
+      "World Bank Open Data",
+      "البنك الدولي — البيانات المفتوحة",
+      "The World Bank",
+      "Live API",
+      "bg-success",
+      "https://data.worldbank.org/country/libya",
+      "Population, population density, GDP per capita, poverty headcount, Gini index, urbanization rate, governance indicators (WGI).",
+      "Vulnerability → urban_sprawl; Coping Capacity → poverty_vulnerability",
+      "Public REST API at <code>api.worldbank.org/v2/</code>. No key required.",
+      "Annual (most indicators) — World Bank publishes on an indicator-specific schedule.",
+      "National.",
+      "Several indicators have multi-year lags for Libya. Latest available value is used and the year is recorded in the audit trail."
+    ) }}
+
+    {# ---------- COPING CAPACITY PILLAR ---------- #}
+    <h6 class="mt-4 mb-2 text-success">
+      <i class="fas fa-shield-alt me-1"></i>
+      <span class="en-text">Lack of Coping Capacity</span>
+      <span class="ar-text">— ركيزة ضعف القدرة على المواجهة</span>
+    </h6>
+
+    {{ source_card(
+      "WHO Libya via OCHA HDX",
+      "منظمة الصحة العالمية — بيانات ليبيا عبر HDX",
+      "World Health Organization (Libya country office)",
+      "Cached file",
+      "bg-info text-dark",
+      "https://data.humdata.org/dataset/who-data-for-lby",
+      "Hospital beds per 10k, TB indicators, child mortality, NCD mortality, nutrition, air pollution mortality, MCV1 immunization coverage.",
+      "Coping Capacity → healthcare_access_gap, health awareness",
+      "OCHA HDX CSV thematic files (31 files, last confirmed April 15, 2026).",
+      "Quarterly to annual depending on indicator.",
+      "National (WHO does not publish sub-national Libya breakdowns).",
+      "National figures applied to all 148 municipalities as documented proxy. Replaces the WHO GHO API which had stale Libya data (e.g., physicians 2008, cholera 1995)."
+    ) }}
+
+    {{ source_card(
+      "WHO Global Health Observatory (GHO)",
+      "مرصد الصحة العالمي",
+      "World Health Organization",
+      "Live API",
+      "bg-success",
+      "https://www.who.int/data/gho/info/gho-odata-api",
+      "Life expectancy, infant/under-5/maternal mortality, measles vaccination, hospital beds, physicians density.",
+      "Coping Capacity → healthcare_access_gap",
+      "Public OData API at <code>ghoapi.azureedge.net/api/</code>. No key required.",
+      "Annual.",
+      "National.",
+      "For Libya, WHO GHO returns very old timestamps for many indicators — the WHO HDX export above is preferred. GHO is retained as a fallback and for comparison."
+    ) }}
+
+    {{ source_card(
+      "HeiGIT Accessibility Indicators (Libya)",
+      "مؤشرات إمكانية الوصول — هايغيت",
+      "Heidelberg Institute for Geoinformation Technology",
+      "Cached file",
+      "bg-info text-dark",
+      "https://data.humdata.org/dataset/libya-accessibility-indicators",
+      "Percentage of population within travel time of nearest hospital and primary clinic; school-age population within distance of nearest school.",
+      "Coping Capacity → healthcare_access_gap; Vulnerability → health_unawareness",
+      "OCHA HDX CSV download. License CC BY-SA 4.0.",
+      "Re-published as the source dataset is updated (typically annually).",
+      "Admin-1 (22 districts / shaabiyat). Municipalities receive their parent district's score.",
+      "Travel-time modeling assumes pre-2023 road network — does not reflect Storm Daniel infrastructure damage in Derna corridor."
+    ) }}
+
+    {{ source_card(
+      "NCDC Libya — National Centre for Disease Control",
+      "المركز الوطني لمكافحة الأمراض",
+      "Libya Ministry of Health — NCDC",
+      "Manual upload",
+      "bg-warning text-dark",
+      "https://www.ncdc.gov.ly/",
+      "Infectious disease surveillance counts, vector-borne disease reports, outbreak notifications by municipality.",
+      "Hazard &amp; Exposure → epidemiological_hazard",
+      "No public API. CSV upload to <code>data/uploads/ncdc/</code> by authorized personnel.",
+      "Periodic — depends on NCDC release schedule.",
+      "Municipal (when provided in upload).",
+      "Connector code complete; awaiting first authoritative data drop from NCDC. Until then this indicator displays \"Data not available\"."
+    ) }}
+
+    {{ source_card(
+      "Centre for Coordination of Information (COI) — Libya",
+      "مركز تنسيق المعلومات",
+      "Government of Libya",
+      "Manual upload",
+      "bg-warning text-dark",
+      "#",
+      "Emergency response capacity, NGO presence by municipality, inter-agency coordination data, ambulance response times, security incident rates.",
+      "Coping Capacity → response_time_gap, community_support_gap",
+      "No public API. CSV/Excel upload to <code>data/uploads/coi/</code> by authorized personnel.",
+      "Periodic — depends on COI release schedule.",
+      "Municipal (when provided in upload).",
+      "Connector code complete; awaiting first authoritative data drop from COI. Public URL not yet available — replace with official link when published."
+    ) }}
+
+    {{ source_card(
+      "ACLED (Armed Conflict Location and Event Data)",
+      "مشروع بيانات أحداث النزاع المسلح",
+      "ACLED Inc., USA",
+      "Stub",
+      "bg-secondary",
+      "https://acleddata.com/data-export-tool/",
+      "Battles, violence against civilians, explosions/remote violence, riots, protests — event-level data with location and date.",
+      "Hazard &amp; Exposure → conflict (currently disabled in Libya profile)",
+      "Free API with registration. Requires <code>ACLED_API_KEY</code> and <code>ACLED_EMAIL</code>.",
+      "Weekly.",
+      "Point (event-level, geocoded). Aggregable to admin-1, admin-2, admin-3.",
+      "<strong>Armed-clashes domain is intentionally omitted from scoring</strong> pending political-sensitivity review. Connector retained so that domain can be re-enabled cleanly if the review approves it."
+    ) }}
+
+    {# ---------- Section B: Planned ---------- #}
+    <h5 class="mt-5 mb-3">
+        <span class="ar-text">ب. مصادر بيانات مقترحة للدمج المستقبلي</span>
+        <span class="en-text d-block text-muted small">B. Planned Data Sources — Not Yet Incorporated</span>
+    </h5>
+
+    <p class="small text-muted mb-3" dir="ltr" style="text-align:left">
+        These sources are recommended for the next integration cycle. Inclusion criteria:
+        either (a) materially improves Libya-specific resolution for an existing INFORM
+        indicator, or (b) closes a known gap flagged in the workshop scoping. Each entry
+        notes the indicator it would feed and the rough integration effort.
+    </p>
+
+    {% macro planned_card(name_en, name_ar, provider, url, what_it_adds, target_pillar, effort) -%}
+    <div class="card border-0 shadow-sm mb-3" style="border-left: 3px solid #adb5bd !important;">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
+          <div>
+            <h6 class="mb-0 fw-bold" dir="ltr" style="text-align:left">{{ name_en }}</h6>
+            <div class="small text-muted ar-text">{{ name_ar }} — {{ provider }}</div>
+          </div>
+          <span class="badge bg-light text-dark border">Planned</span>
+        </div>
+        <dl class="row mb-0 small" dir="ltr" style="text-align:left">
+          <dt class="col-sm-3 text-muted">What it would add</dt>
+          <dd class="col-sm-9">{{ what_it_adds }}</dd>
+
+          <dt class="col-sm-3 text-muted">Target indicator(s)</dt>
+          <dd class="col-sm-9">{{ target_pillar }}</dd>
+
+          <dt class="col-sm-3 text-muted">Integration effort</dt>
+          <dd class="col-sm-9">{{ effort }}</dd>
+
+          <dt class="col-sm-3 text-muted">Source link</dt>
+          <dd class="col-sm-9"><a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ url }}</a></dd>
+        </dl>
+      </div>
+    </div>
+    {%- endmacro %}
+
+    {{ planned_card(
+      "Copernicus Emergency Management Service — Rapid Mapping",
+      "خدمة كوبرنيكوس لإدارة الطوارئ — رسم الخرائط السريع",
+      "European Commission / DG-DEFIS",
+      "https://emergency.copernicus.eu/mapping/list-of-activations-rapid",
+      "Satellite-derived flood and wildfire footprints activated within hours of major events. Would replace event-text parsing with actual mapped polygons (e.g., Storm Daniel Derna footprint).",
+      "Hazard &amp; Exposure → flooding, wildfire (event-level municipal exposure)",
+      "Low — public GeoJSON downloads per activation; one-time loader script."
+    ) }}
+
+    {{ planned_card(
+      "UNHCR Operational Data Portal — Libya",
+      "بوابة بيانات المفوضية العملية — ليبيا",
+      "UN High Commissioner for Refugees",
+      "https://data.unhcr.org/en/country/lby",
+      "Refugee and asylum-seeker stocks, returnee flows, arrival monitoring at coastal departure points.",
+      "Vulnerability → displacement_vulnerability (refugee/returnee disaggregation)",
+      "Low — public CSV downloads. Adds resolution beyond IDMC's IDP-only coverage."
+    ) }}
+
+    {{ planned_card(
+      "NASA FIRMS (Fire Information for Resource Management)",
+      "نظام معلومات الحرائق التابع لناسا",
+      "NASA / Earth Science Data Systems",
+      "https://firms.modaps.eosdis.nasa.gov/country/",
+      "Active fire / hot-spot detections from MODIS and VIIRS satellites, available within 3 hours of overpass. Provides near-real-time wildfire exposure for municipalities.",
+      "Hazard &amp; Exposure → wildfire (real-time signal, not just historical EM-DAT)",
+      "Low — free API key, simple REST interface."
+    ) }}
+
+    {{ planned_card(
+      "USGS Earthquake Catalog",
+      "كتالوج الزلازل — هيئة المسح الجيولوجي الأمريكية",
+      "U.S. Geological Survey",
+      "https://earthquake.usgs.gov/fdsnws/event/1/",
+      "Historical and real-time seismic events with magnitude, depth, and location. Adds geophysical hazard sub-domain (currently absent — Libya is low-seismicity but not zero).",
+      "Hazard &amp; Exposure → natural_hazard (earthquake sub-domain, new)",
+      "Low — open FDSN web service, no key."
+    ) }}
+
+    {{ planned_card(
+      "WorldPop High-Resolution Population Grid",
+      "شبكة السكان عالية الدقة — وورلدبوب",
+      "WorldPop / University of Southampton",
+      "https://www.worldpop.org/geodata/listing?id=29",
+      "100m gridded population estimates for Libya. Enables exposure indicators that combine hazard footprints with population-at-risk counts at municipal level (rather than national proxies).",
+      "Hazard &amp; Exposure → population-at-risk for all natural hazards",
+      "Medium — large GeoTIFF downloads + zonal-statistics step against GADM polygons."
+    ) }}
+
+    {{ planned_card(
+      "Libya Ministry of Health — HMIS facility data",
+      "نظام معلومات الصحة — وزارة الصحة الليبية",
+      "Government of Libya — Ministry of Health",
+      "https://www.health.gov.ly/",
+      "Facility-level health service availability (functioning hospitals, beds, staff, ICU capacity) per municipality. Would replace national WHO proxies for healthcare_access_gap.",
+      "Coping Capacity → healthcare_access_gap (municipal resolution)",
+      "Medium-high — requires data-sharing agreement and regular CSV/Excel upload pipeline."
+    ) }}
+
+    {{ planned_card(
+      "OpenStreetMap road network (via Overpass API)",
+      "شبكة الطرق — خرائط الشارع المفتوح",
+      "OpenStreetMap Foundation contributors",
+      "https://overpass-api.de/",
+      "Road network for travel-time analysis between population centres and emergency facilities. Improves response_time_gap beyond static HeiGIT estimates.",
+      "Coping Capacity → response_time_gap",
+      "Medium — Overpass query + isochrone calculation per facility."
+    ) }}
+
+    {{ planned_card(
+      "World Bank Climate Change Knowledge Portal — CMIP6 projections",
+      "بوابة المعرفة بتغير المناخ — البنك الدولي",
+      "The World Bank Group",
+      "https://climateknowledgeportal.worldbank.org/country/libya",
+      "Downscaled climate projections (temperature, precipitation, drought indices) for Libya through 2100 under SSP scenarios. Forward-looking complement to historical EM-DAT and NOAA GSOD.",
+      "Hazard &amp; Exposure → forward-looking climate stress (new)",
+      "Medium — bulk NetCDF download + scenario selection logic."
+    ) }}
 
     <!-- Missing data policy -->
     <div class="card border-0 shadow-sm mb-4">
