@@ -67,6 +67,8 @@ def create_app() -> Flask:
         exempt_prefixes = ('/static/', '/login', '/logout', '/health')
         if any(request.path.startswith(p) for p in exempt_prefixes):
             return None
+        if request.path == '/':
+            return None
 
         cara_password = os.environ.get('CARA_ACCESS_PASSWORD', '')
         if not cara_password:
