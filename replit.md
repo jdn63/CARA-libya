@@ -78,6 +78,9 @@ Automated — monthly 720h job:
 Connector registry: utils/connector_registry.py
 Registered connectors: hdx, heigit, idmc_hdx, who_hdx, iom, who_gho, worldbank, openaq, ncdc_libya, coi_libya
 
+File-based (public download, no API key required):
+- EM-DAT (CRED/UCLouvain): data/emdat_libya.xlsx — Libya disaster history 2000-present; 76 records; file-based connector reads directly; update by re-downloading from emdat.be and replacing the file. Data version: 2026-04-17. INFORM: Hazard & Exposure / hydrometeorological_hazard — Key event: Storm Daniel 2023 (13,200 deaths, 1.6M affected, $6.2B damage)
+
 Manual upload (no public API — restricted government data):
 - NCDC Libya: data/uploads/ncdc/ (disease surveillance CSV)
 - COI Libya: data/uploads/coi/ (coordination capacity CSV)

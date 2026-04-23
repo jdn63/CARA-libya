@@ -198,6 +198,18 @@ def _load_connector_data(jurisdiction_id: str) -> dict:
     except Exception as e:
         logger.warning(f'NCDC Libya load failed for {jurisdiction_id}: {e}')
 
+    # EM-DAT Libya — file-based, downloaded from emdat.be
+    try:
+        from utils.connectors.worldwide.em_dat_connector import EMDATConnector
+        c = EMDATConnector(country='Libya', iso2='LY')
+        raw = c.fetch(jurisdiction_id)
+        if raw.get('available'):
+            data['em_dat'] = raw
+            logger.info('EM-DAT Libya loaded: %d natural events (10yr), %d deaths',
+                        raw.get('natural_events_10yr', 0), raw.get('natural_deaths_10yr', 0))
+    except Exception as e:
+        logger.warning(f'EM-DAT load failed for {jurisdiction_id}: {e}')
+
     return data
 
 
@@ -260,6 +272,7 @@ def _build_show_work(cd: dict) -> dict:
     wb    = cd.get('worldbank', {})
     coi   = cd.get('coi_libya', {})
     iom   = cd.get('iom', {})
+    emdat = cd.get('em_dat', {})
 
     sw = {}
 
@@ -324,7 +337,23 @@ def _build_show_work(cd: dict) -> dict:
     air_yr   = who_r.get('air_pollution_mortality_per_100k_year')
 
     lines = []
-    lines.append(_row('', 'Flood / Dam hazard', 'بانتظار بيانات EM-DAT · Derna 2023 موثقة / Awaiting EM-DAT · Derna 2023 documented', 'EM-DAT (قيد التوصيل)'))
+    _ed_deaths = emdat.get('flood_deaths_10yr')
+    _ed_aff    = emdat.get('flood_affected_10yr')
+    _ed_dmg    = emdat.get('natural_damage_usd')
+    _ed_evts   = emdat.get('flood_events_10yr', 0)
+    _ed_ver    = emdat.get('data_version', '?')
+    if _ed_deaths is not None:
+        _ed_score = round(min(1.0, _ed_deaths / 5_000), 3)
+        lines.append(_row('الكوارث الهيدرومناخية (10 سنوات)', 'Hydrometeorological disasters (10yr)',
+                           f'{_ed_deaths:,} وفاة · {_ed_aff:,} متضرر · ${(_ed_dmg or 0)/1e9:.1f}B أضرار',
+                           f'EM-DAT (CRED/UCLouvain, v{_ed_ver})'))
+        lines.append(_row('أحداث: عاصفة دانيال 2023 + فيضانات 2019/2024',
+                           'Events: Storm Daniel 2023 + floods 2019/2024', '', ''))
+        lines.append(_formula_row(f'min(1.0, {_ed_deaths:,}/5,000)', _ed_score))
+    else:
+        lines.append(_row('', 'Flood / Hydrometeorological hazard',
+                           'بانتظار ملف EM-DAT / Awaiting EM-DAT file',
+                           'EM-DAT (CRED/UCLouvain)'))
     if pm25 is not None:
         score_pm = round(min(1.0, float(pm25) / 75.0), 3)
         lines.append(_row('تركيز PM2.5', 'PM2.5 concentration',
@@ -692,6 +721,7 @@ def _build_indicator_tiles(cd: dict) -> dict:
     hg    = cd.get('heigit', {})
     wb    = cd.get('worldbank', {})
     coi   = cd.get('coi_libya', {})
+    emdat = cd.get('em_dat', {})
 
     def _yr(key):
         return who_r.get(key + '_year', '')
@@ -741,7 +771,7 @@ def _build_indicator_tiles(cd: dict) -> dict:
     IDMC_SRC  = 'IDMC via OCHA HDX'
     HEIGIT_SRC = 'HeiGIT / OCHA HDX'
     WB_SRC    = 'World Bank'
-    EMDAT_SRC = 'EM-DAT (قيد التوصيل / pending)'
+    EMDAT_SRC = 'EM-DAT (CRED/UCLouvain, 2026-04-17)'
     COI_SRC   = 'COI Libya — رفع يدوي / manual upload'
     PROXY_SRC = 'تقدير بديل / proxy estimate'
 
@@ -755,17 +785,58 @@ def _build_indicator_tiles(cd: dict) -> dict:
     # ════════════════════════════════════════════════════════════════════
 
     # ── Natural Hazards ─────────────────────────────────────────────────
+    # EM-DAT primary; IDMC displacement kept as supporting note
+    emdat_hydro_deaths   = emdat.get('flood_deaths_10yr')      # floods + storms
+    emdat_hydro_affected = emdat.get('flood_affected_10yr')
+    emdat_hydro_events   = emdat.get('flood_events_10yr', 0)
+    emdat_daniel_deaths  = emdat.get('storm_daniel_deaths', 0)
+    emdat_damage         = emdat.get('natural_damage_usd', 0)
+    emdat_ver            = emdat.get('data_version', '2026-04-17')
+
+    # IDMC displacement (kept as context / secondary note)
     flood_disp  = event_displ if events else None
-    flood_score = min(1.0, float(flood_disp) / 50_000) if flood_disp else None
+
+    if emdat_hydro_deaths is not None:
+        # EM-DAT mortality-based score (primary)
+        hydro_score = round(min(1.0, float(emdat_hydro_deaths) / 5_000), 3)
+        hydro_formula = (
+            f'min(1.0, {emdat_hydro_deaths:,} وفاة / 5,000) = {hydro_score:.3f}'
+        )
+        hydro_note = (
+            f'عاصفة دانيال 2023 (Storm Daniel): {emdat_daniel_deaths:,} وفاة · '
+            f'{emdat_hydro_affected:,} متضرر · ${emdat_damage/1e9:.1f}B أضرار. '
+            f'بيانات EM-DAT نسخة {emdat_ver}.'
+            + (f' | IDMC: {int(flood_disp):,} نازح (2024)' if flood_disp else '')
+        )
+        hydro_src   = EMDAT_SRC
+        hydro_proxy = False
+        hydro_val   = emdat_hydro_deaths
+        hydro_unit  = 'وفاة (10 سنوات) / deaths (10yr)'
+        hydro_year  = '2016–2026'
+    else:
+        # Fallback to IDMC displacement when EM-DAT unavailable
+        hydro_score   = round(min(1.0, float(flood_disp) / 50_000), 3) if flood_disp else None
+        hydro_formula = (
+            f'min(1.0, {int(flood_disp or 0):,} / 50,000) = {hydro_score:.3f}'
+            if hydro_score else 'بيانات EM-DAT غير متاحة'
+        )
+        hydro_note  = ('حوادث 2024 عبر IDMC: فيضان مصراتة (504) + فيضان الكفرة (3,000)'
+                       if events else 'بانتظار EM-DAT')
+        hydro_src   = IDMC_SRC
+        hydro_proxy = (flood_disp is None)
+        hydro_val   = flood_disp
+        hydro_unit  = 'نازح / displaced'
+        hydro_year  = idmc_r.get('data_year', '')
+
     nat_tiles = [
         _T('flooding',
-           'الفيضانات', 'Flooding',
-           flood_disp, 'نازح / displaced', idmc_r.get('data_year', ''),
-           flood_score,
-           f'min(1.0, {int(flood_disp or 0):,} / 50,000) = {flood_score:.3f}' if flood_score else 'لا بيانات EM-DAT',
-           IDMC_SRC,
-           proxy=(flood_disp is None),
-           note='حوادث 2024: فيضان مصراتة (504) + فيضان الكفرة (3,000) / 2024 events via IDMC' if events else 'يشمل أحداث درنة 2023 — بانتظار EM-DAT / Includes Derna 2023 — awaiting EM-DAT'),
+           'الكوارث الهيدرومناخية', 'Hydrometeorological Disasters',
+           hydro_val, hydro_unit, hydro_year,
+           hydro_score,
+           hydro_formula,
+           hydro_src,
+           proxy=hydro_proxy,
+           note=hydro_note),
 
         _T('sandstorms',
            'العواصف الرملية', 'Sandstorms / Dust',
