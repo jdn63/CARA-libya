@@ -30,6 +30,8 @@ DOCUMENTATION FORMATTING RULES (permanent, applies to every file without excepti
 - Dashboard connector pipeline: routes/dashboard.py/_load_connector_data() loads who_hdx, idmc_hdx, heigit, iom, worldbank, coi_libya, ncdc_libya from disk cache and normalises keys for domain modules (who_hdx beds per 10k divided by 10 to get per 1000; idmc_hdx total_displacement_stock mapped to idmc.total_idps; etc.)
 - Dashboard sub-domain key mapping: domain modules use sub_domains (hazard) or indicators (vulnerability, coping) as the nested score dict; _run_pillars() flattens both into a uniform components dict for the template
 - Formula transparency: _build_show_work() in dashboard.py builds per-sub-domain Bootstrap popover HTML with raw indicator values, formula string, and data source attribution; passed to template as show_work dict keyed by 'pillar__sub_domain'
+- Granular indicator tiles: _build_indicator_tiles(cd) in dashboard.py builds a 3-level hierarchy (pillar > sub-domain section > individual tile) with 34 individual indicator tiles across 12 sub-domain sections; each tile has id, labels, raw value, unit, year, 0-1 score, 0-10 display, risk level, badge colour, availability flag, proxy flag, source, formula, note, and pre-built popover_html; rendered in dashboard.html as a Bootstrap accordion below the 3-pillar summary
+- Popover HTML escaping: popover_html is built as a Python string in _T() and passed through Jinja2 | e in the template, converting < > " to HTML entities; the browser decodes entities on attribute read, Bootstrap sets innerHTML with html:true; this avoids the attribute-breaking bare-less-than bug that caused popovers to show only their title
 
 ### Frontend
 - RTL layout, Bootstrap 5 RTL build

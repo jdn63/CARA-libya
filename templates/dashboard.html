@@ -610,17 +610,16 @@
                                         {{ tile.source }}
                                         {% if tile.year %}<span class="ms-1 opacity-75">({{ tile.year }})</span>{% endif %}
                                     </div>
-                                    {% if tile.formula %}
                                     <button type="button"
                                             class="btn btn-link btn-sm p-0 text-muted show-work-btn flex-shrink-0"
                                             data-bs-toggle="popover"
                                             data-bs-placement="top"
                                             data-bs-trigger="click"
+                                            data-bs-html="true"
                                             title="{{ tile.label_en }}"
-                                            data-bs-content="<div style='font-size:0.78rem;direction:ltr;min-width:220px;'><b>Risk Formula:</b><br><code style='word-break:break-word;'>{{ tile.formula | e }}</code>{% if tile.note %}<hr style='margin:.4rem 0;'><small class='text-muted'>{{ tile.note | e }}</small>{% endif %}{% if tile.proxy %}<hr style='margin:.4rem 0;'><small class='text-warning'><sup>~</sup> Proxy estimate</small>{% endif %}</div>">
+                                            data-bs-content="{{ tile.popover_html | e }}">
                                         <i class="fas fa-circle-info"></i>
                                     </button>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>

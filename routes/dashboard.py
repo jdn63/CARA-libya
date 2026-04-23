@@ -551,13 +551,18 @@ def _build_show_work(cd: dict) -> dict:
 def _T(tid, la, le, value, unit, year, score, formula, source,
        proxy=False, note='', protective=False):
     """
-    Build a single indicator tile dict.
+    Build a single indicator tile dict with rich pre-built popover HTML.
     protective=True means the raw value shows a GOOD outcome (e.g. vaccination %)
     and the score already reflects the risk direction (1 - coverage).
+
+    popover_html is built here as a Python string containing HTML, then stored
+    in the dict.  The template uses {{ tile.popover_html | e }} so Jinja2 escapes
+    < > " into HTML entities — the browser decodes them on read, Bootstrap renders
+    as innerHTML.  This avoids the attribute-breaking bare-< bug.
     """
     avail = value is not None
-    lev = _score_to_level(score) if score is not None else 'unavailable'
-    bdg = _level_badge(lev)
+    lev   = _score_to_level(score) if score is not None else 'unavailable'
+    bdg   = _level_badge(lev)
 
     if value is None:
         vfmt = None
@@ -575,24 +580,100 @@ def _T(tid, la, le, value, unit, year, score, formula, source,
     else:
         vfmt = str(value)
 
+    score_f  = round(float(score), 3)   if score is not None else None
+    score_d  = round(float(score) * 10, 1) if score is not None else None
+
+    # ── Build rich popover HTML ─────────────────────────────────────
+    p = []
+    # Header: Arabic name
+    p.append(f'<div style="direction:rtl;font-weight:700;font-size:0.85rem;'
+             f'margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px;">'
+             f'{la}</div>')
+
+    # Data table
+    p.append('<table style="width:100%;border-collapse:collapse;font-size:0.78rem;'
+             'margin-bottom:6px;">')
+
+    if vfmt is not None:
+        yr_str = f' ({year})' if year else ''
+        unit_str = f' {unit}' if unit else ''
+        p.append(f'<tr>'
+                 f'<td style="color:#888;padding:2px 8px 2px 0;white-space:nowrap;">'
+                 f'القيمة الفعلية</td>'
+                 f'<td><code style="color:#0d6efd;">{vfmt}</code>'
+                 f'<span style="color:#999;font-size:0.72rem;">{unit_str}{yr_str}</span>'
+                 f'</td></tr>')
+    else:
+        p.append('<tr><td style="color:#888;padding:2px 8px 2px 0;">القيمة الفعلية</td>'
+                 '<td style="color:#aaa;font-style:italic;">لا بيانات أولية / N/A</td></tr>')
+
+    if score_d is not None:
+        level_label = LEVEL_LABELS_AR.get(lev, lev)
+        p.append(f'<tr>'
+                 f'<td style="color:#888;padding:2px 8px 2px 0;white-space:nowrap;">'
+                 f'درجة المخاطر</td>'
+                 f'<td><code style="color:#dc3545;">{score_d}/10</code>'
+                 f'<span style="color:#999;font-size:0.72rem;"> — {level_label} / {lev.upper()}</span>'
+                 f'</td></tr>')
+
+    if protective:
+        p.append('<tr><td></td>'
+                 '<td style="color:#198754;font-size:0.72rem;">'
+                 '&#8593; قيمة وقائية — الدرجة = 1 &minus; التغطية'
+                 '</td></tr>')
+
+    p.append('</table>')
+
+    # Formula
+    if formula:
+        p.append('<div style="background:#f8f9fa;border-radius:4px;padding:6px 8px;'
+                 'margin-bottom:6px;">'
+                 '<div style="font-weight:600;font-size:0.75rem;color:#555;'
+                 'margin-bottom:3px;">&#x2211; الصيغة الحسابية / Formula</div>'
+                 f'<code style="font-size:0.76rem;word-break:break-all;'
+                 f'color:#0d6efd;">{formula}</code>'
+                 '</div>')
+
+    # Source + year
+    if source:
+        yr_str = f' ({year})' if year else ''
+        p.append(f'<div style="font-size:0.72rem;color:#888;margin-bottom:3px;">'
+                 f'<b>&#x1F4CB; المصدر / Source:</b> {source}{yr_str}</div>')
+
+    # Note
+    if note:
+        p.append(f'<div style="font-size:0.72rem;color:#666;border-top:1px solid #eee;'
+                 f'padding-top:4px;margin-top:4px;">{note}</div>')
+
+    # Proxy warning
+    if proxy:
+        p.append('<div style="font-size:0.72rem;color:#fd7e14;border-top:1px solid #eee;'
+                 'padding-top:4px;margin-top:4px;">'
+                 '<sup>~</sup> تقدير بديل موثق — لا تتوفر بيانات أولية مباشرة / '
+                 'Documented proxy estimate — no primary data available</div>')
+
+    popover_html = ''.join(p)
+    # ── End popover HTML ────────────────────────────────────────────
+
     return {
-        'id':           tid,
-        'label_ar':     la,
-        'label_en':     le,
-        'value':        value,
-        'value_fmt':    vfmt,
-        'unit':         unit,
-        'year':         year,
-        'score':        round(float(score), 3) if score is not None else None,
-        'score_display': round(float(score) * 10, 1) if score is not None else None,
-        'level':        lev,
-        'badge':        bdg,
-        'available':    avail,
-        'proxy':        proxy,
-        'protective':   protective,
-        'source':       source,
-        'formula':      formula,
-        'note':         note,
+        'id':            tid,
+        'label_ar':      la,
+        'label_en':      le,
+        'value':         value,
+        'value_fmt':     vfmt,
+        'unit':          unit,
+        'year':          year,
+        'score':         score_f,
+        'score_display': score_d,
+        'level':         lev,
+        'badge':         bdg,
+        'available':     avail,
+        'proxy':         proxy,
+        'protective':    protective,
+        'source':        source,
+        'formula':       formula,
+        'note':          note,
+        'popover_html':  popover_html,
     }
 
 
