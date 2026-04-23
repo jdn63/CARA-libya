@@ -611,13 +611,19 @@
                                         {% if tile.year %}<span class="ms-1 opacity-75">({{ tile.year }})</span>{% endif %}
                                     </div>
                                     <button type="button"
-                                            class="btn btn-link btn-sm p-0 text-muted show-work-btn flex-shrink-0"
-                                            data-bs-toggle="popover"
-                                            data-bs-placement="top"
-                                            data-bs-trigger="click"
-                                            data-bs-html="true"
-                                            title="{{ tile.label_en }}"
-                                            data-bs-content="{{ tile.popover_html | e }}">
+                                            class="btn btn-link btn-sm p-0 text-muted indicator-info-btn flex-shrink-0"
+                                            data-pop-ar="{{ tile.label_ar }}"
+                                            data-pop-en="{{ tile.label_en }}"
+                                            data-pop-value="{{ tile.value_fmt or '' }}"
+                                            data-pop-unit="{{ tile.unit }}"
+                                            data-pop-year="{{ tile.year or '' }}"
+                                            data-pop-score="{{ tile.score_display if tile.score_display is not none else '' }}"
+                                            data-pop-level="{{ tile.level }}"
+                                            data-pop-formula="{{ tile.formula | e }}"
+                                            data-pop-source="{{ tile.source }}"
+                                            data-pop-note="{{ tile.note | e }}"
+                                            data-pop-proxy="{{ 'true' if tile.proxy else 'false' }}"
+                                            data-pop-protective="{{ 'true' if tile.protective else 'false' }}">
                                         <i class="fas fa-circle-info"></i>
                                     </button>
                                 </div>
@@ -643,7 +649,7 @@
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Initialise all Bootstrap popovers on this page
@@ -658,14 +664,111 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Close popover when clicking outside
+    // ── Indicator tile info popovers ────────────────────────────────
+    var levelLabelsAr = {
+        critical: 'حرج', high: 'مرتفع', moderate: 'متوسط',
+        low: 'منخفض', minimal: 'ضئيل', unavailable: 'غير متاح'
+    };
+
+    document.querySelectorAll('.indicator-info-btn').forEach(function (btn) {
+        var d = btn.dataset;
+
+        new bootstrap.Popover(btn, {
+            html:        true,
+            sanitize:    false,
+            trigger:     'click',
+            placement:   'top',
+            container:   'body',
+            customClass: 'show-work-popover',
+            title: d.popEn || '',
+            content: function () {
+                var h = '<div style="direction:ltr;font-size:0.8rem;min-width:240px;">';
+
+                // Arabic name header
+                if (d.popAr) {
+                    h += '<div style="direction:rtl;font-weight:700;font-size:0.85rem;'
+                       + 'margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px;">'
+                       + d.popAr + '</div>';
+                }
+
+                // Data table
+                h += '<table style="width:100%;border-collapse:collapse;margin-bottom:4px;">';
+
+                if (d.popValue) {
+                    var unitYr = (d.popUnit ? ' ' + d.popUnit : '')
+                               + (d.popYear ? ' (' + d.popYear + ')' : '');
+                    h += '<tr><td style="color:#888;padding:2px 8px 2px 0;white-space:nowrap;'
+                       + 'font-size:0.75rem;">القيمة الفعلية</td>'
+                       + '<td><code style="color:#0d6efd;">' + d.popValue + '</code>'
+                       + '<span style="color:#999;font-size:0.72rem;">' + unitYr + '</span></td></tr>';
+                } else {
+                    h += '<tr><td style="color:#888;padding:2px 8px 2px 0;font-size:0.75rem;">'
+                       + 'القيمة الفعلية</td>'
+                       + '<td style="color:#aaa;font-style:italic;font-size:0.75rem;">'
+                       + 'لا بيانات / N/A</td></tr>';
+                }
+
+                if (d.popScore) {
+                    var lbl = levelLabelsAr[d.popLevel] || d.popLevel;
+                    h += '<tr><td style="color:#888;padding:2px 8px 2px 0;white-space:nowrap;'
+                       + 'font-size:0.75rem;">درجة المخاطر</td>'
+                       + '<td><code style="color:#dc3545;">' + d.popScore + '/10</code>'
+                       + '<span style="color:#999;font-size:0.72rem;"> — ' + lbl + ' / '
+                       + (d.popLevel || '').toUpperCase() + '</span></td></tr>';
+                }
+
+                if (d.popProtective === 'true') {
+                    h += '<tr><td></td><td style="color:#198754;font-size:0.72rem;">'
+                       + '&#8593; قيمة وقائية — الدرجة = 1 &minus; التغطية</td></tr>';
+                }
+
+                h += '</table>';
+
+                // Formula block
+                if (d.popFormula) {
+                    h += '<div style="background:#f8f9fa;border-radius:4px;padding:5px 8px;margin:4px 0;">'
+                       + '<div style="font-weight:600;font-size:0.73rem;color:#555;margin-bottom:2px;">'
+                       + 'الصيغة الحسابية / Formula</div>'
+                       + '<code style="font-size:0.76rem;word-break:break-all;color:#0d6efd;">'
+                       + d.popFormula + '</code></div>';
+                }
+
+                // Source
+                if (d.popSource) {
+                    h += '<div style="font-size:0.72rem;color:#888;margin-top:4px;">'
+                       + '<b>المصدر / Source:</b> ' + d.popSource
+                       + (d.popYear ? ' (' + d.popYear + ')' : '') + '</div>';
+                }
+
+                // Methodology note
+                if (d.popNote) {
+                    h += '<div style="font-size:0.72rem;color:#666;border-top:1px solid #eee;'
+                       + 'padding-top:4px;margin-top:4px;">' + d.popNote + '</div>';
+                }
+
+                // Proxy disclaimer
+                if (d.popProxy === 'true') {
+                    h += '<div style="font-size:0.72rem;color:#fd7e14;border-top:1px solid #eee;'
+                       + 'padding-top:4px;margin-top:4px;">~ تقدير بديل موثق — '
+                       + 'لا تتوفر بيانات أولية / Documented proxy estimate</div>';
+                }
+
+                h += '</div>';
+                return h;
+            }
+        });
+    });
+
+    // Close ALL popovers (both types) when clicking outside
     document.addEventListener('click', function (e) {
         if (!e.target.closest('[data-bs-toggle="popover"]') &&
+            !e.target.closest('.indicator-info-btn') &&
             !e.target.closest('.popover')) {
-            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (el) {
-                var pop = bootstrap.Popover.getInstance(el);
-                if (pop) pop.hide();
-            });
+            document.querySelectorAll('[data-bs-toggle="popover"], .indicator-info-btn')
+                .forEach(function (el) {
+                    var pop = bootstrap.Popover.getInstance(el);
+                    if (pop) pop.hide();
+                });
         }
     });
 });
