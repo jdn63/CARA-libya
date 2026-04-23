@@ -10,20 +10,57 @@
     <span class="en-text">Local-Agency Data Entry</span>
   </div>
 
+  {# ─── Master Template CTA (primary action) ───────────────────────── #}
+  <a class="text-decoration-none text-reset"
+     href="{{ url_for('data_entry.master_page') }}">
+    <div class="card border-0 shadow-sm mb-4 cara-clickable-card"
+         style="background:linear-gradient(135deg,#1f4e79 0%,#2e7d32 100%); color:#fff;">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3">
+          <div style="font-size:2rem;">
+            <i class="fas fa-file-excel"></i>
+          </div>
+          <div class="flex-grow-1">
+            <h5 class="mb-1">
+              <span class="ar-text">القالب الموحَّد — كل المجالات في ملف واحد</span>
+            </h5>
+            <div class="en-text mb-2" style="opacity:.9;">
+              Master Template — all domains in one workbook
+            </div>
+            <div class="ar-text small" style="opacity:.95;">
+              تنزيل واحد، رفع واحد. تبويب منفصل لكل مجال. التبويبات
+              الفارغة تُتجاهل تلقائياً ولا تَمسح البيانات السابقة.
+            </div>
+            <div class="en-text small mt-1" style="opacity:.9;" dir="ltr">
+              One download, one upload. A tab per domain. Empty tabs are
+              skipped — they never overwrite previously submitted data.
+            </div>
+          </div>
+          <div>
+            <i class="fas fa-arrow-left ar-text" style="font-size:1.3rem;"></i>
+            <i class="fas fa-arrow-right en-text" style="font-size:1.3rem;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+
   <div class="card border-0 shadow-sm mb-4">
     <div class="card-body">
-      <p class="ar-text mb-2">
-        تختار من القائمة أدناه المجال الذي ترغب في رفع بياناته. كل مجال
-        يتضمن قالب Excel جاهز يحتوي على جميع البلديات الليبية، صفحة
-        إرشادات بالعربية والإنجليزية، وجدول مقارنة فوري بين البلديات بعد
-        رفع الملفات. الأعمدة وأنواع المؤشرات تختلف بحسب المجال.
+      <h6 class="mb-2">
+        <span class="ar-text">أو ارفع بيانات مجال واحد</span>
+        <span class="en-text small text-muted d-block" dir="ltr">
+          Or upload data for a single domain
+        </span>
+      </h6>
+      <p class="ar-text small text-muted mb-1">
+        إذا كانت لديك بيانات لمجال واحد فقط، يمكنك استخدام القالب
+        المخصَّص لذلك المجال عبر البطاقات أدناه.
       </p>
       <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
-        Pick the workshop domain you want to upload data for. Each domain
-        ships with a ready-made Excel template containing every Libyan
-        municipality, a bilingual instructions sheet, and an instant
-        cross-municipality comparison table once files are uploaded.
-        Indicators and units differ by domain.
+        If you only have data for one domain, use that domain's dedicated
+        template via the cards below. The single-domain and master
+        templates consolidate into the same comparison table.
       </p>
     </div>
   </div>

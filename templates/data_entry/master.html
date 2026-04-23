@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}القالب الموحَّد — CARA ليبيا{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item">
+        <a href="{{ url_for('data_entry.hub') }}">
+          <span class="ar-text">إدخال البيانات المحلية</span>
+          <span class="en-text">Local-Agency Data Entry</span>
+        </a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        <span class="ar-text">القالب الموحَّد</span>
+        <span class="en-text">Master Template</span>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="cara-heading mb-3">
+    <span class="ar-text">القالب الموحَّد — كل المجالات في ملف واحد</span>
+    <span class="en-text">Master Template — All Domains in One Workbook</span>
+  </div>
+
+  {# ─── Flash messages ─────────────────────────────────────────────── #}
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in msgs %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  {# ─── Overview ───────────────────────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <p class="ar-text mb-2">
+        تنزيل واحد، ورفع واحد يشمل جميع المجالات. الملف يحتوي على تبويب
+        منفصل لكل مجال (إجمالي {{ per_domain_status|length }} تبويبات)
+        بالإضافة إلى تبويب التعليمات. تستطيع تعبئة ما توفّر لديك فقط —
+        التبويبات الفارغة سيتجاهلها النظام ولن تمسح البيانات المرفوعة
+        سابقاً.
+      </p>
+      <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+        One download and one upload covering every domain. The workbook
+        has one tab per domain ({{ per_domain_status|length }} tabs in total)
+        plus an Instructions tab. Fill only the tabs you have data for —
+        empty tabs are skipped and will not overwrite previously
+        submitted data.
+      </p>
+    </div>
+  </div>
+
+  {# ─── Actions row ────────────────────────────────────────────────── #}
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="mb-2">
+            <i class="fas fa-download me-1"></i>
+            <span class="ar-text">١. تنزيل القالب الموحَّد</span>
+            <span class="en-text small text-muted d-block" dir="ltr">
+              1. Download the Master Template
+            </span>
+          </h6>
+          <p class="small text-muted ar-text">
+            ملف Excel واحد يشمل 106 بلدية وجميع المجالات الخمسة مع
+            التحقق من صحة القيم.
+          </p>
+          <a class="btn btn-primary"
+             href="{{ url_for('data_entry.master_template') }}">
+            <i class="fas fa-file-excel me-1"></i>
+            <span class="ar-text">تنزيل القالب الموحَّد (.xlsx)</span>
+            <span class="en-text">Download Master Template (.xlsx)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="mb-2">
+            <i class="fas fa-upload me-1"></i>
+            <span class="ar-text">٢. رفع القالب بعد التعبئة</span>
+            <span class="en-text small text-muted d-block" dir="ltr">
+              2. Upload the filled master workbook
+            </span>
+          </h6>
+          <p class="small text-muted ar-text">
+            الحد الأقصى 10 ميغابايت. التبويبات الفارغة تُتجاهل تلقائياً.
+          </p>
+          <form method="post"
+                action="{{ url_for('data_entry.master_upload') }}"
+                enctype="multipart/form-data"
+                class="d-flex flex-wrap gap-2 align-items-center">
+            <input type="file" name="workbook" accept=".xlsx"
+                   class="form-control" required style="max-width:320px;">
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-upload me-1"></i>
+              <span class="ar-text">رفع</span>
+              <span class="en-text">Upload</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ─── Per-domain status ─────────────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-light">
+      <h6 class="mb-0">
+        <span class="ar-text">حالة التبويبات في قاعدة البيانات</span>
+        <span class="en-text small text-muted" dir="ltr">
+          Status of each domain in the store
+        </span>
+      </h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>
+              <span class="ar-text">المجال</span>
+              <span class="en-text small text-muted d-block">Domain</span>
+            </th>
+            <th>
+              <span class="ar-text">عدد الملفات</span>
+              <span class="en-text small text-muted d-block">Files</span>
+            </th>
+            <th>
+              <span class="ar-text">بلديات</span>
+              <span class="en-text small text-muted d-block">Munis</span>
+            </th>
+            <th>
+              <span class="ar-text">أحدث تاريخ جمع</span>
+              <span class="en-text small text-muted d-block">Latest capture</span>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in per_domain_status %}
+            {% set spec = d.spec %}
+            <tr>
+              <td>
+                <i class="{{ spec.icon }} me-1 text-muted"></i>
+                <span class="ar-text">{{ spec.name_ar }}</span>
+                <span class="en-text small text-muted d-block" dir="ltr">
+                  {{ spec.name_en }}
+                </span>
+              </td>
+              <td>
+                {% if d.upload_count %}
+                  <span class="badge bg-success">{{ d.upload_count }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">0</span>
+                {% endif %}
+              </td>
+              <td>{{ d.muni_count }}</td>
+              <td dir="ltr">
+                {{ d.freshness.isoformat() if d.freshness else '—' }}
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{{ url_for('data_entry.domain_page', key=spec.key) }}">
+                  <span class="ar-text">افتح</span>
+                  <span class="en-text">Open</span>
+                  <i class="fas fa-arrow-left ar-text ms-1"></i>
+                  <i class="fas fa-arrow-right en-text ms-1"></i>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {# ─── Master export (combined comparison) ──────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <h6 class="mb-2">
+        <i class="fas fa-table me-1"></i>
+        <span class="ar-text">تصدير ملف مقارنة موحَّد لكل المجالات</span>
+        <span class="en-text small text-muted d-block" dir="ltr">
+          Export a single combined comparison workbook
+        </span>
+      </h6>
+      <p class="small text-muted ar-text">
+        ملف Excel واحد فيه تبويب مقارنة لكل مجال — مناسب للمشاركة مع
+        الشركاء بعد الورشة.
+      </p>
+      <a class="btn btn-outline-primary"
+         href="{{ url_for('data_entry.master_export') }}">
+        <i class="fas fa-download me-1"></i>
+        <span class="ar-text">تنزيل ملف المقارنة الموحَّد</span>
+        <span class="en-text">Download Combined Comparison (.xlsx)</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

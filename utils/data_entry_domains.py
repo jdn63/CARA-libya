@@ -72,12 +72,20 @@ class DomainSpec:
 
     indicators: tuple[Indicator, ...] = field(default_factory=tuple)
 
+    sheet_title: str = ""
+    """Short English label used as the worksheet name inside the Libya CARA
+    Master Template workbook. Must be unique across domains and at most 31
+    characters (Excel limit). Defaults to ``nav_en`` if left blank."""
+
     # ----- convenience -----
     def column_keys(self) -> list[str]:
         return [i.code for i in self.indicators]
 
     def has_groups(self) -> bool:
         return any(i.group_ar for i in self.indicators)
+
+    def resolved_sheet_title(self) -> str:
+        return (self.sheet_title or self.nav_en)[:31]
 
 
 # --------------------------------------------------------------------------- #
@@ -152,6 +160,7 @@ def _ncd_grid(prefix: str,
 # --------------------------------------------------------------------------- #
 
 INFECTIOUS_DISEASE = DomainSpec(
+    sheet_title="Infectious Disease",
     key="infectious-disease",
     name_ar="بيانات الأمراض المعدية",
     name_en="Infectious Disease Data",
@@ -187,6 +196,7 @@ INFECTIOUS_DISEASE = DomainSpec(
 
 
 VECTOR_BORNE = DomainSpec(
+    sheet_title="Vector-Borne Disease",
     key="vector-borne-disease",
     name_ar="الأمراض المنقولة بالنواقل",
     name_en="Vector-Borne Disease Data",
@@ -224,6 +234,7 @@ VECTOR_BORNE = DomainSpec(
 
 
 NCDS = DomainSpec(
+    sheet_title="NCDs",
     key="ncds",
     name_ar="الأمراض غير السارية",
     name_en="Non-Communicable Diseases (NCDs)",
@@ -264,6 +275,7 @@ NCDS = DomainSpec(
 
 
 MNCH = DomainSpec(
+    sheet_title="Maternal and Child Health",
     key="maternal-child-health",
     name_ar="صحة الأم والطفل",
     name_en="Maternal, Newborn & Child Health (MNCH)",
@@ -336,6 +348,7 @@ MNCH = DomainSpec(
 
 
 ENVIRONMENTAL_HEALTH = DomainSpec(
+    sheet_title="Environmental Health",
     key="environmental-health",
     name_ar="الصحة البيئية والخدمات الأساسية",
     name_en="Environmental Health & Basic Services",

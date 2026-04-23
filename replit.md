@@ -130,18 +130,28 @@ Domain-driven pipeline that lets local response agencies upload municipal-level 
     - ncds (Diabetes, Hypertension, CVD, Cancer x prevalence/morbidity/mortality)
     - maternal-child-health (6 flat indicators, mixed units)
     - environmental-health (5 flat indicators: water, sanitation, electricity, waste, PM2.5)
-- Engine: utils/local_agency_data.py — schema-agnostic, consumes a DomainSpec to build template, consolidate uploads, build export.
-- Routes: routes/data_entry.py — single set of endpoints parameterized by <key>:
-    - GET /data-entry/                       hub listing all domains with status badges
-    - GET /data-entry/<key>                  download/upload/compare page
-    - GET /data-entry/<key>/template.xlsx    blank pre-populated template (106 munis, RTL, validations, Instructions sheet)
-    - POST /data-entry/<key>/upload          ingest workbook (10MB cap, OOXML validation)
-    - GET /data-entry/<key>/export.xlsx      consolidated comparison workbook
-- Templates: templates/data_entry/index.html (hub), templates/data_entry/domain.html (generic page handles both grouped grids and flat indicator lists).
-- Storage: data/uploads/local_agencies/<domain_key>/ (timestamped audit trail; files never deleted).
+- DomainSpec.sheet_title: short (<=31 char) English worksheet name used inside the master workbook.
+- Engine: utils/local_agency_data.py — schema-agnostic, consumes a DomainSpec to build template, consolidate uploads, build export. _populate_data_entry_sheet() is the shared per-tab builder reused by both single-domain and master templates.
+- Routes: routes/data_entry.py
+    Per-domain (for partners with data in only one area):
+        GET  /data-entry/                       hub
+        GET  /data-entry/<key>                  download/upload/compare
+        GET  /data-entry/<key>/template.xlsx    single-domain template
+        POST /data-entry/<key>/upload           ingest single-domain workbook
+        GET  /data-entry/<key>/export.xlsx      single-domain comparison
+    Master (primary CTA, one file, all domains):
+        GET  /data-entry/master                 master landing page with per-tab status
+        GET  /data-entry/master/template.xlsx   combined template (1 Instructions tab + 5 domain tabs)
+        POST /data-entry/master/upload          split per tab, ingest non-empty tabs, skip empty tabs
+        GET  /data-entry/master/export.xlsx     combined comparison workbook (5 sheets)
+- Templates: templates/data_entry/index.html (hub + master CTA), templates/data_entry/master.html (master page), templates/data_entry/domain.html (generic single-domain page).
+- Storage: data/uploads/local_agencies/<domain_key>/ (timestamped audit trail; files never deleted). Master uploads are split into one standalone per-domain workbook per non-empty tab and saved as TIMESTAMP__master__STEM__DOMAIN.xlsx so the existing consolidation logic is unchanged.
+- Partial-submission rule: a master tab is ingested only if it has at least one row with municipality_id + valid capture_date + at least one non-blank indicator. Empty tabs are SKIPPED, never "cleared" — previously submitted data is preserved.
+- Domain marker: every generated workbook embeds cara_libya_domain_key as a custom workbook property. Single-domain files carry the domain slug; master files carry "__libya_cara_master__". Upload routes reject files whose marker doesn't match the endpoint, with bilingual flashes that point the user to the correct page.
 - Security: filename sanitization, OOXML zip validation, hard 10MB cap (no Content-Length trust), formula-injection guard (_safe_text neutralises leading = + - @ on every text cell in exports).
 - Consolidation: latest capture per municipality wins; on date ties, newer upload (mtime) wins deterministically.
-- Adding a new domain is a pure-data change: append a DomainSpec to utils.data_entry_domains.DOMAINS.
+- Date bounds: _parse_date rejects dates outside [2000-01-01, today] so a user who bypasses Excel data validation cannot poison the comparison table.
+- Adding a new domain is a pure-data change: append a DomainSpec to utils.data_entry_domains.DOMAINS (set a sheet_title <=31 chars to control the master tab name).
 
 ## Bootstrap Icons
 Bootstrap Icons CDN (v1.11.3) is loaded in templates/base.html and templates/login.html.
