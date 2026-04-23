@@ -64,6 +64,11 @@ def create_app() -> Flask:
           /logout    — session teardown
           /health    — monitoring/readiness probe
         """
+        # ACCESS CONTROL TEMPORARILY DISABLED — open access for all routes.
+        # To re-enable, delete the next line and ensure CARA_ACCESS_PASSWORD
+        # is set in Replit Secrets (workspace + deployment).
+        return None
+
         exempt_prefixes = ('/static/', '/login', '/logout', '/health')
         if any(request.path.startswith(p) for p in exempt_prefixes):
             return None
