@@ -87,7 +87,34 @@ Manual upload (no public API — restricted government data):
 - COI Libya: data/uploads/coi/ (coordination capacity CSV)
 - IOM DTM fallback: data/uploads/iom/ (if HDX download fails)
 
-## Wisconsin Cleanup Status
-herc_bp and gis_export_bp removed from routes/__init__.py.
-routes/api.py rewritten with Libya-specific endpoints only.
-Legacy files (routes/herc.py, routes/gis_export.py, utils/herc_data.py, utils/wem_data.py) remain on disk but are not registered or imported by active code paths.
+## Access Control
+Authentication is implemented via a before_request hook in app.py.
+Set the CARA_ACCESS_PASSWORD Replit secret to enable password-gating.
+If CARA_ACCESS_PASSWORD is not set the tool runs in open mode (development only).
+Login route: /login (GET renders bilingual form; POST validates password and sets session).
+Logout route: /logout (clears session, redirects to login).
+Exempt from auth: /static/, /login, /logout, /health
+Logout button is visible in the top navigation bar at all times.
+
+## Health Check
+GET /health returns JSON: status, service, municipalities_loaded, municipalities_target, data_coverage_pct.
+No authentication required. Suitable for readiness probes and monitoring agents.
+
+## Wisconsin Cleanup Status (April 2026)
+The following Wisconsin/HERC-specific files have been permanently deleted:
+- routes/herc.py
+- config/county_baselines.yaml
+- config/profiles/us_state.yaml
+- templates/herc_dashboard.html, herc_print_summary.html, action_plan.html (Wisconsin), active_shooter_methodology.html
+- utils/wisconsin_climate_data.py, wisconsin_dhs_scraper.py, wisconsin_mapping.py
+- utils/herc_data.py, herc_risk_aggregator.py, kp_hva_export.py, hva_export.py
+Remaining US-specific utility files (census_data_loader.py, dhs_data.py, etc.) are inert — not imported by any active Libya code path.
+
+## Test Suite
+tests/smoke_test.py: 14 tests, all pass.
+Includes test_inform_formula_cube_root() validating the INFORM (H x V x C)^(1/3) geometric mean formula with 4 known-value cases.
+All PHRAT pipeline terminology replaced with INFORM/composite terminology throughout.
+
+## Bootstrap Icons
+Bootstrap Icons CDN (v1.11.3) is loaded in templates/base.html and templates/login.html.
+Used in action_plan_libya.html for bi-arrow-right-circle and bi-printer icons.

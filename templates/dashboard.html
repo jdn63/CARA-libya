@@ -77,6 +77,41 @@
                                 </span>
                             </div>
 
+                            {# ── Data completeness badge ────────────────────── #}
+                            {% set pillars_real = [] %}
+                            {% if pillar_data.hazard.available %}{% set _ = pillars_real.append(1) %}{% endif %}
+                            {% if pillar_data.vulnerability.available %}{% set _ = pillars_real.append(1) %}{% endif %}
+                            {% if pillar_data.coping.available %}{% set _ = pillars_real.append(1) %}{% endif %}
+                            {% set real_count = pillars_real | length %}
+                            {% set coverage_pct = (real_count / 3 * 100) | round(0) | int %}
+                            <div class="mt-2">
+                                {% if real_count == 3 %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        <span class="ar-text d-inline">تغطية البيانات: 100%</span>
+                                        <span class="en-text d-inline text-white-50" style="font-size:.75em"> · Full data</span>
+                                    </span>
+                                {% elif real_count == 2 %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-exclamation-circle me-1"></i>
+                                        <span class="ar-text d-inline">تغطية جزئية: 67% (ركيزتان بيانات حقيقية)</span>
+                                        <span class="en-text d-inline" style="font-size:.75em"> · Partial — 1 proxy pillar</span>
+                                    </span>
+                                {% elif real_count == 1 %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        <span class="ar-text d-inline">بيانات محدودة: 33% (ركيزة واحدة فقط)</span>
+                                        <span class="en-text d-inline text-white-50" style="font-size:.75em"> · Limited — 2 proxy pillars</span>
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-question-circle me-1"></i>
+                                        <span class="ar-text d-inline">لا توجد بيانات — جميع القيم تقديرية</span>
+                                        <span class="en-text d-inline text-white-50" style="font-size:.75em"> · No real data — all proxies</span>
+                                    </span>
+                                {% endif %}
+                            </div>
+
                             {% if pillar_data.all_unavailable %}
                             <div class="alert alert-warning mt-3 mb-0 py-2">
                                 <i class="fas fa-exclamation-triangle me-2"></i>

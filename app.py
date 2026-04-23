@@ -1,12 +1,12 @@
 """
-CARA Template — Flask application factory.
+CARA Libya — Flask application factory.
 
-This file is intentionally minimal. All initialization is in core.py.
-Modify core.py to add startup logic, scheduler jobs, or middleware.
+Intentionally minimal: all startup logic lives in core.py.
+Authentication (before_request) and route registration are wired here.
 """
 
 import os
-from flask import Flask
+from flask import Flask, session, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
@@ -47,6 +47,33 @@ def create_app() -> Flask:
 
         from routes import register_routes
         register_routes(flask_app)
+
+    @flask_app.before_request
+    def _require_login():
+        """
+        Restrict access to all routes unless a valid session exists.
+
+        Access control is enabled only when the CARA_ACCESS_PASSWORD environment
+        variable is set. If the variable is absent the tool runs in open mode
+        (useful during local development). Set the variable via Replit Secrets
+        before any public-facing deployment.
+
+        Exempt paths:
+          /static/   — CSS, JS, fonts (always public)
+          /login     — the login form itself
+          /logout    — session teardown
+          /health    — monitoring/readiness probe
+        """
+        exempt_prefixes = ('/static/', '/login', '/logout', '/health')
+        if any(request.path.startswith(p) for p in exempt_prefixes):
+            return None
+
+        cara_password = os.environ.get('CARA_ACCESS_PASSWORD', '')
+        if not cara_password:
+            return None
+
+        if not session.get('cara_authenticated'):
+            return redirect(url_for('public.login', next=request.path))
 
     return flask_app
 

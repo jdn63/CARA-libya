@@ -1,16 +1,20 @@
 """
-CARA Template — End-to-End Smoke Test
+Libya CARA — End-to-End Smoke Test
 
-Verifies that all 7 risk domains can be instantiated, that calculate() and
-domain_info() succeed without exceptions, that all required result keys are
-present, and that the PHRAT pipeline produces a valid numeric score via both
-the risk_engine and data_processor orchestration paths.
+Verifies that all domain classes can be instantiated, that calculate() and
+domain_info() succeed without exceptions, and that all required result keys
+are present.  Also validates the INFORM Risk Index scoring pipeline used by
+the Libya profile and the legacy weighted-quadratic-mean pipeline used by
+the international profile.
 
-Run as a standalone script (from the cara_template/ directory):
+INFORM Risk Index formula (Libya profile):
+    INFORM_Risk = (Hazard_Exposure × Vulnerability × Lack_of_Coping_Capacity) ^ (1/3)
+
+Run as a standalone script (from the project root):
     python tests/smoke_test.py
 
-Run with pytest (from the workspace root):
-    pytest cara_template/tests/smoke_test.py -v
+Run with pytest:
+    pytest tests/smoke_test.py -v
 """
 
 import importlib
@@ -294,8 +298,8 @@ def test_load_weights_international():
     )
 
 
-def test_phrat_produces_valid_score():
-    """calculate_phrat must return a finite float in [0, 1]."""
+def test_composite_score_valid_range():
+    """calculate_phrat (international profile) must return a finite float in [0, 1]."""
     risk_engine = _import("utils.risk_engine")
 
     domain_scores = {}
@@ -312,14 +316,73 @@ def test_phrat_produces_valid_score():
     total_score, breakdown = risk_engine.calculate_phrat(domain_scores, weights)
 
     assert isinstance(total_score, (int, float)), (
-        f"PHRAT score is not numeric: {total_score!r}"
+        f"Composite score is not numeric: {total_score!r}"
     )
-    assert not math.isnan(total_score), "PHRAT score is NaN"
-    assert not math.isinf(total_score), "PHRAT score is Inf"
+    assert not math.isnan(total_score), "Composite score is NaN"
+    assert not math.isinf(total_score), "Composite score is Inf"
     assert 0.0 <= total_score <= 1.0, (
-        f"PHRAT score {total_score:.4f} outside [0, 1]"
+        f"Composite score {total_score:.4f} outside [0, 1]"
     )
-    assert "domains" in breakdown, "PHRAT breakdown missing 'domains' key"
+    assert "domains" in breakdown, "Breakdown missing 'domains' key"
+
+
+def test_inform_formula_cube_root():
+    """
+    Validate the INFORM geometric mean formula: INFORM = (H × V × C) ^ (1/3).
+
+    Uses known inputs with manually-computed expected outputs to ensure
+    the cube-root formula is correctly implemented in calculate_inform().
+    This is the formula used by the Libya profile.
+    """
+    risk_engine = _import("utils.risk_engine")
+
+    # Case 1: (0.5 × 0.5 × 0.5)^(1/3) = 0.5 exactly
+    score1, breakdown1 = risk_engine.calculate_inform({
+        'hazard_exposure': 0.5,
+        'vulnerability': 0.5,
+        'coping_capacity': 0.5,
+    })
+    assert abs(score1 - 0.5) < 0.001, (
+        f"INFORM (0.5×0.5×0.5)^(1/3) expected 0.5, got {score1}"
+    )
+    assert breakdown1.get('formula') == 'inform_geometric_mean', (
+        f"Expected 'inform_geometric_mean', got {breakdown1.get('formula')!r}"
+    )
+    assert 'pillars' in breakdown1, "INFORM breakdown missing 'pillars' key"
+    assert breakdown1.get('data_coverage') == 1.0, (
+        f"Expected full data coverage 1.0, got {breakdown1.get('data_coverage')}"
+    )
+
+    # Case 2: (0.8 × 0.6 × 0.4)^(1/3) = 0.1920^(1/3) ≈ 0.5769
+    expected2 = round((0.8 * 0.6 * 0.4) ** (1.0 / 3.0), 4)
+    score2, _ = risk_engine.calculate_inform({
+        'hazard_exposure': 0.8,
+        'vulnerability': 0.6,
+        'coping_capacity': 0.4,
+    })
+    assert abs(score2 - expected2) < 0.001, (
+        f"INFORM (0.8×0.6×0.4)^(1/3) expected {expected2:.4f}, got {score2:.4f}"
+    )
+
+    # Case 3: any zero pillar → total score must be 0.0 (geometric mean property)
+    score3, _ = risk_engine.calculate_inform({
+        'hazard_exposure': 0.0,
+        'vulnerability': 0.8,
+        'coping_capacity': 0.6,
+    })
+    assert score3 == 0.0, (
+        f"INFORM with Hazard=0 should give 0.0, got {score3}"
+    )
+
+    # Case 4: maximum risk (all pillars = 1.0) → total = 1.0
+    score4, _ = risk_engine.calculate_inform({
+        'hazard_exposure': 1.0,
+        'vulnerability': 1.0,
+        'coping_capacity': 1.0,
+    })
+    assert abs(score4 - 1.0) < 0.001, (
+        f"INFORM (1×1×1)^(1/3) should be 1.0, got {score4}"
+    )
 
 
 def test_classify_risk_returns_dict_with_required_keys():
@@ -362,8 +425,9 @@ def test_compute_all_domains_returns_all_7_international_domains():
 
 def test_risk_engine_end_to_end_pipeline():
     """
-    Full risk_engine pipeline: compute_all_domains → load_weights → calculate_phrat.
-    Verifies that all 7 domain scores feed into a valid composite PHRAT score.
+    Full risk_engine pipeline (international profile):
+    compute_all_domains → load_weights → calculate_phrat.
+    Verifies that all 7 domain scores feed into a valid composite score.
     """
     risk_engine = _import("utils.risk_engine")
 
@@ -380,18 +444,17 @@ def test_risk_engine_end_to_end_pipeline():
     weights = risk_engine.load_weights(profile=PROFILE)
     total_score, _ = risk_engine.calculate_phrat(domain_scores, weights)
 
-    assert isinstance(total_score, (int, float)), f"Non-numeric PHRAT score: {total_score!r}"
-    assert not math.isnan(total_score), "PHRAT score is NaN"
-    assert 0.0 <= total_score <= 1.0, f"PHRAT score {total_score:.4f} outside [0, 1]"
+    assert isinstance(total_score, (int, float)), f"Non-numeric composite score: {total_score!r}"
+    assert not math.isnan(total_score), "Composite score is NaN"
+    assert 0.0 <= total_score <= 1.0, f"Composite score {total_score:.4f} outside [0, 1]"
 
 
 def test_data_processor_orchestration():
     """
-    Validate the data_processor orchestration path:
+    Validate the scoring orchestration path (international profile):
     compute_all_domains → load_weights → calculate_phrat → classify_risk.
-    Uses synthetic connector data; no network calls or database required.
-    This mirrors compute_risk_for_jurisdiction() in data_processor.py,
-    exercising every scoring step except config file loading and connector fetching.
+    Uses synthetic connector data — no network calls or database required.
+    Mirrors the compute_risk_for_jurisdiction() path in data_processor.py.
     """
     risk_engine = _import("utils.risk_engine")
 

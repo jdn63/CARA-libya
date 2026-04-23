@@ -188,6 +188,51 @@ body { direction: rtl; }
         {% endfor %}
     </div>
 
+    {# ── Data quality priority notice ──────────────────────────────────── #}
+    {% set pillars_with_data = [] %}
+    {% if hazard.get('available') %}{% set _ = pillars_with_data.append(1) %}{% endif %}
+    {% if vuln.get('available') %}{% set _ = pillars_with_data.append(1) %}{% endif %}
+    {% if coping.get('available') %}{% set _ = pillars_with_data.append(1) %}{% endif %}
+    {% set real_pillars = pillars_with_data | length %}
+
+    {% if real_pillars < 3 %}
+    <div class="alert border-0 mb-4"
+         style="background:#fff3cd;border-right:5px solid #fd7e14 !important;border-radius:.5rem">
+        <div class="d-flex align-items-start gap-3">
+            <i class="fas fa-database text-warning fs-4 mt-1 flex-shrink-0"></i>
+            <div>
+                <div class="fw-bold mb-1" style="color:#856404">
+                    أولوية تحسين جودة البيانات / Data Quality Improvement — Top Priority
+                </div>
+                <div class="small" style="color:#533f03">
+                    {% if real_pillars == 0 %}
+                    يعتمد هذا التقييم بالكامل على متوسطات إقليمية تقديرية — لا تتوفر بيانات حقيقية لأي من الركائز الثلاث.
+                    <span class="en-text d-block mt-1" style="font-style:italic">
+                        This assessment relies entirely on proxy regional averages — no real data is available for any of the three INFORM pillars.
+                    </span>
+                    {% elif real_pillars == 1 %}
+                    ركيزة واحدة فقط تستند إلى بيانات حقيقية؛ ركيزتان تستخدمان متوسطات إقليمية تقديرية.
+                    <span class="en-text d-block mt-1" style="font-style:italic">
+                        Only one INFORM pillar uses real data; two pillars rely on proxy regional averages.
+                    </span>
+                    {% else %}
+                    ركيزتان تستندان إلى بيانات حقيقية؛ ركيزة واحدة تستخدم متوسطاً إقليمياً تقديرياً.
+                    <span class="en-text d-block mt-1" style="font-style:italic">
+                        Two pillars use real data; one pillar relies on a proxy regional average.
+                    </span>
+                    {% endif %}
+                    <div class="mt-2 fw-semibold" style="color:#533f03">
+                        يُوصى بإدراج تحسين جودة البيانات ضمن الأولويات الأولى في جميع قوائم العمل أدناه.
+                        <span class="en-text fw-normal" style="font-style:italic">
+                        Improving data quality is recommended as a first-order priority across all action lists below.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {# ── Executive Summary Table ───────────────────────────────────────── #}
     <div class="card mb-4">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">

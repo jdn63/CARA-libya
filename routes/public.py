@@ -9,8 +9,10 @@ These routes handle the main pages:
 """
 
 import logging
+import os
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import (Blueprint, render_template, redirect, url_for,
+                   request, session, flash, jsonify)
 
 from utils.geography.jurisdiction_manager import JurisdictionManager
 
@@ -90,6 +92,61 @@ def data_sources():
     except Exception as e:
         logger.error(f"Error loading data sources page: {e}")
         return render_template('error.html', message="Failed to load data sources page.")
+
+
+@public_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    """Bilingual login page — validates CARA_ACCESS_PASSWORD session secret."""
+    cara_password = os.environ.get('CARA_ACCESS_PASSWORD', '')
+
+    if not cara_password:
+        session['cara_authenticated'] = True
+        return redirect(request.args.get('next') or '/')
+
+    if session.get('cara_authenticated'):
+        return redirect(request.args.get('next') or '/')
+
+    if request.method == 'POST':
+        entered = request.form.get('password', '')
+        if entered == cara_password:
+            session['cara_authenticated'] = True
+            session.permanent = False
+            next_url = request.args.get('next', '/')
+            if not next_url.startswith('/'):
+                next_url = '/'
+            return redirect(next_url)
+        flash('كلمة المرور غير صحيحة / Incorrect password — please try again.', 'danger')
+        logger.warning("Failed login attempt from %s", request.remote_addr)
+
+    return render_template('login.html')
+
+
+@public_bp.route('/logout')
+def logout():
+    """Clear session and redirect to login page."""
+    session.clear()
+    return redirect(url_for('public.login'))
+
+
+@public_bp.route('/health')
+def health():
+    """
+    Lightweight health-check endpoint for monitoring and readiness probes.
+    Returns JSON — no authentication required.
+    """
+    try:
+        jm = _get_jm()
+        municipalities_loaded = len(jm.get_all())
+    except Exception:
+        municipalities_loaded = 0
+
+    return jsonify({
+        'status': 'ok',
+        'service': 'CARA Libya',
+        'municipalities_loaded': municipalities_loaded,
+        'municipalities_target': 148,
+        'data_coverage_pct': round(municipalities_loaded / 148 * 100, 1),
+    })
 
 
 @public_bp.route('/gis-export')
