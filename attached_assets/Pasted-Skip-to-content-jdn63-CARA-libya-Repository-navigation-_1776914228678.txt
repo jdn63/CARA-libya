@@ -1,0 +1,75 @@
+Skip to content
+jdn63
+CARA-libya
+Repository navigation
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security and quality
+Insights
+Settings
+CARA CI
+Integrate real EM-DAT disaster data and update documentation #3
+All jobs
+Run details
+Annotations
+1 error and 1 warning
+test
+failed 2 minutes ago in 1m 25s
+Search logs
+1s
+19s
+2s
+0s
+28s
+27s
+0s
+1s
+3s
+utils/scheduler_init.py                                53     53     0%   9-139
+utils/security_manager.py                             114    114     0%   12-320
+utils/strategic_air_quality.py                         84     84     0%   8-326
+utils/strategic_extreme_heat.py                        79     79     0%   8-340
+utils/svi_data.py                                     196    196     0%   9-581
+utils/temporal_risk.py                                275    275     0%   20-700
+utils/tribal_air_quality_mapping.py                    49     49     0%   8-143
+utils/tribal_boundaries.py                            100    100     0%   5-317
+utils/update_risk_functions.py                        146    146     0%   5-477
+utils/utilities_risk.py                               135    135     0%   2-796
+utils/vbd_data_fetcher.py                             369    369     0%   1-627
+utils/vector_borne_disease_risk.py                    188    188     0%   1-362
+utils/weather_alerts.py                               175    175     0%   9-613
+utils/web_scraper.py                                  238    238     0%   1-485
+utils/wem_data.py                                      66     66     0%   8-197
+utils/wem_integration.py                               21     21     0%   2-41
+utils/wha_integration.py                               23     23     0%   2-47
+utils/wisconsin_climate_data.py                        28     28     0%   9-186
+utils/wisconsin_dhs_scraper.py                        391    391     0%   11-789
+utils/wisconsin_mapping.py                             27     27     0%   9-147
+---------------------------------------------------------------------------------
+TOTAL                                               14578  13994     4%
+=========================== short test summary info ============================
+FAILED tests/smoke_test.py::test_classify_risk_returns_dict_with_required_keys - AssertionError: classify_risk(0.0) missing key 'label': {'level': 'minimal', 'label_ar': 'ضئيل', 'label_en': 'Minimal', 'color': '#336633', 'description_ar': 'الحفاظ على المراقبة الأساسية', 'description_en': 'Maintain baseline surveillance'}
+assert 'label' in {'color': '#336633', 'description_ar': 'الحفاظ على المراقبة الأساسية', 'description_en': 'Maintain baseline surveillance', 'label_ar': 'ضئيل', ...}
+FAILED tests/smoke_test.py::test_data_processor_orchestration - KeyError: 'label'
+========================= 2 failed, 11 passed in 2.94s =========================
+Error: Process completed with exit code 1.
+0s
+0s
+2s
+0s
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information

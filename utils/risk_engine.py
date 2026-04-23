@@ -284,17 +284,21 @@ def classify_risk(score: float) -> Dict[str, str]:
         if score >= threshold:
             return {
                 'level': level,
+                'label': label_en,          # backward-compat alias
                 'label_ar': label_ar,
                 'label_en': label_en,
                 'color': color,
+                'description': desc_en,     # backward-compat alias
                 'description_ar': desc_ar,
                 'description_en': desc_en,
             }
     return {
         'level': 'minimal',
+        'label': 'Minimal',
         'label_ar': 'ضئيل',
         'label_en': 'Minimal',
         'color': '#336633',
+        'description': 'Maintain baseline surveillance',
         'description_ar': 'الحفاظ على المراقبة الأساسية',
         'description_en': 'Maintain baseline surveillance',
     }
