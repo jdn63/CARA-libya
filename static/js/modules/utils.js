@@ -187,20 +187,6 @@ export const DomUtils = {
     },
 
     /**
-     * Update element with trusted application-generated HTML
-     * Only call this with strings built entirely from application constants,
-     * never with user-supplied input.
-     * @param {string} id - Element ID
-     * @param {string} html - Trusted HTML string from application code
-     */
-    updateElementHtml(id, html) {
-        const element = this.getElementById(id);
-        if (element) {
-            element.innerHTML = html;
-        }
-    },
-
-    /**
      * Add event listener with error handling
      * @param {Element} element - DOM element
      * @param {string} event - Event type

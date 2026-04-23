@@ -103,10 +103,25 @@ def data_sources():
         return render_template('error.html', message="Failed to load data sources page.")
 
 
-def _safe_next(url: str) -> str:
-    """Return url only if it is a safe relative path, otherwise '/'."""
-    if url and url.startswith('/') and not url.startswith('//'):
-        return url
+_ALLOWED_POST_LOGIN_PATHS = {
+    '/',
+    '/dashboard',
+    '/methodology',
+    '/about',
+    '/data-sources',
+}
+
+
+def _resolve_post_login_path(raw: str) -> str:
+    """Map an arbitrary 'next' value to a fixed allowlisted internal path."""
+    if not raw:
+        return '/'
+    candidate = raw.split('?', 1)[0].split('#', 1)[0]
+    if candidate in _ALLOWED_POST_LOGIN_PATHS:
+        return candidate
+    for prefix in ('/dashboard/', '/methodology/', '/data-sources/', '/about/'):
+        if candidate.startswith(prefix):
+            return candidate
     return '/'
 
 
@@ -114,20 +129,22 @@ def _safe_next(url: str) -> str:
 def login():
     """Bilingual login page — validates CARA_ACCESS_PASSWORD session secret."""
     cara_password = os.environ.get('CARA_ACCESS_PASSWORD', '')
+    raw_next = request.args.get('next', '/')
+    target = _resolve_post_login_path(raw_next)
 
     if not cara_password:
         session['cara_authenticated'] = True
-        return redirect(_safe_next(request.args.get('next', '/')))
+        return redirect(target)
 
     if session.get('cara_authenticated'):
-        return redirect(_safe_next(request.args.get('next', '/')))
+        return redirect(target)
 
     if request.method == 'POST':
         entered = request.form.get('password', '')
         if entered == cara_password:
             session['cara_authenticated'] = True
             session.permanent = False
-            return redirect(_safe_next(request.args.get('next', '/')))
+            return redirect(target)
         flash('كلمة المرور غير صحيحة / Incorrect password — please try again.', 'danger')
         logger.warning("Failed login attempt from %s", request.remote_addr)
 
