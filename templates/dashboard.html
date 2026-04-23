@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "components/info_popover.html" import show_work_btn %}
 
 {% block title %}{{ jurisdiction.name_ar }} — CARA ليبيا{% endblock %}
 
@@ -14,34 +15,33 @@
         </a>
     </div>
 
-    <!-- Municipality header -->
+    <!-- Municipality header card -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-start gap-4 flex-wrap">
 
-                        <!-- INFORM overall score -->
+                        <!-- INFORM overall score badge -->
                         <div class="text-center flex-shrink-0">
                             {% set overall = pillar_data.inform_score %}
-                            <div class="risk-score-badge {{ 'risk-' + overall.level }} mx-auto mb-2"
-                                 style="width:5rem;height:5rem;font-size:1.3rem"
+                            <div class="risk-score-badge risk-{{ overall.level }} mx-auto mb-2"
+                                 style="width:5.5rem;height:5.5rem;font-size:1.4rem;box-shadow:0 2px 8px rgba(0,0,0,.12)"
                                  title="{{ overall.label_ar }}">
-                                {% if overall.available and overall.score is not none %}
+                                {% if overall.score is not none %}
                                     {{ (overall.score * 10) | round(1) }}
                                 {% else %}
-                                    <i class="fas fa-question" style="font-size:1.2rem"></i>
+                                    <i class="fas fa-question" style="font-size:1.1rem"></i>
                                 {% endif %}
                             </div>
                             <div class="small fw-bold" style="color: var(--cara-primary)">
                                 <span class="ar-text">مؤشر INFORM</span>
                             </div>
-                            <div class="small text-muted">
+                            <div class="small">
                                 {% if overall.available %}
-                                    <span class="ar-text">{{ overall.label_ar }}</span>
+                                    <span class="badge bg-{{ overall.badge }}">{{ overall.label_ar }}</span>
                                 {% elif overall.score is not none %}
-                                    <span class="proxy-flag">تقريبي</span>
-                                    <span class="ar-text"> {{ overall.label_ar }}</span>
+                                    <span class="proxy-flag">تقريبي ({{ overall.pillars_available|default(1) }} ركائز)</span>
                                 {% else %}
                                     <span class="data-unavailable">البيانات غير متاحة</span>
                                 {% endif %}
@@ -81,24 +81,36 @@
                             <div class="alert alert-warning mt-3 mb-0 py-2">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
                                 <span class="ar-text fw-bold">البيانات غير متاحة حتى الآن</span>
-                                <span class="en-text d-inline ms-2">No indicator data has been loaded yet for this municipality.</span>
-                                <div class="mt-1 small ar-text">
-                                    لتفعيل التقييم، يرجى رفع ملفات البيانات المطلوبة عبر موردي NCDC وCOI وIOM.
+                                <span class="en-text d-inline ms-2 text-muted">No indicator data loaded yet for this municipality.</span>
+                                <div class="mt-1 small ar-text text-muted">
+                                    لتفعيل التقييم يرجى تشغيل عملية التحديث التلقائي أو رفع ملفات NCDC/COI/IOM.
                                 </div>
                             </div>
                             {% endif %}
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- INFORM formula reference (compact) -->
+    <!-- INFORM formula bar with plugged-in values -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="inform-formula">
-                INFORM Risk = (Hazard &amp; Exposure × Vulnerability × Lack of Coping Capacity)<sup>1/3</sup>
+            <div class="inform-formula d-flex align-items-center flex-wrap gap-2">
+                <span>INFORM Risk = (H &times; V &times; C)<sup>1/3</sup></span>
+                {% set fv = pillar_data.inform_score.get('formula_values') if pillar_data.inform_score else none %}
+                {% if fv %}
+                <span class="text-muted mx-2">=</span>
+                <span class="badge bg-{{ pillar_data.hazard.badge }} text-white">H&nbsp;{{ fv.h }}</span>
+                <span class="text-muted">&times;</span>
+                <span class="badge bg-{{ pillar_data.vulnerability.badge }} text-white">V&nbsp;{{ fv.v }}</span>
+                <span class="text-muted">&times;</span>
+                <span class="badge bg-{{ pillar_data.coping.badge }} text-white">C&nbsp;{{ fv.c }}</span>
+                <span class="text-muted mx-1">=</span>
+                <span class="badge bg-{{ pillar_data.inform_score.badge }} text-white fs-6">{{ fv.result }}</span>
+                {% endif %}
                 {% if pillar_data.inform_score.proxy %}
                 <span class="proxy-flag ms-2">متوسط بديل / proxy average</span>
                 {% endif %}
@@ -110,28 +122,32 @@
     <div class="row g-3 mb-4">
 
         <!-- Pillar 1: Hazard & Exposure -->
+        {% set p = pillar_data.hazard %}
+        {% set sub_defs = [
+            ('infrastructure_hazard', 'مخاطر البنية التحتية', 'Infrastructure Hazard'),
+            ('natural_hazard',        'الكوارث الطبيعية',     'Natural Hazard'),
+            ('epidemiological_hazard','الأمراض المعدية',       'Epidemiological Hazard'),
+            ('road_safety_hazard',    'سلامة الطرق',           'Road Safety'),
+        ] %}
         <div class="col-md-4">
-            {% set p = pillar_data.hazard %}
-            <div class="risk-pillar-card inform-pillar-hazard h-100">
-                <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="risk-pillar-card inform-pillar-hazard h-100 d-flex flex-column">
+
+                <!-- Pillar header -->
+                <div class="d-flex align-items-center gap-2 mb-2">
                     <div class="risk-score-badge risk-{{ p.level }} flex-shrink-0"
                          style="width:3rem;height:3rem;font-size:0.9rem">
-                        {% if p.available and p.score is not none %}
-                            {{ (p.score * 10) | round(1) }}
-                        {% else %}
-                            <i class="fas fa-question"></i>
-                        {% endif %}
+                        {% if p.score is not none %}{{ (p.score * 10) | round(1) }}{% else %}<i class="fas fa-question"></i>{% endif %}
                     </div>
                     <div>
                         <div class="fw-bold">
                             <span class="ar-text">المخاطر والتعرض</span>
-                            <span class="en-text">Hazard & Exposure</span>
+                            <span class="en-text text-muted">Hazard &amp; Exposure</span>
                         </div>
                         <div class="small">
                             {% if p.available %}
-                                <span class="badge bg-{{ 'danger' if p.level in ('critical','high') else 'warning text-dark' if p.level == 'moderate' else 'success' }}">
-                                    <span class="ar-text d-inline">{{ p.label_ar }}</span>
-                                </span>
+                                <span class="badge bg-{{ p.badge }}">{{ p.label_ar }}</span>
+                            {% elif p.score is not none %}
+                                <span class="proxy-flag">{{ p.label_ar }} (تقريبي)</span>
                             {% else %}
                                 <span class="data-unavailable">البيانات غير متاحة</span>
                             {% endif %}
@@ -139,52 +155,99 @@
                     </div>
                 </div>
 
-                <ul class="list-unstyled small mb-0">
-                    {% set sub_labels = {
-                        'infrastructure_hazard': ('مخاطر البنية التحتية', 'Infrastructure Hazard'),
-                        'natural_hazard':        ('الكوارث الطبيعية', 'Natural Hazard'),
-                        'epidemiological_hazard':('الأمراض المعدية', 'Epidemiological Hazard'),
-                        'road_safety_hazard':    ('سلامة الطرق', 'Road Safety'),
-                    } %}
-                    {% for key, (label_ar, label_en) in sub_labels.items() %}
-                    <li class="d-flex justify-content-between align-items-center border-bottom py-1">
-                        <span class="ar-text">{{ label_ar }}</span>
-                        {% if p.components and key in p.components and p.components[key] is not none %}
-                            <span class="badge bg-secondary text-white" style="font-family:var(--font-en)">
-                                {{ (p.components[key] * 10) | round(1) }}
-                            </span>
-                        {% else %}
-                            <span class="data-unavailable" style="font-size:0.72rem">—</span>
+                <!-- Pillar progress bar -->
+                {% if p.score is not none %}
+                <div class="progress mb-3" style="height:6px;border-radius:3px">
+                    <div class="progress-bar bg-{{ p.badge }}" role="progressbar"
+                         style="width:{{ (p.score * 100)|round(0) }}%"></div>
+                </div>
+                {% endif %}
+
+                <!-- Sub-domain rows -->
+                <ul class="list-unstyled small mb-0 flex-grow-1">
+                    {% for key, label_ar, label_en in sub_defs %}
+                    {% set score_val = p.components.get(key) if p.components else none %}
+                    {% set is_proxy = p.proxy_flags.get(key, False) if p.proxy_flags else False %}
+                    {% set sw_key = 'hazard__' + key %}
+                    {% set level_c = 'danger' if score_val and score_val >= 0.55 else 'warning' if score_val and score_val >= 0.35 else 'success' if score_val else 'secondary' %}
+                    <li class="border-bottom py-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div>
+                                <span class="ar-text fw-semibold">{{ label_ar }}</span>
+                                <span class="en-text text-muted d-block" style="font-size:0.72rem">{{ label_en }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 flex-shrink-0 ms-2" dir="ltr">
+                                {% if score_val is not none %}
+                                    <span class="badge bg-{{ level_c }} text-white" style="font-family:var(--font-en);min-width:2.5rem" title="{% if is_proxy %}تقدير بديل / proxy estimate{% endif %}">
+                                        {{ (score_val * 10) | round(1) }}{% if is_proxy %}<sup style="opacity:.7;font-size:.6em">~</sup>{% endif %}
+                                    </span>
+                                {% else %}
+                                    <span class="data-unavailable" style="font-size:0.72rem;min-width:2.5rem;text-align:center">—</span>
+                                {% endif %}
+                                {% if sw_key in show_work %}
+                                    <button type="button"
+                                            class="btn btn-link p-0 show-work-btn"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="click"
+                                            data-bs-placement="left"
+                                            data-bs-html="true"
+                                            data-bs-custom-class="show-work-popover"
+                                            title="{{ show_work[sw_key].title }}"
+                                            data-bs-content="{{ show_work[sw_key].content | e }}"
+                                            aria-label="تفاصيل الحساب / Show calculation">
+                                        <i class="fas fa-info-circle text-primary" style="font-size:0.82rem"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if score_val is not none %}
+                        <div class="progress" style="height:3px;border-radius:2px">
+                            <div class="progress-bar bg-{{ level_c }}" role="progressbar"
+                                 style="width:{{ (score_val * 100)|round(0) }}%"></div>
+                        </div>
                         {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
+
+                <!-- Data sources footer -->
+                {% if p.data_sources %}
+                <div class="mt-3 pt-2 border-top small text-muted" style="font-size:0.7rem">
+                    <i class="fas fa-database me-1"></i>
+                    {% for src in p.data_sources %}{{ src }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </div>
+                {% endif %}
+
             </div>
         </div>
 
         <!-- Pillar 2: Vulnerability -->
+        {% set p = pillar_data.vulnerability %}
+        {% set sub_defs = [
+            ('agency_capacity_gap',        'نقص قدرة الاستجابة', 'Agency Capacity Gap'),
+            ('urban_sprawl',               'التوسع العمراني',     'Urban Sprawl'),
+            ('displacement_vulnerability', 'هشاشة النزوح',        'Displacement'),
+            ('health_unawareness',         'الوعي الصحي',         'Health Awareness'),
+            ('security_vulnerability',     'الهشاشة الأمنية',     'Security'),
+        ] %}
         <div class="col-md-4">
-            {% set p = pillar_data.vulnerability %}
-            <div class="risk-pillar-card inform-pillar-vulnerability h-100">
-                <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="risk-pillar-card inform-pillar-vulnerability h-100 d-flex flex-column">
+
+                <div class="d-flex align-items-center gap-2 mb-2">
                     <div class="risk-score-badge risk-{{ p.level }} flex-shrink-0"
                          style="width:3rem;height:3rem;font-size:0.9rem">
-                        {% if p.available and p.score is not none %}
-                            {{ (p.score * 10) | round(1) }}
-                        {% else %}
-                            <i class="fas fa-question"></i>
-                        {% endif %}
+                        {% if p.score is not none %}{{ (p.score * 10) | round(1) }}{% else %}<i class="fas fa-question"></i>{% endif %}
                     </div>
                     <div>
                         <div class="fw-bold">
                             <span class="ar-text">الهشاشة</span>
-                            <span class="en-text">Vulnerability</span>
+                            <span class="en-text text-muted">Vulnerability</span>
                         </div>
                         <div class="small">
                             {% if p.available %}
-                                <span class="badge bg-{{ 'danger' if p.level in ('critical','high') else 'warning text-dark' if p.level == 'moderate' else 'success' }}">
-                                    <span class="ar-text d-inline">{{ p.label_ar }}</span>
-                                </span>
+                                <span class="badge bg-{{ p.badge }}">{{ p.label_ar }}</span>
+                            {% elif p.score is not none %}
+                                <span class="proxy-flag">{{ p.label_ar }} (تقريبي)</span>
                             {% else %}
                                 <span class="data-unavailable">البيانات غير متاحة</span>
                             {% endif %}
@@ -192,53 +255,96 @@
                     </div>
                 </div>
 
-                <ul class="list-unstyled small mb-0">
-                    {% set sub_labels = {
-                        'agency_capacity_gap':        ('نقص قدرة الاستجابة', 'Agency Capacity Gap'),
-                        'urban_sprawl':               ('التوسع العمراني', 'Urban Sprawl'),
-                        'displacement_vulnerability': ('هشاشة النزوح', 'Displacement'),
-                        'health_unawareness':         ('الوعي الصحي', 'Health Awareness'),
-                        'security_vulnerability':     ('الهشاشة الأمنية', 'Security'),
-                    } %}
-                    {% for key, (label_ar, label_en) in sub_labels.items() %}
-                    <li class="d-flex justify-content-between align-items-center border-bottom py-1">
-                        <span class="ar-text">{{ label_ar }}</span>
-                        {% if p.components and key in p.components and p.components[key] is not none %}
-                            <span class="badge bg-secondary text-white" style="font-family:var(--font-en)">
-                                {{ (p.components[key] * 10) | round(1) }}
-                            </span>
-                        {% else %}
-                            <span class="data-unavailable" style="font-size:0.72rem">—</span>
+                {% if p.score is not none %}
+                <div class="progress mb-3" style="height:6px;border-radius:3px">
+                    <div class="progress-bar bg-{{ p.badge }}" role="progressbar"
+                         style="width:{{ (p.score * 100)|round(0) }}%"></div>
+                </div>
+                {% endif %}
+
+                <ul class="list-unstyled small mb-0 flex-grow-1">
+                    {% for key, label_ar, label_en in sub_defs %}
+                    {% set score_val = p.components.get(key) if p.components else none %}
+                    {% set is_proxy = p.proxy_flags.get(key, False) if p.proxy_flags else False %}
+                    {% set sw_key = 'vulnerability__' + key %}
+                    {% set level_c = 'danger' if score_val and score_val >= 0.55 else 'warning' if score_val and score_val >= 0.35 else 'success' if score_val else 'secondary' %}
+                    <li class="border-bottom py-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div>
+                                <span class="ar-text fw-semibold">{{ label_ar }}</span>
+                                <span class="en-text text-muted d-block" style="font-size:0.72rem">{{ label_en }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 flex-shrink-0 ms-2" dir="ltr">
+                                {% if score_val is not none %}
+                                    <span class="badge bg-{{ level_c }} text-white" style="font-family:var(--font-en);min-width:2.5rem" title="{% if is_proxy %}تقدير بديل / proxy estimate{% endif %}">
+                                        {{ (score_val * 10) | round(1) }}{% if is_proxy %}<sup style="opacity:.7;font-size:.6em">~</sup>{% endif %}
+                                    </span>
+                                {% else %}
+                                    <span class="data-unavailable" style="font-size:0.72rem;min-width:2.5rem;text-align:center">—</span>
+                                {% endif %}
+                                {% if sw_key in show_work %}
+                                    <button type="button"
+                                            class="btn btn-link p-0 show-work-btn"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="click"
+                                            data-bs-placement="left"
+                                            data-bs-html="true"
+                                            data-bs-custom-class="show-work-popover"
+                                            title="{{ show_work[sw_key].title }}"
+                                            data-bs-content="{{ show_work[sw_key].content | e }}"
+                                            aria-label="تفاصيل الحساب / Show calculation">
+                                        <i class="fas fa-info-circle text-primary" style="font-size:0.82rem"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if score_val is not none %}
+                        <div class="progress" style="height:3px;border-radius:2px">
+                            <div class="progress-bar bg-{{ level_c }}" role="progressbar"
+                                 style="width:{{ (score_val * 100)|round(0) }}%"></div>
+                        </div>
                         {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
+
+                {% if p.data_sources %}
+                <div class="mt-3 pt-2 border-top small text-muted" style="font-size:0.7rem">
+                    <i class="fas fa-database me-1"></i>
+                    {% for src in p.data_sources %}{{ src }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </div>
+                {% endif %}
+
             </div>
         </div>
 
         <!-- Pillar 3: Coping Capacity -->
+        {% set p = pillar_data.coping %}
+        {% set sub_defs = [
+            ('response_time_gap',     'قصور وقت الاستجابة',       'Response Time Gap'),
+            ('data_availability_gap', 'نقص توافر البيانات',        'Data Availability'),
+            ('community_support_gap', 'غياب الدعم المجتمعي',       'Community Support'),
+            ('healthcare_access_gap', 'محدودية الرعاية الصحية',    'Healthcare Access'),
+            ('poverty_vulnerability', 'معدل الفقر',                'Poverty'),
+        ] %}
         <div class="col-md-4">
-            {% set p = pillar_data.coping %}
-            <div class="risk-pillar-card inform-pillar-coping h-100">
-                <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="risk-pillar-card inform-pillar-coping h-100 d-flex flex-column">
+
+                <div class="d-flex align-items-center gap-2 mb-2">
                     <div class="risk-score-badge risk-{{ p.level }} flex-shrink-0"
                          style="width:3rem;height:3rem;font-size:0.9rem">
-                        {% if p.available and p.score is not none %}
-                            {{ (p.score * 10) | round(1) }}
-                        {% else %}
-                            <i class="fas fa-question"></i>
-                        {% endif %}
+                        {% if p.score is not none %}{{ (p.score * 10) | round(1) }}{% else %}<i class="fas fa-question"></i>{% endif %}
                     </div>
                     <div>
                         <div class="fw-bold">
                             <span class="ar-text">ضعف القدرة على المواجهة</span>
-                            <span class="en-text">Lack of Coping Capacity</span>
+                            <span class="en-text text-muted">Lack of Coping Capacity</span>
                         </div>
                         <div class="small">
                             {% if p.available %}
-                                <span class="badge bg-{{ 'danger' if p.level in ('critical','high') else 'warning text-dark' if p.level == 'moderate' else 'success' }}">
-                                    <span class="ar-text d-inline">{{ p.label_ar }}</span>
-                                </span>
+                                <span class="badge bg-{{ p.badge }}">{{ p.label_ar }}</span>
+                            {% elif p.score is not none %}
+                                <span class="proxy-flag">{{ p.label_ar }} (تقريبي)</span>
                             {% else %}
                                 <span class="data-unavailable">البيانات غير متاحة</span>
                             {% endif %}
@@ -246,45 +352,107 @@
                     </div>
                 </div>
 
-                <ul class="list-unstyled small mb-0">
-                    {% set sub_labels = {
-                        'response_time_gap':      ('قصور وقت الاستجابة', 'Response Time Gap'),
-                        'data_availability_gap':  ('نقص توافر البيانات', 'Data Availability'),
-                        'community_support_gap':  ('غياب الدعم المجتمعي', 'Community Support'),
-                        'healthcare_access_gap':  ('محدودية الرعاية الصحية', 'Healthcare Access'),
-                        'poverty_vulnerability':  ('معدل الفقر', 'Poverty'),
-                    } %}
-                    {% for key, (label_ar, label_en) in sub_labels.items() %}
-                    <li class="d-flex justify-content-between align-items-center border-bottom py-1">
-                        <span class="ar-text">{{ label_ar }}</span>
-                        {% if p.components and key in p.components and p.components[key] is not none %}
-                            <span class="badge bg-secondary text-white" style="font-family:var(--font-en)">
-                                {{ (p.components[key] * 10) | round(1) }}
-                            </span>
-                        {% else %}
-                            <span class="data-unavailable" style="font-size:0.72rem">—</span>
+                {% if p.score is not none %}
+                <div class="progress mb-3" style="height:6px;border-radius:3px">
+                    <div class="progress-bar bg-{{ p.badge }}" role="progressbar"
+                         style="width:{{ (p.score * 100)|round(0) }}%"></div>
+                </div>
+                {% endif %}
+
+                <ul class="list-unstyled small mb-0 flex-grow-1">
+                    {% for key, label_ar, label_en in sub_defs %}
+                    {% set score_val = p.components.get(key) if p.components else none %}
+                    {% set is_proxy = p.proxy_flags.get(key, False) if p.proxy_flags else False %}
+                    {% set sw_key = 'coping__' + key %}
+                    {% set level_c = 'danger' if score_val and score_val >= 0.55 else 'warning' if score_val and score_val >= 0.35 else 'success' if score_val else 'secondary' %}
+                    <li class="border-bottom py-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div>
+                                <span class="ar-text fw-semibold">{{ label_ar }}</span>
+                                <span class="en-text text-muted d-block" style="font-size:0.72rem">{{ label_en }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 flex-shrink-0 ms-2" dir="ltr">
+                                {% if score_val is not none %}
+                                    <span class="badge bg-{{ level_c }} text-white" style="font-family:var(--font-en);min-width:2.5rem" title="{% if is_proxy %}تقدير بديل / proxy estimate{% endif %}">
+                                        {{ (score_val * 10) | round(1) }}{% if is_proxy %}<sup style="opacity:.7;font-size:.6em">~</sup>{% endif %}
+                                    </span>
+                                {% else %}
+                                    <span class="data-unavailable" style="font-size:0.72rem;min-width:2.5rem;text-align:center">—</span>
+                                {% endif %}
+                                {% if sw_key in show_work %}
+                                    <button type="button"
+                                            class="btn btn-link p-0 show-work-btn"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="click"
+                                            data-bs-placement="left"
+                                            data-bs-html="true"
+                                            data-bs-custom-class="show-work-popover"
+                                            title="{{ show_work[sw_key].title }}"
+                                            data-bs-content="{{ show_work[sw_key].content | e }}"
+                                            aria-label="تفاصيل الحساب / Show calculation">
+                                        <i class="fas fa-info-circle text-primary" style="font-size:0.82rem"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if score_val is not none %}
+                        <div class="progress" style="height:3px;border-radius:2px">
+                            <div class="progress-bar bg-{{ level_c }}" role="progressbar"
+                                 style="width:{{ (score_val * 100)|round(0) }}%"></div>
+                        </div>
                         {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
+
+                {% if p.data_sources %}
+                <div class="mt-3 pt-2 border-top small text-muted" style="font-size:0.7rem">
+                    <i class="fas fa-database me-1"></i>
+                    {% for src in p.data_sources %}{{ src }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </div>
+                {% endif %}
+
             </div>
         </div>
-    </div>
 
-    <!-- Data governance note -->
+    </div><!-- end three pillar row -->
+
+    <!-- Data transparency / governance note -->
     <div class="row mb-3">
         <div class="col-12">
             <div class="card border-0 bg-light">
                 <div class="card-body py-2 px-3 small text-muted">
                     <i class="fas fa-info-circle me-1"></i>
                     <span class="ar-text">
-                        النقاط المعروضة تستند إلى البيانات المتاحة حتى الآن.
-                        الخانات الفارغة (—) تعني أن البيانات لم تُرفع بعد أو غير متاحة من المصدر.
-                        لا يتم اختلاق أرقام في أي حال.
+                        النقاط على مقياس 0–10. العلامة — تعني البيانات لم تُحمَّل بعد أو غير متاحة.
+                        اضغط على زر المعلومات
+                        <i class="fas fa-info-circle text-primary mx-1"></i>
+                        بجانب أي مؤشر لعرض القيم الخام والصيغة الحسابية ومصدر البيانات.
+                        لا يُختلق أي رقم.
                     </span>
                     <span class="en-text d-inline ms-2">
-                        Empty cells (—) mean data has not yet been uploaded or is unavailable from the source. No values are fabricated.
+                        Scores on 0–10 scale. Dash (—) = data not yet loaded or unavailable from source.
+                        Click <i class="fas fa-info-circle text-primary mx-1"></i> on any row to see the raw values, formula, and data source.
+                        No values are fabricated.
                     </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFORM score key -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-2 px-3">
+                    <div class="d-flex flex-wrap gap-2 align-items-center small">
+                        <span class="fw-semibold ar-text me-1">مستوى الخطر:</span>
+                        <span class="badge bg-danger">بالغ الخطورة / Critical <span style="font-family:var(--font-en)">&ge;7.5</span></span>
+                        <span class="badge bg-danger">مرتفع / High <span style="font-family:var(--font-en)">&ge;5.5</span></span>
+                        <span class="badge bg-warning text-dark">متوسط / Moderate <span style="font-family:var(--font-en)">&ge;3.5</span></span>
+                        <span class="badge bg-info text-dark">منخفض / Low <span style="font-family:var(--font-en)">&ge;1.5</span></span>
+                        <span class="badge bg-success">ضئيل / Minimal <span style="font-family:var(--font-en)">&lt;1.5</span></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -301,8 +469,41 @@
                 <i class="fas fa-book me-1"></i>
                 <span class="ar-text">المنهجية</span>
             </a>
+            <a href="/data-sources" class="btn btn-outline-secondary">
+                <i class="fas fa-database me-1"></i>
+                <span class="ar-text">مصادر البيانات</span>
+            </a>
         </div>
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialise all Bootstrap popovers on this page
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (el) {
+        new bootstrap.Popover(el, {
+            html: true,
+            sanitize: false,
+            trigger: 'click',
+            placement: el.dataset.bsPlacement || 'left',
+            customClass: 'show-work-popover',
+            container: 'body',
+        });
+    });
+
+    // Close popover when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('[data-bs-toggle="popover"]') &&
+            !e.target.closest('.popover')) {
+            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (el) {
+                var pop = bootstrap.Popover.getInstance(el);
+                if (pop) pop.hide();
+            });
+        }
+    });
+});
+</script>
 {% endblock %}

@@ -259,3 +259,48 @@ footer .en-text { color: rgba(255,255,255,0.45); }
     body { background: white; color: black; }
     .risk-pillar-card { box-shadow: none; border: 1px solid #999; }
 }
+
+/* ─── Show-work / formula popovers ────────────────────────────────── */
+.show-work-popover .popover {
+    max-width: 340px;
+    font-size: 0.82rem;
+    font-family: var(--font-ar), var(--font-en), sans-serif;
+}
+.show-work-popover .popover-header {
+    background-color: var(--cara-primary);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    direction: rtl;
+}
+.show-work-popover .popover-body {
+    direction: rtl;
+    text-align: right;
+    line-height: 1.6;
+}
+.show-work-popover .popover-body code {
+    font-family: var(--font-en), monospace;
+    font-size: 0.78rem;
+    color: #0d6efd;
+    direction: ltr;
+    display: inline-block;
+}
+.show-work-btn {
+    opacity: 0.7;
+    transition: opacity .15s;
+    line-height: 1;
+    vertical-align: middle;
+}
+.show-work-btn:hover { opacity: 1; }
+
+/* ─── Pillar progress bars (header strip) ─────────────────────────── */
+.risk-pillar-card .progress {
+    background-color: rgba(0,0,0,0.08);
+}
+
+/* ─── INFORM formula bar with plugged values ──────────────────────── */
+.inform-formula .badge {
+    font-size: 0.82rem;
+    font-family: var(--font-en);
+    vertical-align: middle;
+}
