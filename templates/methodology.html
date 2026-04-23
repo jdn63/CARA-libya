@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="cara-heading mb-4">
         <span class="ar-text">منهجية التقييم ومصادر البيانات</span>
-        <span class="en-text">Assessment Methodology & Data Provenance</span>
+        <span class="en-text">Assessment Methodology &amp; Data Provenance</span>
     </div>
 
     <!-- INFORM formula card -->
@@ -24,7 +24,10 @@
             <div class="inform-formula my-3">
                 INFORM Risk = (Hazard &amp; Exposure × Vulnerability × Lack of Coping Capacity)<sup>1/3</sup>
             </div>
-            <p class="small text-muted mt-2" dir="ltr" style="text-align:left">
+            <p class="ar-text mb-1">
+                تُسجَّل كل ركيزة على مقياس من 0 إلى 1. ويضمن المتوسط الهندسي ألاّ يُعوَّض ضعف ركيزةٍ ما بقوّة الركائز الأخرى — فلا بدّ من معالجة الأبعاد الثلاثة جميعها للحدّ من المخاطر الكلية.
+            </p>
+            <p class="small text-muted mt-1" dir="ltr" style="text-align:left">
                 Each pillar is scored [0–1]. The geometric mean ensures that a very low score in any
                 single pillar cannot be compensated by high scores in others — all three dimensions
                 must be addressed to reduce overall risk.
@@ -34,7 +37,8 @@
                     <div class="risk-pillar-card inform-pillar-hazard h-100">
                         <h6 class="fw-bold text-danger">
                             <i class="fas fa-bolt me-1"></i>
-                            <span class="ar-text">1. المخاطر والتعرض</span>
+                            <span class="ar-text">١. المخاطر والتعرض</span>
+                            <span class="en-text">1. Hazard &amp; Exposure</span>
                         </h6>
                         <ul class="small mb-0 ar-text">
                             <li>مخاطر البنية التحتية (السدود، الكهرباء، المياه)</li>
@@ -48,7 +52,8 @@
                     <div class="risk-pillar-card inform-pillar-vulnerability h-100">
                         <h6 class="fw-bold text-warning">
                             <i class="fas fa-users me-1"></i>
-                            <span class="ar-text">2. الهشاشة</span>
+                            <span class="ar-text">٢. الهشاشة</span>
+                            <span class="en-text">2. Vulnerability</span>
                         </h6>
                         <ul class="small mb-0 ar-text">
                             <li>نقص قدرة أجهزة الاستجابة</li>
@@ -63,7 +68,8 @@
                     <div class="risk-pillar-card inform-pillar-coping h-100">
                         <h6 class="fw-bold text-success">
                             <i class="fas fa-shield-alt me-1"></i>
-                            <span class="ar-text">3. ضعف القدرة على المواجهة</span>
+                            <span class="ar-text">٣. ضعف القدرة على المواجهة</span>
+                            <span class="en-text">3. Lack of Coping Capacity</span>
                         </h6>
                         <ul class="small mb-0 ar-text">
                             <li>قصور وقت الاستجابة الطارئة</li>
@@ -90,26 +96,30 @@
             <div class="row g-2">
                 <div class="col-sm-6">
                     <div class="bg-light rounded p-2 small">
-                        <strong class="ar-text">الأولوية 1:</strong>
+                        <strong class="ar-text">الأولوية ١:</strong>
                         <span class="ar-text"> فهم مخاطر الكوارث ← ركيزتا المخاطر والهشاشة</span>
+                        <span class="en-text">Priority 1: Understanding disaster risk → Hazard &amp; Vulnerability pillars</span>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="bg-light rounded p-2 small">
-                        <strong class="ar-text">الأولوية 2:</strong>
+                        <strong class="ar-text">الأولوية ٢:</strong>
                         <span class="ar-text"> تعزيز الحوكمة ← ركيزة القدرة على المواجهة</span>
+                        <span class="en-text">Priority 2: Strengthening governance → Coping Capacity pillar</span>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="bg-light rounded p-2 small">
-                        <strong class="ar-text">الأولوية 3:</strong>
+                        <strong class="ar-text">الأولوية ٣:</strong>
                         <span class="ar-text"> الاستثمار في الحد من المخاطر ← الطاقة المؤسسية</span>
+                        <span class="en-text">Priority 3: Investing in risk reduction → Institutional capacity</span>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="bg-light rounded p-2 small">
-                        <strong class="ar-text">الأولوية 4:</strong>
+                        <strong class="ar-text">الأولوية ٤:</strong>
                         <span class="ar-text"> التأهب للاستجابة ← وقت الاستجابة، توافر البيانات</span>
+                        <span class="en-text">Priority 4: Enhancing preparedness → Response time, data availability</span>
                     </div>
                 </div>
             </div>
@@ -125,24 +135,46 @@
             </h5>
         </div>
         <div class="card-body">
-            <p class="small text-muted mb-3" dir="ltr" style="text-align:left">
-                Every data source feeding the INFORM Risk Index is listed below with its
-                current integration status, the specific indicators it supplies, the
-                pillar it informs, and a direct link to the upstream dataset. This is
-                the transparency contract between this tool and its users — no
-                indicator appears in a score without a documented source.
+            <p class="ar-text mb-2">
+                تُدرَج فيما يلي جميع مصادر البيانات التي تُغذّي مؤشر INFORM للمخاطر، مع بيان حالتها الراهنة من حيث التكامل، والمؤشرات المحدّدة التي تُسهم بها، والركيزة التي تُغذّيها، ورابط مباشر إلى مجموعة البيانات الأصلية. وهذا هو عَقد الشفافية بين هذه الأداة ومستخدميها — فلا يَدخل أي مؤشر في احتساب الدرجة دون مصدرٍ موثَّق.
             </p>
+            <p class="small text-muted mb-3" dir="ltr" style="text-align:left">
+                Every data source feeding the INFORM Risk Index is listed below with its current
+                integration status, the specific indicators it supplies, the pillar it informs,
+                and a direct link to the upstream dataset. No indicator appears in a score without
+                a documented source.
+            </p>
+
             <div class="d-flex flex-wrap gap-2 mb-2">
-                <span class="badge bg-success">Live API</span>
-                <span class="badge bg-info text-dark">Cached file (auto-refreshed)</span>
-                <span class="badge bg-warning text-dark">Manual upload required</span>
-                <span class="badge bg-secondary">Stub — awaiting data</span>
-                <span class="badge bg-light text-dark border">Planned — not started</span>
+                <span class="badge bg-success">
+                    <span class="ar-text">واجهة برمجية مباشرة</span>
+                    <span class="en-text">Live API</span>
+                </span>
+                <span class="badge bg-info text-dark">
+                    <span class="ar-text">ملف مُخزَّن (تحديث آلي)</span>
+                    <span class="en-text">Cached file (auto-refreshed)</span>
+                </span>
+                <span class="badge bg-warning text-dark">
+                    <span class="ar-text">رفع يدوي مطلوب</span>
+                    <span class="en-text">Manual upload required</span>
+                </span>
+                <span class="badge bg-secondary">
+                    <span class="ar-text">جاهز هيكلياً — بانتظار البيانات</span>
+                    <span class="en-text">Stub — awaiting data</span>
+                </span>
+                <span class="badge bg-light text-dark border">
+                    <span class="ar-text">مُقترَح — لم يبدأ بعد</span>
+                    <span class="en-text">Planned — not started</span>
+                </span>
             </div>
+
+            <p class="ar-text small mb-1">
+                مصادر "الملف المُخزَّن" يجلبها مُجدوِلٌ خلفي بصورة دورية وتُقرأ من القرص المحلي أثناء الطلبات، مما يتيح للأداة العمل في بيئات شحيحة الاتصال بالإنترنت.
+            </p>
             <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
-                "Cached file" sources are downloaded periodically by a background
-                scheduler and read from local disk during web requests, allowing the
-                tool to operate in low-connectivity settings.
+                "Cached file" sources are downloaded periodically by a background scheduler and
+                read from local disk during web requests, allowing the tool to operate in
+                low-connectivity settings.
             </p>
         </div>
     </div>
@@ -153,39 +185,91 @@
         <span class="en-text d-block text-muted small">A. Currently Incorporated Data Sources</span>
     </h5>
 
-    {# ---------- SOURCE CARD MACRO ---------- #}
-    {% macro source_card(name_en, name_ar, provider, status_label, status_class, url, indicators_en, pillar, access, cadence, resolution, caveats_en) -%}
+    {# ---------- SOURCE CARD MACRO (Arabic primary, English secondary) ---------- #}
+    {% macro source_card(name_en, name_ar, provider_en, provider_ar,
+                         status_label_ar, status_label_en, status_class, url,
+                         indicators_ar, indicators_en, pillar_ar, pillar_en,
+                         access_ar, access_en, cadence_ar, cadence_en,
+                         resolution_ar, resolution_en, caveats_ar, caveats_en) -%}
     <div class="card border-0 shadow-sm mb-3">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
           <div>
-            <h6 class="mb-0 fw-bold" dir="ltr" style="text-align:left">{{ name_en }}</h6>
-            <div class="small text-muted ar-text">{{ name_ar }} — {{ provider }}</div>
+            <h6 class="mb-0 fw-bold ar-text">{{ name_ar }}</h6>
+            <div class="small text-muted ar-text">{{ provider_ar }}</div>
+            <div class="small text-muted en-text" dir="ltr" style="text-align:left">
+              {{ name_en }} — {{ provider_en }}
+            </div>
           </div>
-          <span class="badge {{ status_class }}">{{ status_label }}</span>
+          <span class="badge {{ status_class }}">
+            <span class="ar-text">{{ status_label_ar }}</span>
+            <span class="en-text">{{ status_label_en }}</span>
+          </span>
         </div>
-        <dl class="row mb-0 small" dir="ltr" style="text-align:left">
-          <dt class="col-sm-3 text-muted">Indicators supplied</dt>
-          <dd class="col-sm-9">{{ indicators_en|safe }}</dd>
 
-          <dt class="col-sm-3 text-muted">INFORM pillar</dt>
-          <dd class="col-sm-9">{{ pillar }}</dd>
+        <dl class="row mb-0 small">
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">المؤشرات المُغذّاة</span>
+            <span class="en-text">Indicators supplied</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ indicators_ar|safe }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ indicators_en|safe }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Access method</dt>
-          <dd class="col-sm-9">{{ access }}</dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">ركيزة INFORM</span>
+            <span class="en-text">INFORM pillar</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ pillar_ar|safe }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ pillar_en|safe }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Update cadence</dt>
-          <dd class="col-sm-9">{{ cadence }}</dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">طريقة الوصول</span>
+            <span class="en-text">Access method</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ access_ar|safe }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ access_en|safe }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Geographic resolution</dt>
-          <dd class="col-sm-9">{{ resolution }}</dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">دورة التحديث</span>
+            <span class="en-text">Update cadence</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ cadence_ar }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ cadence_en }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Source link</dt>
-          <dd class="col-sm-9"><a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ url }}</a></dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">الدقة الجغرافية</span>
+            <span class="en-text">Geographic resolution</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ resolution_ar }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ resolution_en }}</span>
+          </dd>
 
-          {% if caveats_en %}
-          <dt class="col-sm-3 text-muted">Caveats</dt>
-          <dd class="col-sm-9 text-warning-emphasis">{{ caveats_en|safe }}</dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">رابط المصدر</span>
+            <span class="en-text">Source link</span>
+          </dt>
+          <dd class="col-sm-9">
+            <a href="{{ url }}" target="_blank" rel="noopener noreferrer" dir="ltr" style="display:inline-block">{{ url }}</a>
+          </dd>
+
+          {% if caveats_ar or caveats_en %}
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">تحفظات</span>
+            <span class="en-text">Caveats</span>
+          </dt>
+          <dd class="col-sm-9 text-warning-emphasis">
+            <span class="ar-text">{{ caveats_ar|safe }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ caveats_en|safe }}</span>
+          </dd>
           {% endif %}
         </dl>
       </div>
@@ -195,22 +279,28 @@
     {# ---------- HAZARD & EXPOSURE PILLAR ---------- #}
     <h6 class="mt-3 mb-2 text-danger">
       <i class="fas fa-bolt me-1"></i>
+      <span class="ar-text">ركيزة المخاطر والتعرض</span>
       <span class="en-text">Hazard &amp; Exposure</span>
-      <span class="ar-text">— ركيزة المخاطر والتعرض</span>
     </h6>
 
     {{ source_card(
       "EM-DAT (Emergency Events Database)",
-      "قاعدة بيانات أحداث الطوارئ",
+      "قاعدة بيانات أحداث الطوارئ (EM-DAT)",
       "CRED — UC Louvain, Belgium",
-      "Manual upload",
-      "bg-warning text-dark",
+      "مركز أبحاث وبائيات الكوارث — جامعة لوفان الكاثوليكية، بلجيكا",
+      "رفع يدوي", "Manual upload", "bg-warning text-dark",
       "https://www.emdat.be/",
-      "Natural and technological disaster events; deaths, affected persons, and economic damage by event type. Storm Daniel 2023 record drives the flood/storm sub-domain.",
+      "أحداث الكوارث الطبيعية والتكنولوجية؛ الوفيات والمتأثرون والأضرار الاقتصادية حسب نوع الحدث. ويُعدّ سجل عاصفة دانيال 2023 مُحرِّكاً رئيسياً لمؤشري الفيضانات والعواصف.",
+      "Natural and technological disaster events; deaths, affected persons, and economic damage by event type. The Storm Daniel 2023 record drives the flood/storm sub-domain.",
+      "ركيزة المخاطر والتعرض ← المخاطر الطبيعية، مخاطر البنية التحتية",
       "Hazard &amp; Exposure → natural_hazard, infrastructure_hazard",
+      "ملف Excel عمومي (دون مفتاح API). يقوم المُشغِّل بتنزيله من emdat.be ووضعه في المسار <code>data/emdat_libya.xlsx</code>. <strong>الملف مُحمَّل حالياً</strong> من رفعكم بتاريخ 23 أبريل 2026.",
       "Public Excel export (no API key). Operator downloads from emdat.be and places the file at <code>data/emdat_libya.xlsx</code>. <strong>Currently loaded</strong> from your April 23, 2026 upload.",
+      "تحديث يدوي — يُوصى به كل ستة أشهر أو عقب أيّ حدثٍ كبير.",
       "Manual refresh — recommended every 6 months or after a major event.",
+      "وطنية (على مستوى الحدث، لا على مستوى البلدية). الأحداث ذات الموقع النصّي تُربَط بالمستوى الإداري الأول حيثما أمكن.",
       "National (event-level, not municipal). Events with location text are mapped to admin-1 where possible.",
+      "عتبة التغطية (10 وفيات أو 100 متأثر فأكثر) قد تُغفل أحداثاً محلية أصغر. والأرقام وطنية فقط — يُجرى التوزيع على البلديات بتحليل النصوص الموقعية حين تتوفر.",
       "Coverage threshold of 10+ deaths or 100+ affected may miss smaller localized events. National totals only — municipal allocation uses event-location parsing where available."
     ) }}
 
@@ -218,66 +308,90 @@
       "OpenAQ",
       "أوبن إيه كيو — جودة الهواء العالمية",
       "OpenAQ Inc. (open-data community)",
-      "Live API",
-      "bg-success",
+      "منظمة أوبن إيه كيو — مجتمع البيانات المفتوحة",
+      "واجهة مباشرة", "Live API", "bg-success",
       "https://docs.openaq.org/",
-      "PM2.5, PM10, NO₂, O₃, SO₂ from government monitoring stations. Used as proxy for sandstorm/dust exposure and chronic air pollution health burden.",
+      "الجسيمات الدقيقة PM2.5 وPM10، وثاني أكسيد النيتروجين، والأوزون، وثاني أكسيد الكبريت من محطات الرصد الحكومية. تُستخدم وكيلاً للتعرض للعواصف الرملية والغبار، وللعبء الصحي المزمن لتلوث الهواء.",
+      "PM2.5, PM10, NO₂, O₃, SO₂ from government monitoring stations. Used as proxy for sandstorm/dust exposure and chronic air-pollution health burden.",
+      "ركيزة المخاطر والتعرض ← المخاطر الطبيعية (وكيل العواصف الرملية والغبار)",
       "Hazard &amp; Exposure → natural_hazard (dust/sandstorm proxy)",
+      "واجهة REST عمومية؛ مع إمكانية الحصول على مفتاح مجاني لزيادة سقف الطلبات (<code>OPENAQ_API_KEY</code>).",
       "Public REST API; optional free key for higher rate limits (<code>OPENAQ_API_KEY</code>).",
+      "ساعية إلى يومية بحسب المحطة.",
       "Hourly to daily depending on station.",
-      "Point measurements (monitoring stations). Sparse coverage in Libya — only major coastal cities. Used as a national signal, not municipal.",
+      "قياسات نقطية (محطات رصد). تغطية شحيحة في ليبيا تقتصر على كبرى مدن الساحل — تُستخدم إشارةً وطنية لا قياساً بلدياً قاطعاً.",
+      "Point measurements (monitoring stations). Sparse coverage in Libya — only major coastal cities. Used as a national signal, not a definitive municipal exposure measure.",
+      "في ليبيا عددٌ قليل جداً من المحطات النشطة — تُعامَل بياناتها كإشارة لا كقياسٍ نهائي للتعرض.",
       "Libya has very few active stations on OpenAQ. Considered a signal, not a definitive exposure measure."
     ) }}
 
     {{ source_card(
       "GADM (Global Administrative Areas)",
-      "حدود الإدارية العالمية",
+      "قاعدة الحدود الإدارية العالمية (GADM)",
       "UC Davis Geospatial Consortium",
-      "Cached file",
-      "bg-info text-dark",
+      "اتحاد جامعة كاليفورنيا ديفيس للجغرافيا المكانية",
+      "ملف مُخزَّن", "Cached file", "bg-info text-dark",
       "https://gadm.org/",
+      "ملفات GeoJSON للحدود الإدارية (متعدّدات الأضلاع للوطن والشعبية والبلدية). تُغذّي جميع عمليات رسم الخرائط والربط المكاني.",
       "Administrative boundary GeoJSON (national, governorate, municipality polygons). Powers all map rendering and spatial joins.",
+      "عرضي (ركيزة جغرافية أساسية)",
       "Cross-cutting (geographic substrate)",
+      "تنزيل عمومي مباشر من <code>geodata.ucdavis.edu/gadm/gadm4.1/json/</code>. يُخزَّن تلقائياً عند أول استخدام.",
       "Public direct download from <code>geodata.ucdavis.edu/gadm/gadm4.1/json/</code>. Auto-cached on first use.",
+      "ساكنة — الإصدار الراهن هو GADM 4.1.",
       "Static — GADM 4.1 is the current release.",
+      "المستوى الإداري من 0 إلى 3 (البلدية).",
       "Admin-0 through admin-3 (municipality / baladiya).",
+      "لا تتطابق جميع البلديات الليبية بصورة سليمة مع متعدّدات GADM للمستوى الإداري الثالث — 42 بلدية من أصل 148 مُعلَّمة حالياً للمراجعة الحدودية.",
       "Not all Libyan municipalities map cleanly to GADM admin-3 polygons — 42 of 148 currently flagged for boundary verification."
     ) }}
 
     {{ source_card(
       "NOAA GSOD (Global Surface Summary of Day)",
-      "ملخص سطح الأرض اليومي",
+      "ملخص سطح الأرض اليومي (NOAA GSOD)",
       "NOAA / NCEI, USA",
-      "Stub",
-      "bg-secondary",
+      "الإدارة الوطنية للمحيطات والغلاف الجوي / المراكز الوطنية للمعلومات البيئية — الولايات المتحدة",
+      "جاهز هيكلياً", "Stub", "bg-secondary",
       "https://www.ncei.noaa.gov/data/global-summary-of-the-day/",
+      "درجات الحرارة اليومية والهطول وسرعة الرياح من محطات الرصد الجوي العالمية. الاستخدام المُخطَّط: مؤشرات التعرض للحرارة والبرودة الشديدتين.",
       "Daily temperature, precipitation, and wind from global weather stations. Planned use: extreme heat / cold exposure indicators.",
+      "ركيزة المخاطر والتعرض ← المخاطر الطبيعية (الحرارة الشديدة)",
       "Hazard &amp; Exposure → natural_hazard (extreme temperature)",
+      "وصول إلى ملفات تجميعية (دون مفتاح). مع مفتاح اختياري لواجهة الميتا-بيانات الأعلى سقفاً (<code>NOAA_CDO_TOKEN</code>).",
       "Bulk file access (no API key). Optional NOAA CDO token (<code>NOAA_CDO_TOKEN</code>) for the higher-rate metadata API.",
+      "يومية.",
       "Daily.",
+      "نقطية (محطات رصد). يوجد في ليبيا نحو عشر محطات تُبلِّغ بانتظام.",
       "Point (weather station). Libya has ~10 reporting stations.",
+      "الموصِّل البرمجي مُنجَز لكنه لم يُربط بعدُ بمؤشر تسجيل — الحرارة الشديدة ضمن النطاقات المُعطَّلة بانتظار تأكيد ورشة العمل.",
       "Connector implemented but not yet wired into a scoring indicator — extreme temperature is currently in the disabled-domains list pending workshop confirmation."
     ) }}
 
     {# ---------- VULNERABILITY PILLAR ---------- #}
     <h6 class="mt-4 mb-2 text-warning">
       <i class="fas fa-users me-1"></i>
+      <span class="ar-text">ركيزة الهشاشة</span>
       <span class="en-text">Vulnerability</span>
-      <span class="ar-text">— ركيزة الهشاشة</span>
     </h6>
 
     {{ source_card(
       "IDMC via OCHA HDX",
-      "مركز رصد النزوح الداخلي — عبر HDX",
+      "مركز رصد النزوح الداخلي — عبر منصة HDX",
       "Internal Displacement Monitoring Centre (Geneva)",
-      "Cached file",
-      "bg-info text-dark",
+      "المركز الدولي لرصد النزوح الداخلي (جنيف)",
+      "ملف مُخزَّن", "Cached file", "bg-info text-dark",
       "https://data.humdata.org/dataset/idmc-idp-data-lby",
+      "حالات النزوح السنوية الجديدة بسبب النزاعات والكوارث؛ مجموع النازحين داخلياً؛ سجلات النزوح على مستوى الحدث (من 2011 حتى الآن).",
       "Annual new conflict and disaster displacements; total IDP stock; event-level displacement updates (2011–present).",
+      "ركيزة الهشاشة ← هشاشة النزوح",
       "Vulnerability → displacement_vulnerability",
+      "تنزيل CSV عبر منصة OCHA HDX (دون مفتاح). تُستخدم بديلاً لواجهة IDMC المباشرة التي صارت تُرجع 403 دون تسجيل.",
       "OCHA HDX CSV download (no key). Used in place of the direct IDMC API which now returns 403 without registration.",
+      "أرصدة سنوية، وسجلات أحداث وفق نشرها.",
       "Annual stocks; event records as published.",
+      "وطنية (ليبيا، الرمز ISO3 = LBY).",
       "National (Libya, ISO3=LBY).",
+      "لا يتوفر تفصيل دون-وطني للنزوح — تُطبَّق الأرقام الوطنية بديلاً موثَّقاً على مستوى البلديات.",
       "Sub-national displacement breakdown not available — national figures applied as documented proxy to municipalities."
     ) }}
 
@@ -285,29 +399,41 @@
       "IOM DTM (Displacement Tracking Matrix)",
       "مصفوفة تتبع النزوح — المنظمة الدولية للهجرة",
       "International Organization for Migration",
-      "Manual upload",
-      "bg-warning text-dark",
+      "المنظمة الدولية للهجرة",
+      "رفع يدوي", "Manual upload", "bg-warning text-dark",
       "https://displacement.iom.int/libya",
+      "تقديرات أعداد المهاجرين، وتدفقات النازحين داخلياً، والمهاجرين العابرين، وتقييمات المأوى على مستوى البلديات الليبية.",
       "Migrant population estimates, IDP flows, transit migrants, shelter assessments by Libyan municipality.",
+      "ركيزة الهشاشة ← هشاشة النزوح، التوسع العمراني",
       "Vulnerability → displacement_vulnerability, urban_sprawl",
+      "واجهة DTM تتطلب التسجيل؛ يُلجأ إلى الرفع اليدوي لملفات CSV إلى المسار <code>data/uploads/iom/</code>.",
       "DTM API requires registration; falls back to manual CSV upload to <code>data/uploads/iom/</code>.",
+      "وفق الجولات (عادةً كل 4 إلى 8 أسابيع).",
       "Round-based (typically every 4–8 weeks).",
+      "من المستوى الإداري الأول إلى الثالث (بلدي حين يُبلَّغ).",
       "Admin-1 to admin-3 (municipal where reported).",
+      "تتفاوت التغطية من جولة إلى أخرى — لا تُمسَح البلديات الـ 148 جميعها في كل جولة. وتُستخدم المتوسطات الإقليمية للبلديات الناقصة مع علامة تنبيه صريحة.",
       "Coverage varies by round — not all 148 municipalities are surveyed every cycle. Missing municipalities use regional averages with explicit flags."
     ) }}
 
     {{ source_card(
       "OCHA HDX (Humanitarian Data Exchange)",
-      "منصة تبادل البيانات الإنسانية — أوتشا",
+      "منصة تبادل البيانات الإنسانية (HDX) — أوتشا",
       "UN Office for the Coordination of Humanitarian Affairs",
-      "Cached file",
-      "bg-info text-dark",
+      "مكتب الأمم المتحدة لتنسيق الشؤون الإنسانية",
+      "ملف مُخزَّن", "Cached file", "bg-info text-dark",
       "https://data.humdata.org/group/lby",
+      "بيانات الحضور التشغيلي «3W» التابعة لأوتشا (انتشار المنظمات والوكالات حسب الموقع)، وبيانات العائدين من المفوضية، إلى جانب مجموعات بيانات إنسانية متنوعة.",
       "OCHA 3W operational presence (NGO/agency footprint by location), UNHCR returnee data, miscellaneous humanitarian datasets.",
+      "ركيزتا الهشاشة والقدرة على المواجهة (سياق إنساني عرضي)",
       "Vulnerability + Coping Capacity (cross-cutting humanitarian context)",
+      "واجهة CKAN REST على <code>data.humdata.org/api/3/action/</code>. لا تتطلب مصادقة لمجموعات البيانات العمومية.",
       "CKAN REST API at <code>data.humdata.org/api/3/action/</code>. No authentication required for public datasets.",
+      "تحديث خلفي أسبوعي (APScheduler) إلى المسار <code>data/cache/hdx/</code>.",
       "Weekly background refresh (APScheduler) into <code>data/cache/hdx/</code>.",
+      "تتفاوت بحسب مجموعة البيانات — عادةً المستوى الإداري الأول أو الثاني.",
       "Varies by dataset — usually admin-1 or admin-2.",
+      "تتغيّر مجموعات البيانات وتغطيتها على HDX من شهرٍ لآخر — يُسجِّل الموصِّل البرمجي البياناتِ التي جُلبت.",
       "Dataset availability and coverage on HDX changes month to month — connector logs which datasets were retrieved."
     ) }}
 
@@ -315,112 +441,154 @@
       "World Bank Open Data",
       "البنك الدولي — البيانات المفتوحة",
       "The World Bank",
-      "Live API",
-      "bg-success",
+      "البنك الدولي",
+      "واجهة مباشرة", "Live API", "bg-success",
       "https://data.worldbank.org/country/libya",
+      "السكان وكثافتهم، ونصيب الفرد من الناتج المحلي الإجمالي، ومعدل الفقر، ومعامل جيني، ومعدل التحضر، ومؤشرات الحوكمة العالمية (WGI).",
       "Population, population density, GDP per capita, poverty headcount, Gini index, urbanization rate, governance indicators (WGI).",
+      "ركيزة الهشاشة ← التوسع العمراني؛ ركيزة المواجهة ← هشاشة الفقر",
       "Vulnerability → urban_sprawl; Coping Capacity → poverty_vulnerability",
+      "واجهة REST عمومية على <code>api.worldbank.org/v2/</code>. لا تتطلب مفتاحاً.",
       "Public REST API at <code>api.worldbank.org/v2/</code>. No key required.",
+      "سنوية (لمعظم المؤشرات) — ينشر البنك الدولي وفق جدولٍ خاصٍّ بكل مؤشر.",
       "Annual (most indicators) — World Bank publishes on an indicator-specific schedule.",
+      "وطنية.",
       "National.",
+      "تَتأخّر بعض المؤشرات سنواتٍ عدّة بالنسبة لليبيا. تُستخدَم آخر قيمة متوفرة مع تسجيل سنتها في سجل التدقيق.",
       "Several indicators have multi-year lags for Libya. Latest available value is used and the year is recorded in the audit trail."
     ) }}
 
     {# ---------- COPING CAPACITY PILLAR ---------- #}
     <h6 class="mt-4 mb-2 text-success">
       <i class="fas fa-shield-alt me-1"></i>
+      <span class="ar-text">ركيزة ضعف القدرة على المواجهة</span>
       <span class="en-text">Lack of Coping Capacity</span>
-      <span class="ar-text">— ركيزة ضعف القدرة على المواجهة</span>
     </h6>
 
     {{ source_card(
       "WHO Libya via OCHA HDX",
       "منظمة الصحة العالمية — بيانات ليبيا عبر HDX",
       "World Health Organization (Libya country office)",
-      "Cached file",
-      "bg-info text-dark",
+      "منظمة الصحة العالمية — المكتب القُطري في ليبيا",
+      "ملف مُخزَّن", "Cached file", "bg-info text-dark",
       "https://data.humdata.org/dataset/who-data-for-lby",
+      "أَسرّة المستشفيات لكل عشرة آلاف نسمة، ومؤشرات السل، ووفيات الأطفال، ووفيات الأمراض غير السارية، والتغذية، ووفيات تلوّث الهواء، وتغطية لقاح الحصبة الأول.",
       "Hospital beds per 10k, TB indicators, child mortality, NCD mortality, nutrition, air pollution mortality, MCV1 immunization coverage.",
+      "ركيزة المواجهة ← فجوة الوصول إلى الرعاية الصحية، الوعي الصحي",
       "Coping Capacity → healthcare_access_gap, health awareness",
+      "ملفات CSV موضوعية على HDX (31 ملفاً، آخر تحقق في 15 أبريل 2026).",
       "OCHA HDX CSV thematic files (31 files, last confirmed April 15, 2026).",
+      "ربعية إلى سنوية بحسب المؤشر.",
       "Quarterly to annual depending on indicator.",
+      "وطنية (لا تنشر منظمة الصحة العالمية تفاصيل دون-وطنية لليبيا).",
       "National (WHO does not publish sub-national Libya breakdowns).",
+      "تُطبَّق الأرقام الوطنية على البلديات الـ 148 جميعها بديلاً موثَّقاً. تحلّ محل واجهة WHO GHO التي كانت بياناتها الليبية قديمة (مثلاً: الأطباء 2008، والكوليرا 1995).",
       "National figures applied to all 148 municipalities as documented proxy. Replaces the WHO GHO API which had stale Libya data (e.g., physicians 2008, cholera 1995)."
     ) }}
 
     {{ source_card(
       "WHO Global Health Observatory (GHO)",
-      "مرصد الصحة العالمي",
+      "مرصد الصحة العالمي (GHO)",
       "World Health Organization",
-      "Live API",
-      "bg-success",
+      "منظمة الصحة العالمية",
+      "واجهة مباشرة", "Live API", "bg-success",
       "https://www.who.int/data/gho/info/gho-odata-api",
+      "متوسط العمر المتوقع، ووفيات الرضّع ودون الخامسة والأمومة، وتطعيم الحصبة، وأَسرّة المستشفيات، وكثافة الأطباء.",
       "Life expectancy, infant/under-5/maternal mortality, measles vaccination, hospital beds, physicians density.",
+      "ركيزة المواجهة ← فجوة الوصول إلى الرعاية الصحية",
       "Coping Capacity → healthcare_access_gap",
+      "واجهة OData عمومية على <code>ghoapi.azureedge.net/api/</code>. لا تتطلب مفتاحاً.",
       "Public OData API at <code>ghoapi.azureedge.net/api/</code>. No key required.",
+      "سنوية.",
       "Annual.",
+      "وطنية.",
       "National.",
+      "بالنسبة لليبيا، تُرجع GHO طوابع زمنية قديمة جداً لكثيرٍ من المؤشرات — لذا يُفضَّل استخدام تصدير WHO HDX أعلاه. تُستبقى GHO احتياطياً وللمقارنة.",
       "For Libya, WHO GHO returns very old timestamps for many indicators — the WHO HDX export above is preferred. GHO is retained as a fallback and for comparison."
     ) }}
 
     {{ source_card(
       "HeiGIT Accessibility Indicators (Libya)",
-      "مؤشرات إمكانية الوصول — هايغيت",
+      "مؤشرات إمكانية الوصول — معهد هايدلبرغ (HeiGIT)",
       "Heidelberg Institute for Geoinformation Technology",
-      "Cached file",
-      "bg-info text-dark",
+      "معهد هايدلبرغ لتكنولوجيا المعلومات الجغرافية",
+      "ملف مُخزَّن", "Cached file", "bg-info text-dark",
       "https://data.humdata.org/dataset/libya-accessibility-indicators",
+      "النسبة المئوية للسكان ضمن زمن سفرٍ معيّن إلى أقرب مستشفى وعيادة أولية؛ والنسبة من السكان في عمر التعليم ضمن مسافةٍ من أقرب مدرسة.",
       "Percentage of population within travel time of nearest hospital and primary clinic; school-age population within distance of nearest school.",
+      "ركيزة المواجهة ← فجوة الوصول الصحي؛ ركيزة الهشاشة ← الوعي الصحي",
       "Coping Capacity → healthcare_access_gap; Vulnerability → health_unawareness",
+      "تنزيل CSV من OCHA HDX. الترخيص CC BY-SA 4.0.",
       "OCHA HDX CSV download. License CC BY-SA 4.0.",
+      "تُعاد نشرتُه عند تحديث مجموعة البيانات الأصلية (سنوياً عادةً).",
       "Re-published as the source dataset is updated (typically annually).",
+      "المستوى الإداري الأول (22 شعبية). تأخذ البلديات درجة شعبيتها الأمّ.",
       "Admin-1 (22 districts / shaabiyat). Municipalities receive their parent district's score.",
+      "تفترض نمذجة زمن السفر شبكة الطرق قبل عام 2023 — ولا تعكس أضرار البنية التحتية في ممرّ درنة بعد عاصفة دانيال.",
       "Travel-time modeling assumes pre-2023 road network — does not reflect Storm Daniel infrastructure damage in Derna corridor."
     ) }}
 
     {{ source_card(
       "NCDC Libya — National Centre for Disease Control",
-      "المركز الوطني لمكافحة الأمراض",
+      "المركز الوطني لمكافحة الأمراض — ليبيا",
       "Libya Ministry of Health — NCDC",
-      "Manual upload",
-      "bg-warning text-dark",
+      "وزارة الصحة الليبية — المركز الوطني لمكافحة الأمراض",
+      "رفع يدوي", "Manual upload", "bg-warning text-dark",
       "https://www.ncdc.gov.ly/",
+      "أعداد رصد الأمراض المعدية، وتقارير الأمراض المنقولة بالنواقل، وإخطارات تفشّي الأوبئة على مستوى البلديات.",
       "Infectious disease surveillance counts, vector-borne disease reports, outbreak notifications by municipality.",
+      "ركيزة المخاطر والتعرض ← المخاطر الوبائية",
       "Hazard &amp; Exposure → epidemiological_hazard",
+      "لا تتوفر واجهة عمومية. يُرفع ملف CSV إلى المسار <code>data/uploads/ncdc/</code> من قِبَل الكوادر المُخوَّلة.",
       "No public API. CSV upload to <code>data/uploads/ncdc/</code> by authorized personnel.",
+      "دورية — تتوقف على جدول إصدار المركز.",
       "Periodic — depends on NCDC release schedule.",
+      "بلدية (حين تتوفر في الرفعة).",
       "Municipal (when provided in upload).",
+      "كود الموصِّل مُكتمل؛ بانتظار أوّل دفعة بياناتٍ موثوقة من المركز. وحتى ذلك الحين يَعرض المؤشر «البيانات غير متاحة».",
       "Connector code complete; awaiting first authoritative data drop from NCDC. Until then this indicator displays \"Data not available\"."
     ) }}
 
     {{ source_card(
       "Centre for Coordination of Information (COI) — Libya",
-      "مركز تنسيق المعلومات",
+      "مركز تنسيق المعلومات — ليبيا",
       "Government of Libya",
-      "Manual upload",
-      "bg-warning text-dark",
+      "حكومة ليبيا",
+      "رفع يدوي", "Manual upload", "bg-warning text-dark",
       "#",
+      "طاقة الاستجابة الطارئة، وحضور المنظمات غير الحكومية حسب البلدية، وبيانات التنسيق بين الوكالات، وأزمنة استجابة الإسعاف، ومعدلات الحوادث الأمنية.",
       "Emergency response capacity, NGO presence by municipality, inter-agency coordination data, ambulance response times, security incident rates.",
+      "ركيزة المواجهة ← فجوة زمن الاستجابة، فجوة دعم المجتمع",
       "Coping Capacity → response_time_gap, community_support_gap",
+      "لا تتوفر واجهة عمومية. يُرفع ملف CSV/Excel إلى المسار <code>data/uploads/coi/</code> من قِبَل الكوادر المُخوَّلة.",
       "No public API. CSV/Excel upload to <code>data/uploads/coi/</code> by authorized personnel.",
+      "دورية — تتوقف على جدول إصدار المركز.",
       "Periodic — depends on COI release schedule.",
+      "بلدية (حين تتوفر في الرفعة).",
       "Municipal (when provided in upload).",
+      "كود الموصِّل مُكتمل؛ بانتظار أوّل دفعة بياناتٍ موثوقة. والرابط الرسمي العمومي غير متوفر بعد — يُستبدل بالرابط الرسمي عند نشره.",
       "Connector code complete; awaiting first authoritative data drop from COI. Public URL not yet available — replace with official link when published."
     ) }}
 
     {{ source_card(
       "ACLED (Armed Conflict Location and Event Data)",
-      "مشروع بيانات أحداث النزاع المسلح",
+      "مشروع بيانات أحداث النزاع المسلح (ACLED)",
       "ACLED Inc., USA",
-      "Stub",
-      "bg-secondary",
+      "شركة ACLED — الولايات المتحدة",
+      "جاهز هيكلياً", "Stub", "bg-secondary",
       "https://acleddata.com/data-export-tool/",
+      "المعارك، والعنف ضد المدنيين، والتفجيرات/العنف عن بُعد، وأعمال الشغب، والاحتجاجات — بيانات على مستوى الحدث مع الموقع والتاريخ.",
       "Battles, violence against civilians, explosions/remote violence, riots, protests — event-level data with location and date.",
+      "ركيزة المخاطر والتعرض ← النزاع (مُعطَّل حالياً في ملف ليبيا)",
       "Hazard &amp; Exposure → conflict (currently disabled in Libya profile)",
+      "واجهة مجانية تتطلب التسجيل. تتطلب <code>ACLED_API_KEY</code> و<code>ACLED_EMAIL</code>.",
       "Free API with registration. Requires <code>ACLED_API_KEY</code> and <code>ACLED_EMAIL</code>.",
+      "أسبوعية.",
       "Weekly.",
+      "نقطية (على مستوى الحدث، مُحدَّدة الإحداثيات). قابلة للتجميع على المستويات الإدارية الأول والثاني والثالث.",
       "Point (event-level, geocoded). Aggregable to admin-1, admin-2, admin-3.",
-      "<strong>Armed-clashes domain is intentionally omitted from scoring</strong> pending political-sensitivity review. Connector retained so that domain can be re-enabled cleanly if the review approves it."
+      "<strong>نطاق الاشتباكات المسلحة مُستثنى عمداً من احتساب الدرجات</strong> بانتظار مراجعة الحساسية السياسية. ويُحتفَظ بالموصِّل ليتسنى تفعيل النطاق بنظافة في حال إقرار المراجعة.",
+      "<strong>Armed-clashes domain is intentionally omitted from scoring</strong> pending political-sensitivity review. Connector retained so the domain can be re-enabled cleanly if the review approves it."
     ) }}
 
     {# ---------- Section B: Planned ---------- #}
@@ -429,6 +597,9 @@
         <span class="en-text d-block text-muted small">B. Planned Data Sources — Not Yet Incorporated</span>
     </h5>
 
+    <p class="ar-text mb-1">
+        أُدرجت المصادر التالية للنظر في دمجها ضمن الدورة المقبلة. ومعايير القبول هي إمّا (أ) تحسينٌ جوهري لدقة مؤشر INFORM قائم بالنسبة لليبيا، أو (ب) سدّ فجوة معلوماتية رصدتها ورشة العمل التحديدية. ويُبيِّن كل مُدخل المؤشر الذي سيُغذّيه والجهد التقريبي للدمج.
+    </p>
     <p class="small text-muted mb-3" dir="ltr" style="text-align:left">
         These sources are recommended for the next integration cycle. Inclusion criteria:
         either (a) materially improves Libya-specific resolution for an existing INFORM
@@ -436,28 +607,58 @@
         notes the indicator it would feed and the rough integration effort.
     </p>
 
-    {% macro planned_card(name_en, name_ar, provider, url, what_it_adds, target_pillar, effort) -%}
+    {% macro planned_card(name_en, name_ar, provider_en, provider_ar, url,
+                          adds_ar, adds_en, target_ar, target_en, effort_ar, effort_en) -%}
     <div class="card border-0 shadow-sm mb-3" style="border-left: 3px solid #adb5bd !important;">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
           <div>
-            <h6 class="mb-0 fw-bold" dir="ltr" style="text-align:left">{{ name_en }}</h6>
-            <div class="small text-muted ar-text">{{ name_ar }} — {{ provider }}</div>
+            <h6 class="mb-0 fw-bold ar-text">{{ name_ar }}</h6>
+            <div class="small text-muted ar-text">{{ provider_ar }}</div>
+            <div class="small text-muted en-text" dir="ltr" style="text-align:left">
+              {{ name_en }} — {{ provider_en }}
+            </div>
           </div>
-          <span class="badge bg-light text-dark border">Planned</span>
+          <span class="badge bg-light text-dark border">
+            <span class="ar-text">مُقترَح</span>
+            <span class="en-text">Planned</span>
+          </span>
         </div>
-        <dl class="row mb-0 small" dir="ltr" style="text-align:left">
-          <dt class="col-sm-3 text-muted">What it would add</dt>
-          <dd class="col-sm-9">{{ what_it_adds }}</dd>
+        <dl class="row mb-0 small">
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">ما الذي ستُضيفه</span>
+            <span class="en-text">What it would add</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ adds_ar|safe }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ adds_en|safe }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Target indicator(s)</dt>
-          <dd class="col-sm-9">{{ target_pillar }}</dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">المؤشر/المؤشرات المستهدَفة</span>
+            <span class="en-text">Target indicator(s)</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ target_ar|safe }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ target_en|safe }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Integration effort</dt>
-          <dd class="col-sm-9">{{ effort }}</dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">الجهد المطلوب للدمج</span>
+            <span class="en-text">Integration effort</span>
+          </dt>
+          <dd class="col-sm-9">
+            <span class="ar-text">{{ effort_ar }}</span>
+            <span class="en-text" dir="ltr" style="text-align:left">{{ effort_en }}</span>
+          </dd>
 
-          <dt class="col-sm-3 text-muted">Source link</dt>
-          <dd class="col-sm-9"><a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ url }}</a></dd>
+          <dt class="col-sm-3 text-muted">
+            <span class="ar-text">رابط المصدر</span>
+            <span class="en-text">Source link</span>
+          </dt>
+          <dd class="col-sm-9">
+            <a href="{{ url }}" target="_blank" rel="noopener noreferrer" dir="ltr" style="display:inline-block">{{ url }}</a>
+          </dd>
         </dl>
       </div>
     </div>
@@ -467,29 +668,41 @@
       "Copernicus Emergency Management Service — Rapid Mapping",
       "خدمة كوبرنيكوس لإدارة الطوارئ — رسم الخرائط السريع",
       "European Commission / DG-DEFIS",
+      "المفوضية الأوروبية / المديرية العامة للدفاع والفضاء",
       "https://emergency.copernicus.eu/mapping/list-of-activations-rapid",
+      "آثار الفيضانات والحرائق المستخلصة من الأقمار الاصطناعية، تُفعَّل خلال ساعاتٍ من وقوع الحدث الكبير. ومن شأنها استبدال تحليل النصوص بمتعدِّدات أضلاع مرسومةٍ فعلياً (مثل أثر عاصفة دانيال على درنة).",
       "Satellite-derived flood and wildfire footprints activated within hours of major events. Would replace event-text parsing with actual mapped polygons (e.g., Storm Daniel Derna footprint).",
+      "ركيزة المخاطر والتعرض ← الفيضانات وحرائق الغابات (تعرض بلدي على مستوى الحدث)",
       "Hazard &amp; Exposure → flooding, wildfire (event-level municipal exposure)",
+      "منخفض — تنزيلات GeoJSON عمومية لكل تفعيل؛ ونصٌ تحميلي لمرة واحدة.",
       "Low — public GeoJSON downloads per activation; one-time loader script."
     ) }}
 
     {{ planned_card(
       "UNHCR Operational Data Portal — Libya",
-      "بوابة بيانات المفوضية العملية — ليبيا",
+      "بوابة بيانات المفوضية العملياتية — ليبيا",
       "UN High Commissioner for Refugees",
+      "مفوضية الأمم المتحدة لشؤون اللاجئين",
       "https://data.unhcr.org/en/country/lby",
+      "أرصدة اللاجئين وطالبي اللجوء، وتدفقات العائدين، ورصد الوصول عند نقاط المغادرة الساحلية.",
       "Refugee and asylum-seeker stocks, returnee flows, arrival monitoring at coastal departure points.",
+      "ركيزة الهشاشة ← هشاشة النزوح (تفصيل اللاجئين والعائدين)",
       "Vulnerability → displacement_vulnerability (refugee/returnee disaggregation)",
+      "منخفض — تنزيلات CSV عمومية. تُضيف دقة تتجاوز اقتصار IDMC على النازحين داخلياً.",
       "Low — public CSV downloads. Adds resolution beyond IDMC's IDP-only coverage."
     ) }}
 
     {{ planned_card(
       "NASA FIRMS (Fire Information for Resource Management)",
-      "نظام معلومات الحرائق التابع لناسا",
+      "نظام معلومات الحرائق التابع لناسا (FIRMS)",
       "NASA / Earth Science Data Systems",
+      "ناسا / منظومات بيانات علوم الأرض",
       "https://firms.modaps.eosdis.nasa.gov/country/",
+      "اكتشاف الحرائق النشطة والبقع الحرارية من قمري MODIS وVIIRS، يتاح خلال ثلاث ساعاتٍ من المرور المداري. يتيح إشارة تعرضٍ للحرائق شبه آنيةٍ على مستوى البلديات.",
       "Active fire / hot-spot detections from MODIS and VIIRS satellites, available within 3 hours of overpass. Provides near-real-time wildfire exposure for municipalities.",
+      "ركيزة المخاطر والتعرض ← حرائق الغابات (إشارة آنية لا مجرد سجلات EM-DAT التاريخية)",
       "Hazard &amp; Exposure → wildfire (real-time signal, not just historical EM-DAT)",
+      "منخفض — مفتاح API مجاني وواجهة REST بسيطة.",
       "Low — free API key, simple REST interface."
     ) }}
 
@@ -497,9 +710,13 @@
       "USGS Earthquake Catalog",
       "كتالوج الزلازل — هيئة المسح الجيولوجي الأمريكية",
       "U.S. Geological Survey",
+      "هيئة المسح الجيولوجي الأمريكية",
       "https://earthquake.usgs.gov/fdsnws/event/1/",
+      "الأحداث الزلزالية التاريخية والآنية مع المقدار والعمق والموقع. تُضيف نطاقاً جيوفيزيائياً مفقوداً (ليبيا منخفضة النشاط الزلزالي لكنه ليس معدوماً).",
       "Historical and real-time seismic events with magnitude, depth, and location. Adds geophysical hazard sub-domain (currently absent — Libya is low-seismicity but not zero).",
+      "ركيزة المخاطر والتعرض ← المخاطر الطبيعية (نطاق فرعي جديد للزلازل)",
       "Hazard &amp; Exposure → natural_hazard (earthquake sub-domain, new)",
+      "منخفض — خدمة FDSN مفتوحة دون مفتاح.",
       "Low — open FDSN web service, no key."
     ) }}
 
@@ -507,39 +724,55 @@
       "WorldPop High-Resolution Population Grid",
       "شبكة السكان عالية الدقة — وورلدبوب",
       "WorldPop / University of Southampton",
+      "وورلدبوب / جامعة ساوثامبتون",
       "https://www.worldpop.org/geodata/listing?id=29",
+      "تقديرات سكانية شبكية بدقة 100 متر لليبيا. تتيح مؤشرات تعرضٍ تجمع بين أثر الخطر وأعداد السكان المُعرَّضين على المستوى البلدي (بدل البدائل الوطنية).",
       "100m gridded population estimates for Libya. Enables exposure indicators that combine hazard footprints with population-at-risk counts at municipal level (rather than national proxies).",
+      "ركيزة المخاطر والتعرض ← السكان المُعرَّضون لجميع المخاطر الطبيعية",
       "Hazard &amp; Exposure → population-at-risk for all natural hazards",
+      "متوسط — تنزيلات GeoTIFF كبيرة + خطوة إحصاءاتٍ منطقية على متعدِّدات GADM.",
       "Medium — large GeoTIFF downloads + zonal-statistics step against GADM polygons."
     ) }}
 
     {{ planned_card(
       "Libya Ministry of Health — HMIS facility data",
-      "نظام معلومات الصحة — وزارة الصحة الليبية",
+      "نظام معلومات الصحة (HMIS) — وزارة الصحة الليبية",
       "Government of Libya — Ministry of Health",
+      "حكومة ليبيا — وزارة الصحة",
       "https://www.health.gov.ly/",
+      "بيانات على مستوى المنشأة لتوفّر الخدمات الصحية (المستشفيات العاملة، الأَسرّة، الكوادر، طاقة العناية المركزة) لكل بلدية. ستحلّ محل البدائل الوطنية لمنظمة الصحة العالمية لمؤشر فجوة الوصول الصحي.",
       "Facility-level health service availability (functioning hospitals, beds, staff, ICU capacity) per municipality. Would replace national WHO proxies for healthcare_access_gap.",
+      "ركيزة المواجهة ← فجوة الوصول الصحي (دقة بلدية)",
       "Coping Capacity → healthcare_access_gap (municipal resolution)",
+      "متوسط إلى مرتفع — يستلزم اتفاقية مشاركة بيانات وخطّ رفعٍ منتظم لملفات CSV/Excel.",
       "Medium-high — requires data-sharing agreement and regular CSV/Excel upload pipeline."
     ) }}
 
     {{ planned_card(
       "OpenStreetMap road network (via Overpass API)",
-      "شبكة الطرق — خرائط الشارع المفتوح",
+      "شبكة طرق خرائط الشارع المفتوح (عبر واجهة Overpass)",
       "OpenStreetMap Foundation contributors",
+      "مؤسسة خرائط الشارع المفتوح — المساهمون",
       "https://overpass-api.de/",
+      "شبكة الطرق لتحليل أزمنة السفر بين المراكز السكانية ومرافق الطوارئ. تُحسِّن مؤشر فجوة زمن الاستجابة بما يفوق تقديرات HeiGIT الساكنة.",
       "Road network for travel-time analysis between population centres and emergency facilities. Improves response_time_gap beyond static HeiGIT estimates.",
+      "ركيزة المواجهة ← فجوة زمن الاستجابة",
       "Coping Capacity → response_time_gap",
+      "متوسط — استعلام Overpass + احتساب خطوط الإيزوكرون لكل منشأة.",
       "Medium — Overpass query + isochrone calculation per facility."
     ) }}
 
     {{ planned_card(
       "World Bank Climate Change Knowledge Portal — CMIP6 projections",
-      "بوابة المعرفة بتغير المناخ — البنك الدولي",
+      "بوابة المعرفة بتغيّر المناخ — البنك الدولي (إسقاطات CMIP6)",
       "The World Bank Group",
+      "مجموعة البنك الدولي",
       "https://climateknowledgeportal.worldbank.org/country/libya",
+      "إسقاطات مناخية مُصغَّرة المقياس (الحرارة، الهطول، مؤشرات الجفاف) لليبيا حتى عام 2100 ضمن سيناريوهات SSP. مكمّل استشرافي لسجلات EM-DAT التاريخية وNOAA GSOD.",
       "Downscaled climate projections (temperature, precipitation, drought indices) for Libya through 2100 under SSP scenarios. Forward-looking complement to historical EM-DAT and NOAA GSOD.",
+      "ركيزة المخاطر والتعرض ← الإجهاد المناخي الاستشرافي (نطاق جديد)",
       "Hazard &amp; Exposure → forward-looking climate stress (new)",
+      "متوسط — تنزيل ملفات NetCDF مع منطق اختيار السيناريو.",
       "Medium — bulk NetCDF download + scenario selection logic."
     ) }}
 
@@ -555,12 +788,12 @@
             <div class="alert alert-warning mb-3">
                 <i class="fas fa-exclamation-triangle me-2"></i>
                 <span class="ar-text fw-bold">الشفافية الكاملة: </span>
-                <span class="ar-text">عندما لا تتوفر بيانات لمؤشر ما على مستوى البلدية، يُعرض "البيانات غير متاحة" بوضوح. يُستخدم المتوسط الوطني كبديل موثق عند الضرورة مع الإشارة الصريحة إلى ذلك. لا يتم اختلاق بيانات في أي حال.</span>
+                <span class="ar-text">عندما لا تتوفر بيانات لمؤشر ما على مستوى البلدية، يُعرض «البيانات غير متاحة» بوضوح. ويُستخدم المتوسط الوطني بديلاً موثَّقاً عند الضرورة مع الإشارة الصريحة إلى ذلك. ولا يتم اختلاق بيانات في أيّ حال.</span>
             </div>
             <p class="small text-muted" dir="ltr" style="text-align:left">
-                When municipal-level data is unavailable, this tool displays "Data not available" 
-                (البيانات غير متاحة) honestly. Where a national average proxy is used, it is 
-                explicitly flagged in reports. No data is fabricated or silently substituted. 
+                When municipal-level data is unavailable, this tool displays "Data not available"
+                (البيانات غير متاحة) honestly. Where a national average proxy is used, it is
+                explicitly flagged in reports. No data is fabricated or silently substituted.
                 This policy is consistent with the INFORM methodology for data-sparse contexts.
             </p>
         </div>
