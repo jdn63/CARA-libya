@@ -286,12 +286,14 @@ MNCH = DomainSpec(
     inform_pillar_en="Population — priority care",
     inform_role_ar=(
         "ارتفاع وفيات الأمهات والمواليد وانخفاض تغطية التطعيم يَعكس ضعف "
-        "النظام الصحي ويرفع قابلية التأثّر في مؤشر INFORM."
+        "النظام الصحي ويُبرز الحاجة إلى رعاية ذات أولوية لهذه الفئات "
+        "السكانية ضمن مؤشر INFORM."
     ),
     inform_role_en=(
         "High maternal and neonatal mortality together with low "
-        "immunization coverage signal a weak health system and raise the "
-        "INFORM Vulnerability score."
+        "immunization coverage signal a weak health system and highlight "
+        "the need for priority care for this population group within the "
+        "INFORM index."
     ),
     description_ar=(
         "مؤشّرات صحة الأم والطفل المُجمَّعة من السجلات المحلية للولادات "
