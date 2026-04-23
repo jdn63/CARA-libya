@@ -26,7 +26,8 @@ DOCUMENTATION FORMATTING RULES (permanent, applies to every file without excepti
     - refresh_libya_global: every 720 hours (30 days) — WHO Libya via HDX (primary); WHO GHO (legacy fallback); World Bank; OpenAQ
 - CARA_PROFILE environment variable: set to "libya" in shared environment to activate Libya scheduler
 - Configuration: config/jurisdiction.yaml, config/risk_weights.yaml, config/profiles/libya.yaml
-- Routes: routes/public.py (home, methodology, about, data-sources), routes/dashboard.py, routes/api.py
+- Routes: routes/public.py (home, methodology, about, data-sources), routes/dashboard.py (dashboard + action plan), routes/api.py
+- Action Plan: GET /action-plan/<jurisdiction_id> — bilingual RTL preparedness action plan; reuses _run_pillars(); calls utils/action_plan_content.get_action_domains() to produce 11 INFORM-component domains sorted by score; each domain has 3-tier timeline (0-3mo / 3-12mo / 1-3yr) in Arabic+English with UN Cluster + Libyan govt counterpart + Sendai priority; template: templates/action_plan_libya.html; linked from dashboard "خطة العمل" button; print CSS included
 - Dashboard connector pipeline: routes/dashboard.py/_load_connector_data() loads who_hdx, idmc_hdx, heigit, iom, worldbank, coi_libya, ncdc_libya from disk cache and normalises keys for domain modules (who_hdx beds per 10k divided by 10 to get per 1000; idmc_hdx total_displacement_stock mapped to idmc.total_idps; etc.)
 - Dashboard sub-domain key mapping: domain modules use sub_domains (hazard) or indicators (vulnerability, coping) as the nested score dict; _run_pillars() flattens both into a uniform components dict for the template
 - Formula transparency: _build_show_work() in dashboard.py builds per-sub-domain Bootstrap popover HTML with raw indicator values, formula string, and data source attribution; passed to template as show_work dict keyed by 'pillar__sub_domain'

@@ -1345,8 +1345,66 @@ def _run_pillars(jurisdiction_id: str, jurisdiction_config: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Route
+# Routes
 # ---------------------------------------------------------------------------
+
+@dashboard_bp.route('/action-plan/<jurisdiction_id>')
+def action_plan(jurisdiction_id):
+    """Bilingual Arabic/English preparedness action plan — Libya CARA."""
+    try:
+        from utils.action_plan_content import get_action_domains, SENDAI_LABELS
+
+        jm = _get_jm()
+
+        if jurisdiction_id.upper() in ('LY', 'LIBYA', 'LY-NATIONAL'):
+            jurisdiction = {
+                'id': 'LY',
+                'name_ar': 'ليبيا — التقييم الوطني',
+                'name_en': 'Libya — National Assessment',
+                'level': 1,
+                'population': 6931000,
+                'region': '',
+            }
+            jurisdiction_config = jm.get_country_config()
+        else:
+            jurisdiction = jm.get_by_id(jurisdiction_id)
+            if not jurisdiction:
+                return render_template(
+                    'error.html',
+                    message=f'البلدية غير موجودة / Municipality not found: {jurisdiction_id}'
+                )
+            jurisdiction_config = jm.get_country_config()
+
+        pillar_data   = _run_pillars(jurisdiction_id, jurisdiction_config)
+        action_domains = get_action_domains(pillar_data, min_score=0.15)
+
+        # INFORM summary row for the header card
+        inform  = pillar_data.get('inform_score', {})
+        hazard  = pillar_data.get('hazard', {})
+        vuln    = pillar_data.get('vulnerability', {})
+        coping  = pillar_data.get('coping', {})
+
+        return render_template(
+            'action_plan_libya.html',
+            jurisdiction=jurisdiction,
+            pillar_data=pillar_data,
+            action_domains=action_domains,
+            inform=inform,
+            hazard=hazard,
+            vuln=vuln,
+            coping=coping,
+            sendai_labels=SENDAI_LABELS,
+            level_labels_ar=LEVEL_LABELS_AR,
+            level_labels_en=LEVEL_LABELS_EN,
+            now=datetime.utcnow(),
+        )
+    except Exception as e:
+        logger.error(f'Action plan error for {jurisdiction_id}: {e}', exc_info=True)
+        return render_template(
+            'error.html',
+            message='حدث خطأ أثناء إنشاء خطة العمل. / An error occurred generating the action plan.'
+        )
+
 
 @dashboard_bp.route('/dashboard/<jurisdiction_id>')
 def dashboard(jurisdiction_id):

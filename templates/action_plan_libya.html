@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}خطة العمل التحضيري — {{ jurisdiction.name_ar }}{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ── Action Plan — Libya CARA ──────────────────────────────────────────── */
+body { direction: rtl; }
+
+.ap-header {
+    background: linear-gradient(135deg, #0a3d62 0%, #1a6fa8 100%);
+    color: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.ap-header .official-badge {
+    background: #c0392b;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.7rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+.ap-score-card {
+    border-top: 4px solid var(--bs-primary);
+    text-align: center;
+}
+.ap-score-card.danger  { border-top-color: #dc3545; }
+.ap-score-card.warning { border-top-color: #fd7e14; }
+.ap-score-card.info    { border-top-color: #0dcaf0; }
+.ap-score-card.success { border-top-color: #198754; }
+
+.domain-card {
+    border-right: 5px solid #adb5bd;
+    transition: border-color .2s;
+}
+.domain-card.level-critical { border-right-color: #dc3545; }
+.domain-card.level-high     { border-right-color: #fd7e14; }
+.domain-card.level-moderate { border-right-color: #ffc107; }
+.domain-card.level-low      { border-right-color: #0dcaf0; }
+.domain-card.level-minimal  { border-right-color: #198754; }
+
+.sendai-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+}
+.sendai-1 { background: #e8f4f8; color: #0a6ea5; border: 1px solid #0a6ea5; }
+.sendai-2 { background: #f3e8f8; color: #7d3c98; border: 1px solid #7d3c98; }
+.sendai-3 { background: #e8f8ec; color: #1a7a3a; border: 1px solid #1a7a3a; }
+.sendai-4 { background: #fff3e0; color: #b7540a; border: 1px solid #b7540a; }
+
+.timeline-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: .25rem;
+    margin-bottom: .5rem;
+}
+.timeline-label.immediate { border-bottom-color: #dc3545; color: #dc3545; }
+.timeline-label.short     { border-bottom-color: #fd7e14; color: #b7540a; }
+.timeline-label.long      { border-bottom-color: #198754; color: #198754; }
+
+.action-item {
+    font-size: 0.85rem;
+    margin-bottom: .4rem;
+    padding-right: 1rem;
+    position: relative;
+}
+.action-item::before {
+    content: '◆';
+    position: absolute;
+    right: 0;
+    color: #6c757d;
+    font-size: 0.5rem;
+    top: .3rem;
+}
+.action-item .ar { display: block; font-weight: 500; }
+.action-item .en {
+    display: block;
+    color: #6c757d;
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+.gov-row {
+    font-size: 0.8rem;
+    background: #f8f9fa;
+    border-radius: .3rem;
+    padding: .4rem .75rem;
+    margin-bottom: .5rem;
+}
+.gov-row .label {
+    font-weight: 700;
+    color: #495057;
+    min-width: 6rem;
+    display: inline-block;
+}
+
+.summary-table th { font-size: 0.8rem; white-space: nowrap; }
+.summary-table td { font-size: 0.82rem; }
+
+/* Print overrides */
+@media print {
+    .no-print { display: none !important; }
+    .domain-card { break-inside: avoid; }
+    .ap-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { font-size: 11pt; }
+    .container { max-width: 100% !important; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xl py-3">
+
+    {# ── Page Header ───────────────────────────────────────────────────── #}
+    <div class="ap-header">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="official-badge">للاستخدام الرسمي فقط / Official Use Only</span>
+                    <span class="official-badge" style="background:#6c3483">CARA ليبيا</span>
+                </div>
+                <h2 class="mb-0 fw-bold">خطة العمل التحضيري للحد من مخاطر الكوارث</h2>
+                <div class="text-white-50 small">Disaster Risk Reduction Preparedness Action Plan</div>
+                <div class="mt-2 fw-semibold fs-5">{{ jurisdiction.name_ar }}</div>
+                <div class="text-white-50 small">{{ jurisdiction.name_en }}</div>
+            </div>
+            <div class="text-end">
+                <div class="text-white-50 small">صادر في / Issued</div>
+                <div class="fw-semibold" dir="ltr">{{ now.strftime('%d %B %Y') }}</div>
+                <div class="text-white-50 small mt-1">إطار سيندا للحد من مخاطر الكوارث 2015–2030</div>
+                <div class="text-white-50 small">Sendai Framework for DRR 2015–2030 · INFORM Risk Index</div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Navigation bar ────────────────────────────────────────────────── #}
+    <div class="d-flex gap-2 mb-3 no-print flex-wrap">
+        <a href="/dashboard/{{ jurisdiction.id }}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-right-circle me-1"></i>العودة إلى لوحة التقييم
+        </a>
+        <button class="btn btn-success btn-sm" onclick="window.print()">
+            <i class="bi bi-printer me-1"></i>طباعة / Print
+        </button>
+    </div>
+
+    {# ── INFORM Score Summary ──────────────────────────────────────────── #}
+    {% set h_score = hazard.get('score') %}
+    {% set v_score = vuln.get('score') %}
+    {% set c_score = coping.get('score') %}
+    {% set i_score = inform.get('score') %}
+
+    {% macro score_color(s) %}{% if s and s > 0.6 %}danger{% elif s and s > 0.4 %}warning{% elif s and s > 0.2 %}info{% elif s %}success{% else %}secondary{% endif %}{% endmacro %}
+    {% macro score_label_ar(level) %}{{ level_labels_ar.get(level, 'غير محدد') }}{% endmacro %}
+
+    <div class="row g-3 mb-4">
+        {% for label_ar, label_en, score, level in [
+            ('مؤشر الخطر والتعرض', 'Hazard & Exposure', h_score, hazard.get('level','unavailable')),
+            ('مؤشر الضعف والهشاشة', 'Vulnerability', v_score, vuln.get('level','unavailable')),
+            ('القدرة على التكيف', 'Coping Capacity (Lack of)', c_score, coping.get('level','unavailable')),
+            ('مؤشر INFORM الإجمالي', 'Overall INFORM Risk', i_score, inform.get('level','unavailable')),
+        ] %}
+        <div class="col-6 col-md-3">
+            <div class="card h-100 ap-score-card {{ score_color(score) }}">
+                <div class="card-body py-3 px-2 text-center">
+                    <div class="small text-muted">{{ label_en }}</div>
+                    <div class="fw-bold text-{{ score_color(score) }} fs-3">
+                        {{ '%.1f'|format(score * 10) if score is not none else '—' }}
+                    </div>
+                    <div class="small text-muted mb-1">/10</div>
+                    <div class="fw-semibold">{{ label_ar }}</div>
+                    {% if level and level != 'unavailable' %}
+                    <span class="badge bg-{{ score_color(score) }} mt-1" style="font-size:0.7rem">
+                        {{ level_labels_ar.get(level, '') }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# ── Executive Summary Table ───────────────────────────────────────── #}
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <span class="fw-bold">ملخص مناطق الأولوية / Priority Areas Summary</span>
+            <span class="badge bg-secondary">{{ action_domains|length }} مجال / domains</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover summary-table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">#</th>
+                            <th>المجال / Domain</th>
+                            <th>الركيزة / Pillar</th>
+                            <th>الدرجة / Score</th>
+                            <th>مستوى الخطر / Risk Level</th>
+                            <th>أولوية سيندا / Sendai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in action_domains %}
+                        <tr>
+                            <td class="ps-3 text-muted">{{ loop.index }}</td>
+                            <td>
+                                <i class="bi {{ d.icon }} me-1 text-secondary"></i>
+                                <strong>{{ d.label_ar }}</strong>
+                                <div class="text-muted" style="font-size:0.75rem">{{ d.label_en }}</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if d.pillar_key == 'hazard' %}danger{% elif d.pillar_key == 'vulnerability' %}warning text-dark{% else %}primary{% endif %}" style="font-size:0.7rem">
+                                    {{ d.pillar_ar }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1" style="height:8px;width:70px">
+                                        <div class="progress-bar bg-{{ score_color(d.score) }}"
+                                             style="width:{{ (d.score * 100)|round|int }}%"></div>
+                                    </div>
+                                    <strong class="text-{{ score_color(d.score) }}">{{ '%.1f'|format(d.score_10) }}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ score_color(d.score) }}">
+                                    {{ level_labels_ar.get(d.level, d.level) }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="sendai-badge sendai-{{ d.sendai_priority }}">
+                                    {{ d.sendai_priority }} — {{ sendai_labels[d.sendai_priority].ar }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# ── Action Cards ──────────────────────────────────────────────────── #}
+    <h4 class="mb-3 fw-bold">
+        <i class="bi bi-list-check me-2"></i>الإجراءات التفصيلية / Detailed Action Steps
+    </h4>
+
+    {% for d in action_domains %}
+    <div class="card mb-4 domain-card level-{{ d.level }}" id="domain-{{ d.key }}">
+
+        {# Card header #}
+        <div class="card-header py-2">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi {{ d.icon }} fs-5 text-{{ score_color(d.score) }}"></i>
+                    <div>
+                        <strong class="fs-6">{{ d.label_ar }}</strong>
+                        <div class="text-muted" style="font-size:0.8rem">{{ d.label_en }}</div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="badge bg-{% if d.pillar_key == 'hazard' %}danger{% elif d.pillar_key == 'vulnerability' %}warning text-dark{% else %}primary{% endif %}" style="font-size:0.7rem">
+                        {{ d.pillar_en }}
+                    </span>
+                    <span class="sendai-badge sendai-{{ d.sendai_priority }}">
+                        سيندا {{ d.sendai_priority }} — {{ sendai_labels[d.sendai_priority].ar }}
+                    </span>
+                    <span class="badge bg-{{ score_color(d.score) }} fs-6">
+                        {{ '%.1f'|format(d.score_10) }}/10 — {{ level_labels_ar.get(d.level, '') }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            {# Responsible parties #}
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <div class="gov-row">
+                        <span class="label">الجهات الحكومية المعنية:</span>
+                        {{ d.gov_ar }}
+                    </div>
+                    <div class="text-muted" style="font-size:0.75rem; padding-right:0.25rem">{{ d.gov_en }}</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="gov-row">
+                        <span class="label">منظومة الأمم المتحدة:</span>
+                        {{ d.cluster_ar }}
+                    </div>
+                    <div class="text-muted" style="font-size:0.75rem; padding-right:0.25rem">{{ d.cluster_en }}</div>
+                </div>
+            </div>
+
+            {# Sendai priority explanation #}
+            <div class="alert alert-light py-2 px-3 mb-3" style="border-right:3px solid #0a6ea5; font-size:0.8rem">
+                <strong>أولوية سيندا {{ d.sendai_priority }}:</strong>
+                {{ sendai_labels[d.sendai_priority].ar }}
+                <span class="text-muted"> / {{ sendai_labels[d.sendai_priority].en }}</span>
+            </div>
+
+            {# Timeline action columns #}
+            <div class="row g-3">
+                {% for term_style, action_group in [
+                    ('immediate', d.actions[0]),
+                    ('short',     d.actions[1] if d.actions|length > 1 else None),
+                    ('long',      d.actions[2] if d.actions|length > 2 else None),
+                ] %}
+                {% if action_group %}
+                <div class="col-lg-4">
+                    <div class="timeline-label {{ term_style }}">
+                        {{ action_group.term_ar }}
+                        <div class="text-muted fw-normal" style="font-size:0.72rem">{{ action_group.term_en }}</div>
+                    </div>
+                    <ul class="list-unstyled mb-0">
+                        {% for ar_text, en_text in action_group['items'] %}
+                        <li class="action-item">
+                            <span class="ar">{{ ar_text }}</span>
+                            <span class="en">{{ en_text }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>{# /card-body #}
+    </div>{# /domain-card #}
+    {% endfor %}
+
+    {# ── Footer / Methodology Note ─────────────────────────────────────── #}
+    <div class="card mt-4 bg-light border-0">
+        <div class="card-body small text-muted">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <strong>منهجية التسجيل / Scoring Methodology</strong><br>
+                    تستند الدرجات إلى مؤشر INFORM للمخاطر (الخطر × الهشاشة × ضعف القدرة على التكيف)^⅓.
+                    الأولويات الواردة في هذه الخطة مرتبة تنازلياً حسب درجة المخاطر المحسوبة من البيانات المتاحة.
+                    <br><em>Scores based on INFORM Risk Index (H × V × C)^⅓. Priorities ordered descending by computed risk score from available data.</em>
+                </div>
+                <div class="col-md-6">
+                    <strong>الإطار المرجعي / Reference Framework</strong><br>
+                    إطار سيندا للحد من مخاطر الكوارث 2015–2030 · منظومة الأمم المتحدة للمجموعات الإنسانية · وكالات الأمم المتحدة العاملة في ليبيا
+                    <br><em>Sendai Framework for DRR 2015–2030 · UN Cluster System · UN agencies operating in Libya</em>
+                    <br><br>
+                    <span class="badge bg-danger" style="font-size:0.65rem">للاستخدام الرسمي فقط / Official Use Only</span>
+                    <span class="text-muted ms-2">صادر: {{ now.strftime('%d %B %Y') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>{# /container-xl #}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const jId = '{{ jurisdiction.id }}';
+    const jName = '{{ jurisdiction.name_ar }}';
+    if (jId) {
+        localStorage.setItem('selectedJurisdictionId', jId);
+        localStorage.setItem('selectedJurisdictionName', jName);
+        const el = document.getElementById('jurisdiction-display');
+        if (el) el.innerHTML = jName;
+    }
+});
+</script>
+{% endblock %}
