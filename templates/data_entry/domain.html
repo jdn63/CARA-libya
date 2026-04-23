@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}{{ spec.name_ar }} — CARA ليبيا{% endblock %}
+
+{# ─────────────────────────────────────────────────────────────────────────
+   Build the (group → metrics) layout once so the table can render a
+   two-row colspan header for grouped domains and a flat header for
+   ungrouped ones (MNCH, environmental health).
+   ───────────────────────────────────────────────────────────────────────── #}
+{% set groups = [] %}
+{% set seen = {} %}
+{% for ind in spec.indicators %}
+  {% set gar = ind.group_ar %}
+  {% set gen = ind.group_en %}
+  {% set key = gar or '__flat__::' ~ ind.code %}
+  {% if key not in seen %}
+    {% set _ = seen.update({key: groups|length}) %}
+    {% set _ = groups.append({'ar': gar, 'en': gen, 'inds': [ind]}) %}
+  {% else %}
+    {% set _ = groups[seen[key]]['inds'].append(ind) %}
+  {% endif %}
+{% endfor %}
+{% set ind_col_count = spec.indicators|length %}
+
+{% block content %}
+<div class="container py-4">
+
+  <nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small mb-0">
+      <li class="breadcrumb-item"><a href="{{ url_for('data_entry.hub') }}">
+        <span class="ar-text">إدخال البيانات</span>
+        <span class="en-text">Data entry</span>
+      </a></li>
+      <li class="breadcrumb-item active" aria-current="page">
+        <span class="ar-text">{{ spec.name_ar }}</span>
+        <span class="en-text small text-muted">{{ spec.name_en }}</span>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="cara-heading mb-3 d-flex align-items-center gap-3">
+    <span class="cara-domain-icon"><i class="{{ spec.icon }}"></i></span>
+    <span>
+      <span class="ar-text d-block">{{ spec.name_ar }}</span>
+      <span class="en-text">{{ spec.name_en }}</span>
+    </span>
+  </div>
+
+  {# ─── Flash messages ────────────────────────────────────────────── #}
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for category, msg in msgs %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  {# ─── Overview ─────────────────────────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <p class="ar-text mb-2">{{ spec.description_ar }}</p>
+      <p class="small text-muted mb-3" dir="ltr" style="text-align:left">
+        {{ spec.description_en }}
+      </p>
+      <div class="alert alert-light border small mb-0">
+        <strong>
+          <i class="fas fa-link me-1"></i>
+          <span class="ar-text">صلة المجال بمؤشر INFORM:</span>
+          <span class="en-text">INFORM linkage:</span>
+        </strong>
+        <div class="ar-text">{{ spec.inform_role_ar }}</div>
+        <div class="en-text small text-muted">{{ spec.inform_role_en }}</div>
+      </div>
+    </div>
+  </div>
+
+  {# ─── Step 1: Download template ─────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <h5 class="mb-0">
+        <span class="badge bg-primary me-2">1</span>
+        <span class="ar-text">تنزيل القالب</span>
+        <span class="en-text">Download the Template</span>
+      </h5>
+      <a class="btn btn-primary"
+         href="{{ url_for('data_entry.domain_template', key=spec.key) }}">
+        <i class="fas fa-file-excel me-1"></i>
+        <span class="ar-text">تنزيل قالب Excel</span>
+        <span class="en-text">Download Excel Template</span>
+      </a>
+    </div>
+    <div class="card-body">
+      <p class="ar-text mb-2">
+        يحتوي القالب على صفّ مُسبَّق لكل بلدية ليبية مع رمزها واسمها بالعربية والإنجليزية. على الجهة المُبلِّغة فقط ملء تاريخ جمع البيانات والمؤشرات والملاحظات. وحدة كل عمود مذكورة بين قوسين في الترويسة.
+      </p>
+      <p class="small text-muted mb-2" dir="ltr" style="text-align:left">
+        The template ships with one pre-populated row per Libyan
+        municipality including the ID and bilingual name. Reporting
+        agencies only need to fill in the capture date, the indicator
+        values, and any notes. The unit of each column is shown in
+        parentheses in the header.
+      </p>
+      <details class="small">
+        <summary class="text-primary">
+          <span class="ar-text">عرض قائمة المؤشرات ({{ ind_col_count }})</span>
+          <span class="en-text">Show indicator list ({{ ind_col_count }})</span>
+        </summary>
+        <ul class="mt-2 mb-0">
+          {% for ind in spec.indicators %}
+            <li>
+              {% if ind.group_ar %}
+                <span class="ar-text fw-semibold">{{ ind.group_ar }} — {{ ind.name_ar }}</span>
+                <span class="en-text text-muted small">{{ ind.group_en }} — {{ ind.name_en }}</span>
+              {% else %}
+                <span class="ar-text fw-semibold">{{ ind.name_ar }}</span>
+                <span class="en-text text-muted small">{{ ind.name_en }}</span>
+              {% endif %}
+              <span class="text-muted">({{ ind.unit_en }})</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </details>
+    </div>
+  </div>
+
+  {# ─── Step 2: Upload completed file ────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3">
+      <h5 class="mb-0">
+        <span class="badge bg-primary me-2">2</span>
+        <span class="ar-text">رفع الملف المُكتمل</span>
+        <span class="en-text">Upload the Completed File</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <form method="POST"
+            action="{{ url_for('data_entry.domain_upload', key=spec.key) }}"
+            enctype="multipart/form-data"
+            class="row g-2 align-items-end">
+        <div class="col-md-8">
+          <label for="workbook" class="form-label small">
+            <span class="ar-text">اختر ملف Excel (xlsx.) — الحد الأقصى 10 ميغابايت</span>
+            <span class="en-text">Select an .xlsx file (max 10 MB)</span>
+          </label>
+          <input class="form-control" type="file" id="workbook" name="workbook"
+                 accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                 required>
+        </div>
+        <div class="col-md-4">
+          <button type="submit" class="btn btn-success w-100">
+            <i class="fas fa-upload me-1"></i>
+            <span class="ar-text">رفع</span>
+            <span class="en-text">Upload</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# ─── Step 3: Comparison table ──────────────────────────────── #}
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <h5 class="mb-0">
+        <span class="badge bg-primary me-2">3</span>
+        <span class="ar-text">جدول مقارنة بين البلديات</span>
+        <span class="en-text">Cross-Municipality Comparison Table</span>
+      </h5>
+      <a class="btn btn-outline-success"
+         href="{{ url_for('data_entry.domain_export', key=spec.key) }}">
+        <i class="fas fa-file-export me-1"></i>
+        <span class="ar-text">تصدير الجدول إلى Excel</span>
+        <span class="en-text">Export Table to Excel</span>
+      </a>
+    </div>
+    <div class="card-body">
+
+      <div class="alert alert-info py-2 small mb-3">
+        {% if table.freshness %}
+          <i class="fas fa-clock me-1"></i>
+          <strong class="ar-text">أحدث تاريخ جمع للبيانات:</strong>
+          <span dir="ltr">{{ table.freshness.isoformat() }}</span>
+          <span class="text-muted mx-2">|</span>
+          <strong class="en-text">Latest capture date:</strong>
+          <span dir="ltr">{{ table.freshness.isoformat() }}</span>
+          <span class="text-muted mx-2">|</span>
+          <span class="ar-text">عدد الملفات المُدمَجة:</span>
+          <span dir="ltr">{{ table.upload_count }}</span>
+          {% if table.last_upload_at %}
+            <span class="text-muted mx-2">|</span>
+            <span class="ar-text">آخر رفع:</span>
+            <span dir="ltr">{{ table.last_upload_at.strftime('%Y-%m-%d %H:%M UTC') }}</span>
+          {% endif %}
+        {% else %}
+          <i class="fas fa-info-circle me-1"></i>
+          <span class="ar-text fw-bold">البيانات لم تُرفع بعد —</span>
+          <span class="ar-text">
+            الجدول أدناه نموذج توضيحي لشكل المخرجات بعد ورود أوّل ملف من جهة محلية.
+          </span>
+          <br>
+          <span class="en-text">
+            <strong>Data not yet uploaded</strong> — the table below is a
+            placeholder showing the layout that will appear once the first
+            local-agency file is received.
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle small mb-0">
+          <thead class="table-light">
+            {% if spec.has_groups() %}
+              <tr>
+                <th rowspan="2" class="align-middle">
+                  <span class="ar-text">البلدية</span>
+                  <span class="en-text">Municipality</span>
+                </th>
+                <th rowspan="2" class="align-middle text-nowrap">
+                  <span class="ar-text">تاريخ الجمع</span>
+                  <span class="en-text">Capture Date</span>
+                </th>
+                <th rowspan="2" class="align-middle">
+                  <span class="ar-text">الجهة</span>
+                  <span class="en-text">Agency</span>
+                </th>
+                {% for g in groups %}
+                  <th colspan="{{ g.inds|length }}" class="text-center border-start">
+                    {% if g.ar %}
+                      <span class="ar-text">{{ g.ar }}</span>
+                      <span class="en-text">{{ g.en }}</span>
+                    {% else %}
+                      <span class="ar-text">{{ g.inds[0].name_ar }}</span>
+                      <span class="en-text">{{ g.inds[0].name_en }}</span>
+                    {% endif %}
+                  </th>
+                {% endfor %}
+                <th rowspan="2" class="align-middle border-start">
+                  <span class="ar-text">ملاحظات</span>
+                  <span class="en-text">Notes</span>
+                </th>
+              </tr>
+              <tr>
+                {% for g in groups %}
+                  {% for ind in g.inds %}
+                    <th class="text-center text-muted small {% if loop.first %}border-start{% endif %}"
+                        title="{{ ind.unit_en }}">
+                      <span class="ar-text">{{ ind.name_ar }}</span>
+                      <span class="en-text">{{ ind.name_en }}</span>
+                    </th>
+                  {% endfor %}
+                {% endfor %}
+              </tr>
+            {% else %}
+              <tr>
+                <th>
+                  <span class="ar-text">البلدية</span>
+                  <span class="en-text">Municipality</span>
+                </th>
+                <th class="text-nowrap">
+                  <span class="ar-text">تاريخ الجمع</span>
+                  <span class="en-text">Capture Date</span>
+                </th>
+                <th>
+                  <span class="ar-text">الجهة</span>
+                  <span class="en-text">Agency</span>
+                </th>
+                {% for ind in spec.indicators %}
+                  <th class="text-center border-start" title="{{ ind.unit_en }}">
+                    <span class="ar-text">{{ ind.name_ar }}</span>
+                    <span class="en-text small d-block text-muted">{{ ind.name_en }}</span>
+                    <span class="badge bg-light text-dark border small mt-1">{{ ind.unit_en }}</span>
+                  </th>
+                {% endfor %}
+                <th class="border-start">
+                  <span class="ar-text">ملاحظات</span>
+                  <span class="en-text">Notes</span>
+                </th>
+              </tr>
+            {% endif %}
+          </thead>
+          <tbody>
+            {% if table.rows %}
+              {% for row in table.rows %}
+                <tr>
+                  <td>
+                    <div class="ar-text fw-semibold">{{ row.name_ar or '—' }}</div>
+                    <div class="en-text small text-muted">{{ row.name_en or row.municipality_id }}</div>
+                  </td>
+                  <td class="text-nowrap" dir="ltr">{{ row.capture_date.isoformat() if row.capture_date else '—' }}</td>
+                  <td class="small">{{ row.agency_name or '—' }}</td>
+                  {% for ind in spec.indicators %}
+                    {% set v = row.metrics.get(ind.code) %}
+                    <td class="text-center {% if loop.first %}border-start{% endif %}">
+                      {% if v is none %}
+                        <span class="text-muted" title="Data not available">—</span>
+                      {% else %}
+                        <span dir="ltr">{{ '{:.1f}'.format(v) }}</span>
+                      {% endif %}
+                    </td>
+                  {% endfor %}
+                  <td class="small text-muted border-start">{{ row.notes or '' }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              {# Placeholder rows so partners can visualise the planned layout. #}
+              {% set placeholder = [
+                ('طرابلس المركز', 'Tripoli Center', 'LY-001'),
+                ('بنغازي',        'Benghazi',       'LY-024'),
+                ('سبها',          'Sabha',          'LY-079'),
+              ] %}
+              {% for ar, en, mid in placeholder %}
+                <tr class="text-muted fst-italic">
+                  <td>
+                    <div class="ar-text">{{ ar }}</div>
+                    <div class="en-text small">{{ en }}</div>
+                  </td>
+                  <td dir="ltr">—</td>
+                  <td>—</td>
+                  {% for ind in spec.indicators %}
+                    <td class="text-center {% if loop.first %}border-start{% endif %}">—</td>
+                  {% endfor %}
+                  <td class="border-start">—</td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td colspan="{{ 4 + ind_col_count }}"
+                    class="text-center text-muted small fst-italic py-3">
+                  <span class="ar-text">سيُعرَض هنا صفٌّ لكل بلدية وردت بياناتها.</span>
+                  <span class="en-text">A row will appear here for each municipality whose data has been received.</span>
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="small text-muted mt-3 mb-0 ar-text">
+        ملاحظة: الجدول يَعرض أحدث صفٍّ لكل بلدية بحسب «تاريخ جمع البيانات». عند تطابق التواريخ، يَفُوز الصف من أحدث ملف مرفوع. الرفعات الأقدم تُحفَظ ولا تُحذَف للتدقيق.
+      </p>
+      <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+        Note: the table shows the most recent row per municipality based on
+        the Date of Data Capture. On date ties, the row from the most
+        recently uploaded file wins. Older uploads are retained — never
+        deleted — for audit.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .cara-domain-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #eef4fb; color: #1f4e79; font-size: 1.3rem;
+  }
+</style>
+{% endblock %}

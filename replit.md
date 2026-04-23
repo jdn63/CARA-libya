@@ -122,6 +122,27 @@ tests/smoke_test.py: 14 tests, all pass.
 Includes test_inform_formula_cube_root() validating the INFORM (H x V x C)^(1/3) geometric mean formula with 4 known-value cases.
 All PHRAT pipeline terminology replaced with INFORM/composite terminology throughout.
 
+## Local-Agency Data Entry
+Domain-driven pipeline that lets local response agencies upload municipal-level data via Excel.
+- Registry: utils/data_entry_domains.py — DomainSpec dataclass + 5 workshop domains:
+    - infectious-disease (HIV, HBV, HCV, TB x incidence/morbidity/mortality)
+    - vector-borne-disease (Malaria, Dengue, Leishmaniasis x same)
+    - ncds (Diabetes, Hypertension, CVD, Cancer x prevalence/morbidity/mortality)
+    - maternal-child-health (6 flat indicators, mixed units)
+    - environmental-health (5 flat indicators: water, sanitation, electricity, waste, PM2.5)
+- Engine: utils/local_agency_data.py — schema-agnostic, consumes a DomainSpec to build template, consolidate uploads, build export.
+- Routes: routes/data_entry.py — single set of endpoints parameterized by <key>:
+    - GET /data-entry/                       hub listing all domains with status badges
+    - GET /data-entry/<key>                  download/upload/compare page
+    - GET /data-entry/<key>/template.xlsx    blank pre-populated template (106 munis, RTL, validations, Instructions sheet)
+    - POST /data-entry/<key>/upload          ingest workbook (10MB cap, OOXML validation)
+    - GET /data-entry/<key>/export.xlsx      consolidated comparison workbook
+- Templates: templates/data_entry/index.html (hub), templates/data_entry/domain.html (generic page handles both grouped grids and flat indicator lists).
+- Storage: data/uploads/local_agencies/<domain_key>/ (timestamped audit trail; files never deleted).
+- Security: filename sanitization, OOXML zip validation, hard 10MB cap (no Content-Length trust), formula-injection guard (_safe_text neutralises leading = + - @ on every text cell in exports).
+- Consolidation: latest capture per municipality wins; on date ties, newer upload (mtime) wins deterministically.
+- Adding a new domain is a pure-data change: append a DomainSpec to utils.data_entry_domains.DOMAINS.
+
 ## Bootstrap Icons
 Bootstrap Icons CDN (v1.11.3) is loaded in templates/base.html and templates/login.html.
 Used in action_plan_libya.html for bi-arrow-right-circle and bi-printer icons.

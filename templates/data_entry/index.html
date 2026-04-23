@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}إدخال البيانات المحلية — CARA ليبيا{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="cara-heading mb-4">
+    <span class="ar-text">إدخال البيانات من الجهات المحلية</span>
+    <span class="en-text">Local-Agency Data Entry</span>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <p class="ar-text mb-2">
+        تختار من القائمة أدناه المجال الذي ترغب في رفع بياناته. كل مجال
+        يتضمن قالب Excel جاهز يحتوي على جميع البلديات الليبية، صفحة
+        إرشادات بالعربية والإنجليزية، وجدول مقارنة فوري بين البلديات بعد
+        رفع الملفات. الأعمدة وأنواع المؤشرات تختلف بحسب المجال.
+      </p>
+      <p class="small text-muted mb-0" dir="ltr" style="text-align:left">
+        Pick the workshop domain you want to upload data for. Each domain
+        ships with a ready-made Excel template containing every Libyan
+        municipality, a bilingual instructions sheet, and an instant
+        cross-municipality comparison table once files are uploaded.
+        Indicators and units differ by domain.
+      </p>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    {% for d in domains %}
+      {% set spec = d.spec %}
+      <div class="col-lg-6">
+        <a class="text-decoration-none text-reset" href="{{ url_for('data_entry.domain_page', key=spec.key) }}">
+          <div class="card border-0 shadow-sm h-100 cara-clickable-card">
+            <div class="card-body">
+              <div class="d-flex align-items-start gap-3">
+                <div class="cara-domain-icon">
+                  <i class="{{ spec.icon }}"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <h5 class="mb-1">
+                    <span class="ar-text">{{ spec.name_ar }}</span>
+                  </h5>
+                  <div class="en-text small text-muted mb-2">{{ spec.name_en }}</div>
+
+                  <div class="small text-muted mb-2">
+                    <i class="fas fa-link me-1"></i>
+                    <span class="ar-text">{{ spec.inform_pillar_ar }}</span>
+                    <span class="en-text small d-block">{{ spec.inform_pillar_en }}</span>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2 small">
+                    <span class="badge bg-light text-dark border">
+                      <i class="fas fa-list-ol me-1"></i>
+                      {{ spec.indicators|length }}
+                      <span class="ar-text">مؤشّر</span>
+                      <span class="en-text">indicator{{ 's' if spec.indicators|length != 1 else '' }}</span>
+                    </span>
+                    {% if d.upload_count == 0 %}
+                      <span class="badge bg-secondary">
+                        <span class="ar-text">لم تُرفَع بيانات بعد</span>
+                        <span class="en-text">No data yet</span>
+                      </span>
+                    {% else %}
+                      <span class="badge bg-success">
+                        <i class="fas fa-check me-1"></i>
+                        {{ d.upload_count }}
+                        <span class="ar-text">ملف</span>
+                        <span class="en-text">file{{ 's' if d.upload_count != 1 else '' }}</span>
+                      </span>
+                      <span class="badge bg-info text-dark">
+                        {{ d.muni_count }}
+                        <span class="ar-text">بلدية</span>
+                        <span class="en-text">muni{{ 's' if d.muni_count != 1 else '' }}</span>
+                      </span>
+                      {% if d.freshness %}
+                        <span class="badge bg-light text-dark border" dir="ltr">
+                          <i class="fas fa-clock me-1"></i>{{ d.freshness.isoformat() }}
+                        </span>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="text-muted">
+                  <i class="fas fa-arrow-left ar-text"></i>
+                  <i class="fas fa-arrow-right en-text"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<style>
+  .cara-clickable-card { transition: box-shadow .15s ease, transform .15s ease; }
+  .cara-clickable-card:hover { box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.08) !important; transform: translateY(-2px); }
+  .cara-domain-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: #eef4fb; color: #1f4e79; font-size: 1.4rem; flex-shrink: 0;
+  }
+</style>
+{% endblock %}
