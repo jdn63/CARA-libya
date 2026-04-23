@@ -1,76 +1,98 @@
 {
-    "data_sources": {
-        "cdc_svi": {
-            "description": "CDC Social Vulnerability Index data (annual refresh)",
-            "refresh_interval_hours": 8760,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_cdc_svi"
-        },
-        "fema_nri": {
-            "description": "FEMA National Risk Index data (annual refresh)",
-            "refresh_interval_hours": 8760,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_fema_nri"
-        },
-        "dhs_health": {
-            "description": "Wisconsin DHS health metrics (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_dhs_health"
-        },
-        "nws_forecast": {
-            "description": "NWS weather forecasts (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_nws_forecasts"
-        },
-        "epa_air_quality": {
-            "description": "EPA AirNow air quality data (daily refresh)",
-            "refresh_interval_hours": 24,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_epa_air_quality"
-        },
-        "herc_risk_cache": {
-            "description": "HERC region pre-computed risk data",
-            "refresh_interval_hours": 4,
-            "module": "utils.herc_risk_aggregator",
-            "function": "precompute_all_herc_regions"
-        },
-        "openfema_declarations": {
-            "description": "Federal disaster declarations per county from OpenFEMA (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_openfema_declarations"
-        },
-        "openfema_nfip": {
-            "description": "NFIP flood insurance claims per county from OpenFEMA (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_openfema_nfip"
-        },
-        "openfema_hma": {
-            "description": "Hazard mitigation projects per county from OpenFEMA (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_openfema_hma"
-        },
-        "noaa_storm_events": {
-            "description": "Historical severe weather events from NOAA NCEI (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_noaa_storm_events"
-        },
-        "nid_dam_inventory": {
-            "description": "USACE National Inventory of Dams - county-level dam counts and hazard classifications (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.data_source_refresher",
-            "function": "refresh_all_nid_dam_inventory"
-        },
-        "dhs_vbd_surveillance": {
-            "description": "WI DHS EPHT vector-borne disease surveillance - county-level Lyme/WNV CSV data from dhs.wisconsin.gov/epht (weekly refresh)",
-            "refresh_interval_hours": 168,
-            "module": "utils.vbd_data_fetcher",
-            "function": "refresh_all_dhs_vbd_surveillance"
-        }
+  "profile": "libya",
+  "description": "Libya CARA automated data refresh schedule",
+  "data_sources": {
+    "hdx_iom_dtm": {
+      "description": "IOM Displacement Tracking Matrix (DTM) Libya — IDPs, returnees, migrants per municipality",
+      "description_ar": "مصفوفة تتبع النزوح (DTM) — منظمة الهجرة الدولية — ليبيا",
+      "refresh_interval_hours": 168,
+      "source": "OCHA HDX",
+      "url": "https://data.humdata.org/group/lby",
+      "method": "hdx_ckan_api",
+      "auth_required": false,
+      "cache_path": "data/cache/hdx/iom_dtm.csv",
+      "module": "utils.connectors.worldwide.hdx_connector",
+      "function": "refresh"
+    },
+    "hdx_ocha_3w": {
+      "description": "OCHA 3W — Who Does What Where — NGO/agency operational presence in Libya",
+      "description_ar": "بيانات من يفعل ماذا وأين — مكتب الأمم المتحدة لتنسيق الشؤون الإنسانية",
+      "refresh_interval_hours": 168,
+      "source": "OCHA HDX",
+      "url": "https://data.humdata.org/group/lby",
+      "method": "hdx_ckan_api",
+      "auth_required": false,
+      "cache_path": "data/cache/hdx/ocha_3w.csv",
+      "module": "utils.connectors.worldwide.hdx_connector",
+      "function": "refresh"
+    },
+    "hdx_unhcr": {
+      "description": "UNHCR Libya — persons of concern, refugees, asylum seekers",
+      "description_ar": "بيانات المفوضية السامية للأمم المتحدة لشؤون اللاجئين — ليبيا",
+      "refresh_interval_hours": 168,
+      "source": "OCHA HDX",
+      "url": "https://data.humdata.org/group/lby",
+      "method": "hdx_ckan_api",
+      "auth_required": false,
+      "cache_path": "data/cache/hdx/unhcr.csv",
+      "module": "utils.connectors.worldwide.hdx_connector",
+      "function": "refresh"
+    },
+    "who_gho_libya": {
+      "description": "WHO Global Health Observatory — Libya health indicators (disease burden, mortality, health coverage)",
+      "description_ar": "مرصد الصحة العالمي — منظمة الصحة العالمية — المؤشرات الصحية لليبيا",
+      "refresh_interval_hours": 720,
+      "source": "WHO GHO",
+      "url": "https://ghoapi.azureedge.net/api/",
+      "method": "rest_api",
+      "auth_required": false,
+      "module": "utils.connectors.worldwide.who_gho_connector",
+      "function": "fetch"
+    },
+    "worldbank_libya": {
+      "description": "World Bank — Libya development indicators (poverty, infrastructure, governance)",
+      "description_ar": "البنك الدولي — مؤشرات التنمية لليبيا",
+      "refresh_interval_hours": 720,
+      "source": "World Bank Open Data",
+      "url": "https://api.worldbank.org/v2/",
+      "method": "rest_api",
+      "auth_required": false,
+      "module": "utils.connectors.worldwide.worldbank_connector",
+      "function": "fetch"
+    },
+    "openaq_libya": {
+      "description": "OpenAQ — Libya air quality measurements (PM2.5, PM10, NO2) for sandstorm risk",
+      "description_ar": "بيانات جودة الهواء في ليبيا — مشروع OpenAQ",
+      "refresh_interval_hours": 720,
+      "source": "OpenAQ",
+      "url": "https://api.openaq.org/v2/",
+      "method": "rest_api",
+      "auth_required": false,
+      "module": "utils.connectors.worldwide.openaq_connector",
+      "function": "fetch"
+    },
+    "ncdc_libya": {
+      "description": "NCDC Libya — disease surveillance data (manual upload only — no public API)",
+      "description_ar": "المركز الوطني لمكافحة الأمراض — ليبيا — رفع يدوي فقط",
+      "refresh_interval_hours": 0,
+      "source": "NCDC Libya",
+      "url": "https://ncdc.org.ly",
+      "method": "manual_upload",
+      "auth_required": true,
+      "upload_path": "data/uploads/ncdc/",
+      "automation_feasible": false,
+      "automation_note": "NCDC Libya has no public API. Data must be uploaded manually by authorized NCDC personnel as CSV to data/uploads/ncdc/."
+    },
+    "coi_libya": {
+      "description": "COI Libya — emergency coordination data (manual upload only — no public API)",
+      "description_ar": "مركز تنسيق المعلومات — ليبيا — رفع يدوي فقط",
+      "refresh_interval_hours": 0,
+      "source": "Centre for Coordination of Information — Libya",
+      "method": "manual_upload",
+      "auth_required": true,
+      "upload_path": "data/uploads/coi/",
+      "automation_feasible": false,
+      "automation_note": "COI Libya is a government coordination body with no digital data portal. Data must be uploaded manually by authorized personnel as CSV to data/uploads/coi/."
     }
+  }
 }

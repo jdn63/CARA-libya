@@ -32,6 +32,7 @@ connectors:
   who_gho: who_gho
   displacement: idmc
   migration: iom
+  hdx: hdx
   air_quality: openaq
   disaster_history: em_dat
   hazard_index: em_dat

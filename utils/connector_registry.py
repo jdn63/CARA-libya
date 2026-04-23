@@ -116,6 +116,22 @@ class ConnectorRegistry:
                 from utils.connectors.worldwide.noaa_gsod_connector import NOAAGSODConnector
                 return NOAAGSODConnector(country_code=country_code)
 
+            elif name == 'hdx':
+                from utils.connectors.worldwide.hdx_connector import HDXConnector
+                return HDXConnector()
+
+            elif name == 'ncdc_libya':
+                from utils.connectors.libya.ncdc_connector import NCDCLibyaConnector
+                return NCDCLibyaConnector()
+
+            elif name == 'coi_libya':
+                from utils.connectors.libya.coi_connector import COILibyaConnector
+                return COILibyaConnector()
+
+            elif name == 'iom':
+                from utils.connectors.worldwide.iom_connector import IOMConnector
+                return IOMConnector()
+
             elif name == 'airnow':
                 try:
                     from utils.connectors.us.airnow_connector import AirNowConnector
