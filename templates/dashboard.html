@@ -648,7 +648,18 @@
                                  style="font-size:0.68rem;" dir="ltr">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="text-muted text-truncate me-1" style="max-width:150px;"
-                                         title="{{ tile.source }}">
+                                         title="{{ tile.source }}{% if tile.source_kind == 'national_proxy' %} — متوسط وطني مُطبَّق على هذه البلدية / National figure applied as proxy{% elif tile.source_kind == 'local' %} — رفع محلي{% if tile.agency %} ({{ tile.agency }}){% endif %} / Local agency upload{% endif %}">
+                                        {% if tile.source_kind == 'local' %}
+                                          <span class="badge text-bg-success me-1" style="font-size:0.6rem;font-weight:600;"
+                                                title="بيانات مرفوعة محلياً / Local agency data">
+                                            <i class="fas fa-map-marker-alt me-1"></i>محلي / Local
+                                          </span>
+                                        {% elif tile.source_kind == 'national_proxy' %}
+                                          <span class="badge text-bg-warning me-1" style="font-size:0.6rem;font-weight:600;"
+                                                title="رقم وطني مُطبَّق على البلدية / National figure applied as proxy">
+                                            <i class="fas fa-flag me-1"></i>وطني / National
+                                          </span>
+                                        {% endif %}
                                         {{ tile.source }}
                                         {% if tile.year %}<span class="ms-1 opacity-75">({{ tile.year }})</span>{% endif %}
                                     </div>

@@ -13,6 +13,7 @@ from utils.geography.jurisdiction_manager import JurisdictionManager
 from utils.domains.hazard_exposure import HazardExposureDomain
 from utils.domains.vulnerability import VulnerabilityDomain
 from utils.domains.coping_capacity import CopingCapacityDomain
+from utils.local_overrides import get_overrides_for
 
 logger = logging.getLogger(__name__)
 
@@ -578,7 +579,8 @@ def _build_show_work(cd: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def _T(tid, la, le, value, unit, year, score, formula, source,
-       proxy=False, note='', protective=False):
+       proxy=False, note='', protective=False,
+       source_kind='measured', agency=None):
     """
     Build a single indicator tile dict with rich pre-built popover HTML.
     protective=True means the raw value shows a GOOD outcome (e.g. vaccination %)
@@ -700,13 +702,91 @@ def _T(tid, la, le, value, unit, year, score, formula, source,
         'proxy':         proxy,
         'protective':    protective,
         'source':        source,
+        'source_kind':   source_kind,
+        'agency':        agency,
         'formula':       formula,
         'note':          note,
         'popover_html':  popover_html,
     }
 
 
-def _build_indicator_tiles(cd: dict) -> dict:
+# Mapping: dashboard tile_id → data-entry indicator code.
+# When a municipality has uploaded its own value via the workshop pipeline
+# for one of these indicators, the dashboard substitutes the local figure
+# in place of the national WHO/WB proxy.
+_LOCAL_OVERRIDE_TILES: dict[str, str] = {
+    'tb_inc':       'tb_incidence',
+    'u5mort':       'under5_mortality_rate',
+    'neo_mort':     'neonatal_mortality_rate',
+    'water':        'improved_water_pct',
+    'sanitation':   'improved_sanitation_pct',
+    'electricity':  'electricity_access_pct',
+    'pm25':         'pm25_annual_avg',
+}
+
+# Sources that publish only at the national level for Libya.  Tiles
+# carrying these sources are tagged as 'national_proxy' on the
+# subnational dashboard so users can see at a glance that the value is a
+# country-level figure applied to every municipality.
+_NATIONAL_ONLY_SOURCES: set[str] = {
+    'WHO Libya via OCHA HDX',
+    'World Bank',
+}
+
+# Source labels that flag the value as a proxy/estimate rather than a
+# measurement (e.g. CARA-derived placeholders for hazards we do not yet
+# have an authoritative feed for).
+_PROXY_SOURCE_PREFIXES: tuple[str, ...] = (
+    'تقدير بديل', 'proxy', 'Proxy',
+)
+
+
+def _stamp_source_kinds(tile_tree: dict, jurisdiction_id: str,
+                         is_national: bool, local_idx: dict) -> None:
+    """Walk every tile and stamp ``source_kind`` + override metadata.
+
+    - 'local'           value came from a municipal upload via the
+                        workshop Data Entry pipeline
+    - 'national'        national jurisdiction view, no proxy applied
+    - 'national_proxy'  subnational jurisdiction inheriting a country
+                        figure (transparency badge shown in the UI)
+    - 'measured'        truly subnational source (HeiGIT, IDMC events,
+                        EM-DAT, COI uploads, …) — no badge needed
+    """
+    for pillar in tile_tree.values():
+        for section in pillar.get('sections', []):
+            for tile in section.get('tiles', []):
+                tid = tile.get('id')
+                code = _LOCAL_OVERRIDE_TILES.get(tid)
+                if code and code in local_idx:
+                    ov = local_idx[code]
+                    agency = ov.get('agency') or ''
+                    tile['source_kind'] = 'local'
+                    tile['agency'] = agency
+                    tile['year'] = ov.get('year') or tile.get('year')
+                    src = (
+                        'رفع محلي / Local agency upload'
+                        + (f' — {agency}' if agency else '')
+                    )
+                    tile['source'] = src
+                    continue
+                src_label = tile.get('source') or ''
+                if src_label in _NATIONAL_ONLY_SOURCES:
+                    tile['source_kind'] = (
+                        'national' if is_national else 'national_proxy'
+                    )
+                elif tile.get('proxy') or any(
+                    p in src_label for p in _PROXY_SOURCE_PREFIXES
+                ):
+                    tile['source_kind'] = 'proxy'
+                else:
+                    # HeiGIT, IDMC, EM-DAT, COI, local-only sources —
+                    # truly subnational measured data; no badge needed.
+                    tile['source_kind'] = 'measured'
+
+
+def _build_indicator_tiles(cd: dict, jurisdiction_id: str = 'LY',
+                            is_national: bool = True) -> dict:
     """
     Build the full 3-pillar tile hierarchy.
     Returns {'hazard': {...}, 'vulnerability': {...}, 'coping': {...}}
@@ -723,6 +803,11 @@ def _build_indicator_tiles(cd: dict) -> dict:
     coi   = cd.get('coi_libya', {})
     emdat = cd.get('em_dat', {})
 
+    # Local-agency overrides — only consulted for subnational views;
+    # the national page intentionally keeps the WHO/WB country figures.
+    local_idx = ({} if is_national
+                 else get_overrides_for(jurisdiction_id))
+
     def _yr(key):
         return who_r.get(key + '_year', '')
 
@@ -733,6 +818,16 @@ def _build_indicator_tiles(cd: dict) -> dict:
     neo_mort       = who_r.get('neonatal_mortality_rate')
     inf_mort       = who_r.get('infant_mortality_rate')
     tb_inc         = who_r.get('tb_incidence_per_100k')
+    # Apply municipality-level overrides where partners have uploaded
+    # their own measurements via the Data Entry workshop pipeline.
+    if 'tb_incidence' in local_idx:
+        tb_inc = local_idx['tb_incidence']['value']
+    if 'under5_mortality_rate' in local_idx:
+        u5mort = local_idx['under5_mortality_rate']['value']
+    if 'neonatal_mortality_rate' in local_idx:
+        neo_mort = local_idx['neonatal_mortality_rate']['value']
+    if 'pm25_annual_avg' in local_idx:
+        pm25 = local_idx['pm25_annual_avg']['value']
     tb_trt         = who_r.get('tb_treatment_coverage_pct')
     tb_succ        = who_r.get('tb_treatment_success_pct')
     ncd_mort       = who_r.get('ncd_mortality_30_70_pct')
@@ -761,6 +856,12 @@ def _build_indicator_tiles(cd: dict) -> dict:
     water_pct      = wb.get('access_clean_water')
     sanit_pct      = wb.get('access_sanitation')
     elec_pct       = wb.get('access_electricity')
+    if 'improved_water_pct' in local_idx:
+        water_pct = local_idx['improved_water_pct']['value']
+    if 'improved_sanitation_pct' in local_idx:
+        sanit_pct = local_idx['improved_sanitation_pct']['value']
+    if 'electricity_access_pct' in local_idx:
+        elec_pct = local_idx['electricity_access_pct']['value']
     urban_pct      = wb.get('urban_population_pct')
     pop_density    = wb.get('population_density')
     food_insec     = wb.get('food_insecurity_pct')
@@ -1202,7 +1303,7 @@ def _build_indicator_tiles(cd: dict) -> dict:
     # ════════════════════════════════════════════════════════════════════
     # Assemble hierarchy
     # ════════════════════════════════════════════════════════════════════
-    return {
+    tile_tree = {
         'hazard': {
             'label_ar': 'المخاطر والتعرض',
             'label_en': 'Hazard & Exposure',
@@ -1234,6 +1335,11 @@ def _build_indicator_tiles(cd: dict) -> dict:
             ],
         },
     }
+
+    # Stamp transparency metadata onto every tile so the template can
+    # render proxy / local-upload badges.
+    _stamp_source_kinds(tile_tree, jurisdiction_id, is_national, local_idx)
+    return tile_tree
 
 
 # ---------------------------------------------------------------------------
@@ -1438,7 +1544,9 @@ def dashboard(jurisdiction_id):
         pillar_data     = _run_pillars(jurisdiction_id, jurisdiction_config)
         cd              = pillar_data.get('connector_data', {})
         show_work       = _build_show_work(cd)
-        indicator_tiles = _build_indicator_tiles(cd)
+        indicator_tiles = _build_indicator_tiles(
+            cd, jurisdiction_id=jurisdiction_id, is_national=is_national
+        )
 
         return render_template(
             'dashboard.html',
