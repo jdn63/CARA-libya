@@ -138,7 +138,7 @@ class APIKeyManager:
     def _validate_openweather_key(self, api_key: str) -> Tuple[bool, str]:
         """Validate OpenWeatherMap API key"""
         try:
-            url = f"https://api.openweathermap.org/data/2.5/weather?q=Madison,WI,US&appid={api_key}"
+            url = f"https://api.openweathermap.org/data/2.5/weather?q=Tripoli,LY&appid={api_key}"
             response = requests.get(url, timeout=10)
             
             if response.status_code == 200:
@@ -192,12 +192,12 @@ class APIKeyManager:
     def _validate_airnow_key(self, api_key: str) -> Tuple[bool, str]:
         """Validate AirNow API key"""
         try:
-            # Test with Madison, WI coordinates
+            # Test with Tripoli, Libya coordinates
             url = "https://www.airnowapi.org/aq/observation/latLong/current/"
             params = {
                 'format': 'application/json',
-                'latitude': 43.0731,
-                'longitude': -89.4012,
+                'latitude': 32.8872,
+                'longitude': 13.1913,
                 'distance': 25,
                 'API_KEY': api_key
             }
