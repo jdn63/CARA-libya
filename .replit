@@ -60,3 +60,7 @@ expertMode = true
 [userenv.shared]
 CENSUS_API_KEY = "8a848d918aea43b9a29bce82eb7f22e12a516564"
 ENABLE_SCRAPERS = "1"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 180000
