@@ -1,71 +1,49 @@
 # CARA - Comprehensive Automated Risk Assessment
-# Python Dependencies for Render.com Deployment
+# Production Python dependencies (kept in sync with requirements.txt / pyproject.toml).
+# Used by scripts/post-merge.sh and Render.com deployment.
 
 # Core Web Framework
 flask>=3.1.3
 gunicorn>=22.0.0
 werkzeug>=3.1.8
+jinja2>=3.1.6
 
 # Database
-flask-sqlalchemy>=3.1.0
-sqlalchemy>=2.0.0
-psycopg2-binary>=2.9.0
+flask-sqlalchemy>=3.1.1
+sqlalchemy
+psycopg2-binary>=2.9.10
+alembic
 
 # Data Processing
-numpy>=2.0.0
-pandas>=2.0.0
+numpy>=2.2.3
+pandas>=2.2.3
 geopandas>=1.1.2
-shapely>=2.0.0
-pyshp>=2.3.0
+shapely>=2.0.7
 scikit-learn>=1.4.0
-openpyxl>=3.1.0
+openpyxl>=3.1.5
 
 # Visualization and Mapping
-matplotlib>=3.8.0
-folium>=0.15.0
+folium>=0.19.5
 
 # PDF Generation
 fpdf>=1.7.2
 
 # API and Web Scraping
-beautifulsoup4>=4.12.0
-trafilatura>=1.6.0
-census>=0.8.0
+beautifulsoup4>=4.13.3
+census>=0.8.23
 requests>=2.33.0
-
-# XML/HTML Processing
-lxml>=6.1.0
-lxml-html-clean>=0.4.2
-
-# Font Processing
-fonttools>=4.58.0
-
-# Image Processing
-pillow>=12.2.0
-
-# HTTP
 urllib3>=2.6.3
 
-# Authentication
-pyjwt>=2.12.0
-
-# Configuration and Environment
-python-dotenv>=1.1.0
-pyyaml>=6.0.0
+# Configuration
+pyyaml
 
 # Scheduling
-apscheduler>=3.10.0
+apscheduler
 
 # Security and Monitoring
-sentry-sdk>=2.0.0
-flask-limiter>=3.5.0
+sentry-sdk
+flask-limiter
+psutil>=7.0.0
 
-# Statistical Data File Support (for NCES data)
-pyreadstat>=1.2.0
-
-# Testing (dev dependencies, can be removed for production)
-pytest>=8.0.0
-pytest-flask>=1.3.0
-pytest-cov>=4.1.0
-coverage>=7.3.0
-flask-testing>=0.8.1
+# Statistical Data File Support (NCES SSOCS .sav/.dta files)
+pyreadstat>=1.2.8
