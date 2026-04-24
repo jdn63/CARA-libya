@@ -1,8 +1,8 @@
-modules = ["python-3.11", postgresql-16", "nodejs-20"]
+modules = ["python-3.11", "python3", "postgresql-16", "nodejs-20"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["cairo", "ffmpeg-full", "fontconfig", "freetype", "geos", "ghostscript", "glib", "glibcLocales", "gobject-introspection", "gtk3", "gumbo", "harfbuzz", "jbig2dec", "lcms2", "libiconv", "libimagequant", "libjpeg", "libjpeg_turbo", "libtiff", "libwebp", "libxcrypt", "libyaml", "mupdf", "openjpeg", "pango", "pkg-config", "qhull", "readstat", "swig", "tcl", "tk", "xcbuild", "xcodebuild", "xsimd", "zlib"]
+packages = ["cairo", "ffmpeg-full", "freetype", "geos", "ghostscript", "glibcLocales", "gobject-introspection", "gtk3", "gumbo", "harfbuzz", "jbig2dec", "libiconv", "libjpeg_turbo", "libxcrypt", "libyaml", "mupdf", "openjpeg", "pkg-config", "qhull", "readstat", "swig", "tcl", "tk", "xcbuild", "xsimd", "zlib"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -20,6 +20,10 @@ author = "agent"
 task = "workflow.run"
 args = "Start application"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "artifacts/mockup-sandbox: Component Preview Server"
+
 [[workflows.workflow]]
 name = "Start application"
 author = "agent"
@@ -34,6 +38,19 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "artifacts/mockup-sandbox: Component Preview Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd artifacts/mockup-sandbox && npm install --legacy-peer-deps && PORT=3001 BASE_PATH=/__mockup/ npm run dev"
+waitForPort = 3001
+
+[workflows.workflow.metadata]
+outputType = "console"
+isCanvasWorkflow = true
 
 [[ports]]
 localPort = 3001
@@ -53,14 +70,9 @@ externalPort = 3000
 
 [agent]
 integrations = ["web_scraper:1.0.0"]
-expertMode = true
 
 [userenv]
 
 [userenv.shared]
+CENSUS_API_KEY = "8a848d918aea43b9a29bce82eb7f22e12a516564"
 ENABLE_SCRAPERS = "1"
-CARA_PROFILE = "libya"
-
-[postMerge]
-path = "scripts/post-merge.sh"
-timeoutMs = 120000
