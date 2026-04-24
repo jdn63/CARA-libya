@@ -157,25 +157,3 @@ class DataQualityEvent(db.Model):
         return f"<DataQualityEvent {self.event_type} source={self.source_type}>"
 
 
-class HERCRiskCache(db.Model):
-    """Cache for computed HERC region risk aggregations."""
-    __tablename__ = "herc_risk_cache"
-
-    id = db.Column(db.Integer, primary_key=True)
-    herc_id = db.Column(db.String(64), nullable=False, unique=True, index=True)
-    name = db.Column(db.String(128), nullable=True)
-    risk_data = db.Column(db.JSON, nullable=True)
-    calculated_at = db.Column(db.DateTime, default=datetime.utcnow)
-    is_valid = db.Column(db.Boolean, default=True, index=True)
-    calculation_duration_seconds = db.Column(db.Float, nullable=True)
-    jurisdiction_count = db.Column(db.Integer, nullable=True)
-    error_message = db.Column(db.Text, nullable=True)
-
-    @property
-    def age_minutes(self):
-        if self.calculated_at is None:
-            return None
-        return (datetime.utcnow() - self.calculated_at).total_seconds() / 60
-
-    def __repr__(self):
-        return f"<HERCRiskCache {self.herc_id}>"

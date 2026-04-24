@@ -17,7 +17,7 @@ DOCUMENTATION FORMATTING RULES (permanent, applies to every file without excepti
 
 ### Backend
 - Framework: Flask (Python), gunicorn, PostgreSQL
-- Risk Engine: utils/risk_engine.py — INFORM geometric mean formula
+- Risk Engine: utils/domains/ pillar modules compute per-pillar scores; routes/dashboard.py/_run_pillars() composes the INFORM geometric mean (H x V x C)^(1/3)
 - Geography: utils/geography/jurisdiction_manager.py — loads 148 municipalities from data/libya_municipalities.json, regional proxy fallback
 - Domain modules: utils/domains/ (hazard_exposure.py, vulnerability.py, coping_capacity.py)
 - Data connectors: utils/connectors/ — see full list in Data Sources section
@@ -111,27 +111,78 @@ Wired in `core._setup_logging()` (called from `initialize_app`). Three channels 
 Use `from utils.logging_config import audit; audit('event_name', **fields)` to add new audit events.
 Optional Sentry integration auto-activates when `SENTRY_DSN` is set (sentry-sdk already in deps).
 
-## Wisconsin Cleanup Status (April 2026)
-The following Wisconsin/HERC-specific files have been permanently deleted:
-- routes/herc.py
-- config/county_baselines.yaml
-- config/profiles/us_state.yaml
-- templates/herc_dashboard.html, herc_print_summary.html, action_plan.html (Wisconsin), active_shooter_methodology.html
-- utils/wisconsin_climate_data.py, wisconsin_dhs_scraper.py, wisconsin_mapping.py
-- utils/herc_data.py, herc_risk_aggregator.py, kp_hva_export.py, hva_export.py
-Additional files deleted (April 2026):
-- utils/active_shooter_risk.py, utils/main_risk_calculator.py (imported it), routes/gis_export.py (referenced it, was unregistered)
-- utils/gva_data_processor.py, data/gva_reports/ (GunViolenceArchive data)
-- utils/natural_hazards_risk.py (called load_nri_data for US counties only)
-- attached_assets/active_shooter_risk_model_config.json, Active_Shooter_Risk_Scoring_Framework.txt
-- attached_assets/kp_incident_log_hva_(5)_1771953905117.xlsm
-- attached_assets/NRI_Table_CensusTracts_Wisconsin_FloodTornadoWinterOnly.csv
-Remaining US-specific utility files (census_data_loader.py, dhs_data.py, etc.) are inert — not imported by any active Libya code path.
+## Wisconsin / HERC / Tribal Cleanup Status (April 2026)
+
+Earlier removals (prior tasks):
+- routes/herc.py; routes/gis_export.py (unregistered)
+- config/county_baselines.yaml; config/profiles/us_state.yaml
+- templates: herc_dashboard.html, herc_print_summary.html, action_plan.html (Wisconsin), active_shooter_methodology.html
+- utils: wisconsin_climate_data.py, wisconsin_dhs_scraper.py, wisconsin_mapping.py, herc_data.py, herc_risk_aggregator.py, kp_hva_export.py, hva_export.py, active_shooter_risk.py, main_risk_calculator.py, gva_data_processor.py, natural_hazards_risk.py
+- data/gva_reports/, attached_assets/ Wisconsin/active-shooter artefacts
+
+Final purge (Task #7, April 2026): ~53 MB and ~50 source files removed; the codebase no longer carries any Wisconsin/HERC/tribal data, templates, JS, CSS, models, or utility modules.
+
+Data + assets:
+- data/tribal/, data/herc/, data/wi_herc_regions.geojson; data/svi/wisconsin_svi_data.json; data/disease/wisconsin_*.json; data/dam_inventory/wisconsin_dam_risk_factors.json; data/census/wisconsin_*.csv + README_DATA_SOURCES.md; data/climate/natural_hazard_climate_projections.json; data/noaa_storm_events/ (25 MB of Wisconsin storm CSVs 2008-2025); tribal_territories.json, wi_health_departments.json, wisconsin_tribal_areas.pdf
+- Images: static/images/wisconsin_*.png; static/images/regions/wisconsin_*.png; attached_assets/tribalgovernmentmap600.png; attached_assets/Wisconsin_Local_Public_Health_Department_Office_Boundaries.geojson (7.2 MB)
+- Stray export: HERC_Region_1_HVA_Export.xlsx
+
+Templates (8 deleted, 4 fixed):
+- Deleted (zero render_template hits): results.html, print_summary.html, docs/quick_start_guide.html, docs/faq.html
+- Edited: templates/errors/404.html and 400.html replaced dead /docs/faq links with /methodology
+- Edited: templates/errors/500.html replaced "For Wisconsin Public Health Officials / regional HERC coordinator" block with bilingual "For Authorised Users" Libya CARA admin contact text
+- Edited: templates/errors/503.html replaced Wisconsin Emergency Management phone numbers with bilingual Libyan civil-defence / MoH EOC / Red Crescent guidance
+
+Utilities (29 modules deleted in total):
+- Direct Wisconsin (16): tribal_boundaries.py, tribal_air_quality_mapping.py, dam_failure_risk.py, svi_data.py, census_data_loader.py, vector_borne_disease_risk.py, vbd_data_fetcher.py, dhs_data.py, weather_alerts.py, data_freshness.py, data_processor.py, risk_engine.py, air_quality_data.py, heat_vulnerability.py, boundary_mapping.py, correctional_facilities.py
+- Cascade-orphan (11) whose only callers were the 16 above: em_comparison_export.py, export_job_worker.py, utilities_risk.py, update_risk_functions.py, temporal_risk.py, real_trend_calculator.py, gis_export.py, extreme_heat_metrics.py, disease_surveillance.py, data_source_refresher.py, data_refresh_scheduler.py
+- Cascade-orphan (4) discovered in the second pass: noaa_storm_events.py, openfema_data.py, data_cache_manager.py (the cache layer they shared), scheduler_init.py (only imported the deleted data_refresh_scheduler)
+- Third-pass dead-orphan utilities (20) discovered after architect re-review — none had any importer outside utils/ itself, and the only intra-utils edge (climate_adjusted_risk → risk_calculation) was inside the deleted set: web_scraper.py (Wisconsin DHS scraping), nces_ssocs_processor.py (Wisconsin schools), strategic_extreme_heat.py + strategic_air_quality.py (WICCI/Wisconsin DNR projections), map_generator.py (Wisconsin folium map), jurisdictions_code.py + jurisdiction_mapping_code.py (Wisconsin county directory), security_manager.py (Wisconsin PH API key bank), jurisdiction_geojson.py (Wisconsin LPHD boundaries), risk_calculation.py (Wisconsin NRI lookup), geo_data.py + predictive_analysis.py (HERC/WEM boundary helpers), ph_data.py + wha_integration.py (Wisconsin Hospital Association), nid_data.py (USACE NID Wisconsin dam fetcher), email_notifications.py (HERC integration field), wem_data.py + wem_integration.py (Wisconsin Emergency Management WebEOC), download_census_data.py (Wisconsin ACS pull), climate_adjusted_risk.py (Wisconsin heat-vulnerability heuristics)
+
+Dead scripts: scripts/precompute_em_comparison.py, scripts/fetch_nid_data.py
+Legacy module: routes.py (the routes/ package shadowed it on Python import; never executed)
+Models: removed HERCRiskCache class from models.py (zero usages; no other code reads herc_risk_cache table). Note: the application uses db.create_all() with no migration framework, so no migration step is required for runtime — but existing development/production databases will retain a stale, never-touched herc_risk_cache table until manually dropped. Optional cleanup: `DROP TABLE IF EXISTS herc_risk_cache;`.
+Workflow: removed orphan "artifacts/mockup-sandbox: Component Preview Server"
+
+Frontend JS purge:
+- The new Libya UI loads ONLY static/js/cara-libya.js from templates/base.html (plus inline scripts in a few page templates such as templates/action_plan_libya.html that own their own jurisdiction-display element).
+- Confirmed via grep that templates/components/scripts.html (the Wisconsin-era partial that loaded the modules/ chain) was referenced by no template, and that the entire static/js/modules/ chain (utils.js, navigation.js, accessibility.js, legacy-navigation.js, dashboard.js) plus the top-level static/js/{index,main,accessibility,lazy-load,performance,return-to-top}.js files were never loaded by any live template either. No template references any of selectJurisdiction(), StorageUtils.*, DomUtils.*, ModalManager.*, getRiskLevel(), getRiskColor(), getColorForRisk(), or legacy-navigation symbols.
+- All of the above were deleted: templates/components/scripts.html, static/js/modules/ (entire directory), and static/js/{index,main,accessibility,lazy-load,performance,return-to-top}.js.
+- Net result: static/js/ now contains exactly one file — cara-libya.js — which exposes window.CARA.{getRiskClass,getRiskColor,getRiskLabelAr,scoreToLevel,...}.
+
+CSS (static/css/custom.css):
+- Deleted ~205 lines of dead .herc-label / .herc-control / .herc-stats-panel / .wem-label / .wem-stats-panel rules + their @media (max-width: 768px) and @media print companion blocks (no template referenced any of these classes)
+- Updated print @page top-center branding from "CARA - Wisconsin Public Health Risk Assessment" to "Libya CARA - Climate Adaptation & Risk Assessment"
+
+Known status to flag (out of Task #7 scope):
+- **Authentication is currently disabled.** `app.py:_require_login()` returns `None` unconditionally
+  (commit 55abc1a "Disable login requirement for all users temporarily" by jdn63 on 2026-04-23).
+  This was a deliberate pre-Task-#7 user decision and has been preserved as-is to honour the
+  "temporarily" intent. To re-enable: delete the early `return None` at app.py:70 and ensure
+  `CARA_ACCESS_PASSWORD` is set in Replit Secrets for both workspace and deployment. Re-enabling
+  is a strict prerequisite to the "official government use only" / restricted-access posture
+  described in this README and should be tracked as a follow-up task before any public-facing
+  publish.
+
+Known retained-on-purpose items (NOT dead, NOT to delete in this task):
+- utils/connectors/us/{airnow,nws,open_fema,cdc_nssp}_connector.py — placeholder NotImplementedError adapters loaded by utils/connector_registry.py inside try/except guards only when profile == "us_state" (Libya never triggers them); their docstrings still cite the deleted Wisconsin source files as a porting reference. Whether to remove the entire US-state scaffolding is a separate scope decision.
+- utils/cache_config.py and utils/planning_mode_config.py still list a "tribal_boundaries" cache key / planning-mode flag — these are config catalogue entries with no live readers (the producers were deleted) and will become orphan data on the next config audit.
+- utils/metadata_config.py still lists tribal_status / tribal_counties / tribal_primary_county metadata field names; the consuming Wisconsin jurisdictions code is gone, but Libyan governorate metadata may want analogous fields.
+
+Compensating fix in core utility:
+- utils/action_plan_content.py used the deleted risk_engine.classify_risk(); replaced with a local _inform_classify() banding helper (very_low / low / medium / high / very_high using upper-exclusive 0.20 / 0.40 / 0.60 / 0.80 cut points; non-numeric or negative input returns "unavailable").
+
+Note on remaining "tribal" string matches in utils/action_plan_content.py: those refer to Libyan tribal networks and religious institutions as a social-cohesion / coping resource, not Wisconsin tribal nations, and are intentionally retained.
 
 ## Test Suite
-tests/smoke_test.py: 14 tests, all pass.
-Includes test_inform_formula_cube_root() validating the INFORM (H x V x C)^(1/3) geometric mean formula with 4 known-value cases.
-All PHRAT pipeline terminology replaced with INFORM/composite terminology throughout.
+tests/smoke_test.py: 7 tests, all pass. Each test exercises the Libya domain pipeline:
+domain modules import, instantiate, return required keys (location, score, dominant_factor, available),
+keep score in 0..1, and return non-empty strings for dominant_factor and the data-availability flag.
+The 7 legacy Wisconsin/PHRAT pipeline tests (load_weights_international, composite_score_valid_range,
+inform_formula_cube_root via risk_engine, classify_risk, compute_all_domains_returns_all_7_international_domains,
+risk_engine_end_to_end_pipeline, data_processor_orchestration) were removed when the underlying
+risk_engine.py and data_processor.py modules were deleted; rebuilding INFORM-formula tests against the
+current routes/dashboard.py/_run_pillars() pipeline is a follow-up task.
 
 ## Local-Agency Data Entry
 Domain-driven pipeline that lets local response agencies upload municipal-level data via Excel.

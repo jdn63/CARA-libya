@@ -45,6 +45,35 @@ Structure per entry:
     actions              — list of {term_ar, term_en, items: [(ar, en), ...]}
 """
 
+_INFORM_BANDS = (
+    (0.20, 'very_low'),
+    (0.40, 'low'),
+    (0.60, 'medium'),
+    (0.80, 'high'),
+    (1.01, 'very_high'),
+)
+
+
+def _inform_classify(score_01: float) -> dict:
+    """Map a 0-1 INFORM score to a band label.
+
+    Returns {'level': <band>} where band is one of:
+    very_low, low, medium, high, very_high. Returns 'unavailable' for
+    non-numeric or negative input so the action-plan template can render
+    a "data not available" state without raising.
+    """
+    try:
+        s = float(score_01)
+    except (TypeError, ValueError):
+        return {'level': 'unavailable'}
+    if s < 0:
+        return {'level': 'unavailable'}
+    for upper, label in _INFORM_BANDS:
+        if s < upper:
+            return {'level': label}
+    return {'level': 'very_high'}
+
+
 def get_action_domains(pillar_data, min_score=0.0):
     """Return enriched list of action domains from ACTION_GUIDANCE.
 
@@ -53,13 +82,12 @@ def get_action_domains(pillar_data, min_score=0.0):
         pillar_key  — 'hazard' | 'vulnerability' | 'coping'
         score       — 0-1 INFORM pillar score (for colour coding)
         score_10    — 0-10 display score
-        level       — risk level string from classify_risk()
+        level       — INFORM risk band ('very_low'..'very_high')
 
     Domains are sorted by pillar order, then Sendai priority ascending.
     min_score is currently unused (all domains are returned) because
     comprehensive preparedness planning is appropriate regardless of scores.
     """
-    from utils.risk_engine import classify_risk
 
     # Map INFORM pillar label_en to pillar key and pillar_data slot
     _pillar_map = {
@@ -83,7 +111,7 @@ def get_action_domains(pillar_data, min_score=0.0):
         score_01 = raw_score / 10.0 if raw_score > 1.0 else raw_score
         score_10 = raw_score if raw_score > 1.0 else raw_score * 10.0
 
-        risk_info = classify_risk(score_01)
+        risk_info = _inform_classify(score_01)
 
         enriched.append({
             **d,

@@ -2,9 +2,9 @@
 Health Metrics Risk Domain
 
 Scores population health baseline risk using available health surveillance data.
-Connector-agnostic: accepts data from CDC PLACES, County Health Rankings,
-Wisconsin DHS, WHO GHO, World Bank Health Indicators, or any source
-that provides the expected metric keys.
+Connector-agnostic: accepts data from WHO Global Health Observatory,
+World Bank Health Indicators, IHME GBD, Libya Ministry of Health surveillance,
+or any source that provides the expected metric keys.
 
 Metric groups:
   - Chronic disease burden (COPD, diabetes, cardiovascular)
