@@ -175,7 +175,7 @@ Compensating fix in core utility:
 Note on remaining "tribal" string matches in utils/action_plan_content.py: those refer to Libyan tribal networks and religious institutions as a social-cohesion / coping resource, not Wisconsin tribal nations, and are intentionally retained.
 
 ## Test Suite
-21 tests total, all pass via `pytest -q`.
+81 tests total, all pass via `pytest -q`.
 
 tests/smoke_test.py: 7 tests. Each exercises the Libya domain pipeline:
 domain modules import, instantiate, return required keys (location, score, dominant_factor, available),
@@ -196,6 +196,28 @@ tests/test_inform.py: 14 tests covering the INFORM Risk Index pipeline:
   to fixed scores (h=0.5, v=0.4, c=0.6) and asserts the exact expected national INFORM score
   (0.4932), formula_values block (h=5.0, v=4.0, c=6.0, result=4.9), dashboard level
   ('moderate' / 'warning' badge), and action-plan template band ('medium').
+
+tests/test_pillar_indicators.py: 37 tests covering each sub-indicator helper inside the three
+Libya pillar domain modules (utils/domains/hazard_exposure.py, utils/domains/vulnerability.py,
+utils/domains/coping_capacity.py). Two cases per helper — "real connector data present" (asserting
+the exact 0-1 score the helper returns and proxy_used=False) and "data missing -> proxy"
+(asserting the documented fallback constant and proxy_used=True) — across 14 helpers:
+_infrastructure_hazard, _natural_hazard, _epidemiological_hazard, _road_safety_hazard
+(Pillar 1); _agency_capacity_gap, _urban_sprawl, _displacement_vulnerability, _health_unawareness,
+_security_vulnerability (Pillar 2); _response_time_gap, _data_availability_gap,
+_community_support_gap, _healthcare_access_gap, _poverty_vulnerability (Pillar 3). Plus the
+_weighted_average helper exercised with fully-populated, partial (one missing indicator
+rescaled), and all-missing inputs across all three pillar domains (3 cases x 3 domains =
+9 tests). Note: _weighted_average currently lives on each pillar class (HazardExposureDomain,
+VulnerabilityDomain, CopingCapacityDomain) rather than on BaseDomain; the three
+implementations are nearly identical and tested independently. Consolidation onto BaseDomain
+is tracked as a follow-up. Together these pin each branch so a regression in any single
+sub-indicator or aggregation step cannot silently produce an in-range pillar score and a
+plausible-looking INFORM number.
+
+tests/test_login_redirect.py: 23 tests covering safe redirect-target validation on the
+/login route (relative-path-only, blocks scheme/netloc/protocol-relative URLs, collapses
+unsafe inputs to root).
 
 The 7 legacy Wisconsin/PHRAT pipeline tests (load_weights_international, composite_score_valid_range,
 inform_formula_cube_root via risk_engine, classify_risk, compute_all_domains_returns_all_7_international_domains,
