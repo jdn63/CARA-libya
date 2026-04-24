@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "KHom6-GbwnFkaamRDq60b"
+uri = "file://dist/libya-cara.zip"
+type = "unspecified"
+title = "Libya CARA — runtime zip"
