@@ -30,8 +30,14 @@ def _get_jm() -> JurisdictionManager:
 
 
 @api_bp.route('/municipalities')
+@api_bp.route('/jurisdictions')
 def get_municipalities():
-    """Return all municipalities as JSON."""
+    """Return all municipalities as JSON.
+
+    Exposed at both /api/municipalities (canonical, current naming) and
+    /api/jurisdictions (legacy alias kept so external callers and the
+    Task #7 acceptance smoke check continue to work).
+    """
     try:
         jm = _get_jm()
         municipalities = jm.get_all()
