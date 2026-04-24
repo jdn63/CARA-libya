@@ -4,8 +4,8 @@ Conflict and Displacement Risk Domain.
 Assesses public health risk from political violence, armed conflict,
 and population displacement using ACLED event data and IDMC displacement figures.
 
-This domain is enabled by the international profile and disabled by the US state
-profile. It is relevant for any jurisdiction experiencing or adjacent to:
+This domain is enabled by the international profile. It is relevant for any
+jurisdiction experiencing or adjacent to:
   - Armed conflict or political violence
   - Mass population displacement (internal or cross-border)
   - Civil unrest with public health implications
@@ -111,11 +111,6 @@ class ConflictDisplacementDomain(BaseDomain):
         jurisdiction_config: Dict[str, Any],
         profile: str = 'international',
     ) -> Dict[str, Any]:
-        if profile == 'us_state':
-            return self._unavailable_result(
-                "Conflict/displacement domain not applicable for US state profile"
-            )
-
         acled = connector_data.get('acled', {})
         idmc = connector_data.get('idmc', {})
         worldbank = connector_data.get('worldbank', {})

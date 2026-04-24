@@ -2,14 +2,11 @@
 Air Quality Risk Domain
 
 Scores ambient air quality risk using AQI or PM2.5/O3 concentration data.
-Works with any connector that returns daily AQI or pollutant concentration readings:
-  - US deployments: EPA AirNow (real-time + historical)
-  - International deployments: OpenAQ (global, near-real-time)
-  - Both: NOAA, WHO ambient air quality datasets
+Works with any connector that returns daily AQI or pollutant concentration
+readings (OpenAQ, WHO ambient air quality datasets, etc.).
 
 Scoring is based on the US EPA AQI breakpoints for PM2.5 and ozone, which are
-also the basis for WHO air quality guidelines and therefore appropriate for
-both US and international use.
+also the basis for WHO air quality guidelines.
 """
 
 import logging
@@ -40,10 +37,10 @@ class AirQualityDomain(BaseDomain):
             "label": self.DOMAIN_LABEL,
             "description": (
                 "Scores ambient air quality risk using AQI or PM2.5/ozone concentration data. "
-                "Compatible with US (EPA AirNow) and international (OpenAQ) data sources."
+                "Compatible with international (OpenAQ, WHO) data sources."
             ),
             "methodology": "Weighted composite: 50% AQI level, 30% unhealthy days, 20% sensitive population exposure.",
-            "applicable_profiles": ["us_state", "international"],
+            "applicable_profiles": ["libya", "international"],
         }
 
     def calculate(self, connector_data, jurisdiction_config, profile="international"):

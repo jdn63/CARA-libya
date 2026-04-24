@@ -165,9 +165,37 @@ Known status to flag (out of Task #7 scope):
   publish.
 
 Known retained-on-purpose items (NOT dead, NOT to delete in this task):
-- utils/connectors/us/{airnow,nws,open_fema,cdc_nssp}_connector.py — placeholder adapters loaded by utils/connector_registry.py inside try/except guards only when a profile YAML lists their connector names (Libya's profile does not). **Decision (Task #9): KEEP these stubs as future-fork scaffolding.** They are part of a wider us_state skeleton that also lives in core.py (the `profile == "us_state"` branch and refresh_us_connectors entry point), the `applicable_profiles: ["us_state", ...]` lists in utils/domains/* (air_quality, extreme_heat, vector_borne_disease, health_metrics, natural_hazards, mass_casualty, conflict_displacement), the us_state-only utils/domains/dam_failure.py module, and the `us_state:` weights block in config/risk_weights.yaml. Removing only the connectors would leave that wider skeleton dangling, so the connectors stay until the broader us_state cleanup is scoped as its own task. Their docstrings, package __init__.py, and README.md were rewritten in Task #9 to drop all references to the deleted Wisconsin source files (utils/air_quality_data.py, utils/heat_risk.py, utils/fema_data.py, utils/nssp_respiratory.py) and instead point at the public API endpoints a future fork should implement against; the README's connector list was also trimmed from the historical 12-entry wishlist down to the 4 stubs that actually exist on disk.
 - utils/cache_config.py and utils/planning_mode_config.py still list a "tribal_boundaries" cache key / planning-mode flag — these are config catalogue entries with no live readers (the producers were deleted) and will become orphan data on the next config audit.
 - utils/metadata_config.py still lists tribal_status / tribal_counties / tribal_primary_county metadata field names; the consuming Wisconsin jurisdictions code is gone, but Libyan governorate metadata may want analogous fields.
+
+## us_state Scaffolding Removal (Task #12, April 2026)
+
+**Decision: option (a) — REMOVED the us_state scaffolding entirely.**
+
+Rationale: Libya is the sole live deployment, the us_state branch was never executed, and Task #9 explicitly deferred the cleanup. Committing to us_state as a real future-fork target (option b) would have required building config/profiles/us_state.yaml, real (non-stub) connector implementations, and dedicated smoke tests — work no current stakeholder is sponsoring. Carrying dead skeletons indefinitely was the worst of both worlds, so the skeleton was deleted. A future US fork can be reintroduced cleanly from version control history if the need ever arises.
+
+What was deleted:
+- utils/connectors/us/ (entire directory: airnow, nws, open_fema, cdc_nssp connectors + __init__.py + README.md)
+- utils/domains/dam_failure.py (us_state-only module, never in DOMAIN_CLASS_MAP)
+- docs/adapting_for_us_state.md
+- core.py: `elif profile == "us_state":` scheduler branch and `_refresh_us_data()` function
+- utils/connector_registry.py: airnow / nws / open_fema / cdc_nssp elif branches
+- config/risk_weights.yaml: entire `us_state:` profiles block
+- utils/domains/mass_casualty.py: `US_WEIGHTS` constant, `_calculate_us()` method, `us_subtype` branch in `calculate()`, US-specific docstring + data sources + `us_active_shooter_subtype` payload
+- utils/domains/conflict_displacement.py: `if profile == 'us_state'` early-return guard
+- tests/smoke_test.py: `domain_config: {mass_casualty: {us_subtype: False}}` fixture entry
+- config/profiles/international.yaml: orphan `domain_config.mass_casualty.us_subtype: false`, `include_firearm_data: false`, and `disabled: [dam_failure]` entries (the consuming code paths are gone)
+- .env.example: `AIRNOW_API_KEY` and `CENSUS_API_KEY` lines (US-only; no live consumer)
+
+What was rewritten:
+- `applicable_profiles` lists across 7 domain modules (health_metrics, vector_borne_disease, natural_hazards, extreme_heat, air_quality, mass_casualty, plus base_domain.py docstring) changed from `["us_state", "international"]` to `["libya", "international"]`
+- Domain module docstrings (air_quality, extreme_heat, natural_hazards, vector_borne_disease, mass_casualty) and their domain_info() descriptions: dropped "US deployments: ..." bullet lines and US sub-type prose; kept the international data-source language only
+- docs/configuration_reference.md: profile values, env-var description, and profiles/ directory listing now read `libya | international` (not `us_state | international`); AIRNOW_API_KEY / CENSUS_API_KEY rows removed from the env-var table
+- docs/adding_custom_connector.md: example connector path is now `utils/connectors/worldwide/` (not `utils/connectors/us/`); profile YAML reference is now `libya.yaml` (not `us_state.yaml`)
+
+Verification: `pytest -q` — 81/81 pass (smoke 7/7 + INFORM 14/14 + pillar indicators + others).
+
+Out of scope (left as-is, flagged for future cleanup): docs/template_review_findings.md is a historical April-2026 snapshot and still references the now-deleted us_state.yaml / dam_failure.py — preserved as a dated review document. utils/risk_alignment.py, utils/report_generator.py, utils/config_manager.py, and the docs/risk_assessment_*.md documents still carry "active_shooter" string references unrelated to the us_state cleanup; they are dead orphans from the original Wisconsin codebase whose removal belongs to a separate audit pass.
 
 Compensating fix in core utility:
 - utils/action_plan_content.py used the deleted risk_engine.classify_risk(); replaced with a local _inform_classify() banding helper (very_low / low / medium / high / very_high using upper-exclusive 0.20 / 0.40 / 0.60 / 0.80 cut points; non-numeric or negative input returns "unavailable").

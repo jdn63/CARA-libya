@@ -11,10 +11,10 @@ through the ConnectorRegistry and passes their results to domain modules.
 
 ## Step 1: Create the connector file
 
-Create a new file in `utils/connectors/global/` or `utils/connectors/us/`:
+Create a new file in `utils/connectors/worldwide/` or `utils/connectors/libya/`:
 
 ```python
-# utils/connectors/global/my_data_source.py
+# utils/connectors/worldwide/my_data_source.py
 
 import requests
 from typing import Any, Dict, Optional
@@ -67,13 +67,13 @@ Open `utils/connector_registry.py` and add a new `elif` branch in `_build_connec
 
 ```python
 elif name == 'my_data_source':
-    from utils.connectors.global.my_data_source import MyDataSourceConnector
+    from utils.connectors.worldwide.my_data_source import MyDataSourceConnector
     return MyDataSourceConnector(country_code=country_code)
 ```
 
 ## Step 3: Reference it in the profile
 
-Open `config/profiles/international.yaml` (or `us_state.yaml`) and add
+Open `config/profiles/international.yaml` (or `libya.yaml`) and add
 your connector under `connectors:`:
 
 ```yaml

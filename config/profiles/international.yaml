@@ -39,13 +39,8 @@ domains:
     - vector_borne_disease
     - mass_casualty
     - conflict_displacement
-  disabled:
-    - dam_failure
-
 domain_config:
   mass_casualty:
-    us_subtype: false
-    include_firearm_data: false
     data_sources:
       - em_dat
       - acled

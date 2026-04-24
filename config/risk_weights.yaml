@@ -131,16 +131,6 @@ profiles:
           label_en: "Poverty Rate"
           note_en: "Higher poverty = lower capacity to cope with or recover from disasters"
 
-  us_state:
-    formula: phrat
-    natural_hazards: 0.28
-    mass_casualty: 0.18
-    health_metrics: 0.17
-    air_quality: 0.12
-    extreme_heat: 0.11
-    dam_failure: 0.07
-    vector_borne_disease: 0.07
-
   international:
     formula: phrat
     natural_hazards: 0.25

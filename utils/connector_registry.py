@@ -144,34 +144,6 @@ class ConnectorRegistry:
                 from utils.connectors.worldwide.iom_connector import IOMConnector
                 return IOMConnector()
 
-            elif name == 'airnow':
-                try:
-                    from utils.connectors.us.airnow_connector import AirNowConnector
-                    return AirNowConnector()
-                except ImportError:
-                    logger.warning("US AirNow connector not available — add to utils/connectors/us/")
-
-            elif name == 'nws':
-                try:
-                    from utils.connectors.us.nws_connector import NWSConnector
-                    return NWSConnector()
-                except ImportError:
-                    logger.warning("US NWS connector not available")
-
-            elif name == 'open_fema':
-                try:
-                    from utils.connectors.us.open_fema_connector import OpenFEMAConnector
-                    return OpenFEMAConnector()
-                except ImportError:
-                    logger.warning("US OpenFEMA connector not available")
-
-            elif name == 'cdc_nssp':
-                try:
-                    from utils.connectors.us.cdc_nssp_connector import CDCNSSPConnector
-                    return CDCNSSPConnector()
-                except ImportError:
-                    logger.warning("US CDC NSSP connector not available")
-
             else:
                 logger.debug(f"No connector implementation found for: {name}")
 

@@ -103,9 +103,6 @@ JURISDICTION_CONFIG = {
         "iso3166_1": "TJK",
         "population": 2_000_000,
     },
-    "domain_config": {
-        "mass_casualty": {"us_subtype": False},
-    },
 }
 
 SYNTHETIC_CONNECTOR_DATA = {

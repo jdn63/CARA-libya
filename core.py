@@ -122,16 +122,6 @@ def _start_scheduler(app: Flask) -> None:
                 misfire_grace_time=3600,
             )
 
-        elif profile == "us_state":
-            scheduler.add_job(
-                func=lambda: _refresh_us_data(app),
-                trigger="interval",
-                hours=24,
-                id="refresh_us_data",
-                replace_existing=True,
-                misfire_grace_time=3600,
-            )
-
         scheduler.start()
         logger.info(f"Scheduler started for profile: {profile}")
         app.scheduler = scheduler
@@ -303,35 +293,6 @@ def _refresh_global_data(app: Flask) -> None:
                     logger.error(f"Connector {name} refresh failed: {e}")
         except Exception as e:
             logger.error(f"Global data refresh failed: {e}")
-
-
-def _refresh_us_data(app: Flask) -> None:
-    """Refresh all US connector data (us_state profile)."""
-    with app.app_context():
-        logger.info("Starting US data refresh")
-        try:
-            from utils.connector_registry import ConnectorRegistry
-            import yaml
-
-            with open(os.path.join("config", "jurisdiction.yaml"), "r") as f:
-                jconfig = yaml.safe_load(f) or {}
-
-            registry = ConnectorRegistry(profile="us_state", jurisdiction_config=jconfig)
-            jid = jconfig.get("jurisdiction", {}).get("short_name", "XX")
-
-            for name, connector in registry.get_all_available().items():
-                try:
-                    result = connector.fetch(jurisdiction_id=jid)
-                    if result.get("available"):
-                        logger.info(f"Refreshed connector: {name}")
-                    else:
-                        logger.warning(
-                            f"Connector {name} returned no data: {result.get('message')}"
-                        )
-                except Exception as e:
-                    logger.error(f"Connector {name} refresh failed: {e}")
-        except Exception as e:
-            logger.error(f"US data refresh failed: {e}")
 
 
 def _get_jurisdiction_name() -> str:

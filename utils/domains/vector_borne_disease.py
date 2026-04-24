@@ -5,11 +5,7 @@ Scores risk from vector-borne diseases (Lyme disease, West Nile Virus, Dengue,
 Malaria, Zika, Chikungunya, Rift Valley Fever, etc.) using surveillance data
 and climate-adjusted range expansion projections.
 
-Profile-aware:
-  - US state profile: uses WI DHS EPHT county incidence data (or equivalent
-    state epidemiological surveillance CSV exports)
-  - International profile: uses WHO GHO disease incidence estimates and
-    World Bank climate indicators
+Uses WHO GHO disease incidence estimates and World Bank climate indicators.
 
 Scoring uses the EVR framework (Exposure-Vulnerability-Resilience) with a
 climate adjustment factor reflecting projected habitat range expansion.
@@ -60,7 +56,7 @@ class VectorBorneDiseaseDomain(BaseDomain):
                 "using surveillance data and climate-adjusted range expansion projections."
             ),
             "methodology": "EVR composite: 40% incidence, 25% climate adjustment, 20% vulnerability, 15% resilience (inverted).",
-            "applicable_profiles": ["us_state", "international"],
+            "applicable_profiles": ["libya", "international"],
         }
 
     def calculate(self, connector_data, jurisdiction_config, profile="international"):

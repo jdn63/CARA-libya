@@ -35,7 +35,7 @@ class HealthMetricsDomain(BaseDomain):
                 "Compatible with CDC PLACES, County Health Rankings, WHO GHO, World Bank, and local ministry data."
             ),
             "methodology": "Weighted composite: 35% chronic burden, 25% vaccination gap, 25% healthcare access gap, 15% social determinants.",
-            "applicable_profiles": ["us_state", "international"],
+            "applicable_profiles": ["libya", "international"],
         }
 
     def calculate(self, connector_data, jurisdiction_config, profile="international"):

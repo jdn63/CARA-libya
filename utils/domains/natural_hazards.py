@@ -2,9 +2,8 @@
 Natural Hazards Risk Domain
 
 Calculates exposure-vulnerability-resilience scores for natural hazard risk.
-Works with any data source that provides disaster event counts and impact metrics:
-  - US deployments: FEMA NRI, NOAA Storm Events, OpenFEMA declarations
-  - International deployments: EM-DAT, ReliefWeb
+Works with any data source that provides disaster event counts and impact
+metrics (EM-DAT, ReliefWeb, etc.).
 
 Pluggable scoring: connector data is normalized before scoring so the formula
 runs identically regardless of the upstream data source.
@@ -57,11 +56,10 @@ class NaturalHazardsDomain(BaseDomain):
             "label": self.DOMAIN_LABEL,
             "description": (
                 "Scores risk from natural hazards using an Exposure-Vulnerability-Resilience "
-                "framework. Compatible with US (FEMA/NOAA) and international (EM-DAT/ReliefWeb) "
-                "data sources."
+                "framework. Compatible with international (EM-DAT/ReliefWeb) data sources."
             ),
             "methodology": "EVR composite: 40% exposure, 30% vulnerability, 20% resilience (inverted), 10% health impact.",
-            "applicable_profiles": ["us_state", "international"],
+            "applicable_profiles": ["libya", "international"],
         }
 
     def calculate(self, connector_data, jurisdiction_config, profile="international"):

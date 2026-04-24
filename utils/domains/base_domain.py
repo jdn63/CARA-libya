@@ -47,8 +47,8 @@ class BaseDomain(ABC):
             connector_data: Dict of connector_name -> connector result dict.
                             Use connector_data.get('acled', {}) etc.
             jurisdiction_config: The jurisdiction's configuration dict.
-            profile: 'us_state' or 'international' — controls which sub-components
-                     and data sources are used.
+            profile: jurisdiction profile name (e.g. 'libya', 'international') —
+                     controls which sub-components and data sources are used.
 
         Returns:
             Dict with at minimum:

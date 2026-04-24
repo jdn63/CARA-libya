@@ -5,8 +5,8 @@
 ```
 config/
   profiles/
-    us_state.yaml          Profile for US states, territories, Tribal nations
-    international.yaml     Profile for countries and non-US jurisdictions
+    libya.yaml             Active Libya CARA deployment profile
+    international.yaml     Profile for countries and non-Libya jurisdictions
   jurisdiction.yaml        Your deployment-specific configuration (from .example)
   risk_weights.yaml        Domain weights and scoring thresholds
 ```
@@ -19,7 +19,7 @@ config/
 |-----|------|----------|-------------|
 | name | string | yes | Full jurisdiction name |
 | short_name | string | yes | Abbreviation (2-6 chars) |
-| profile | string | yes | 'us_state' or 'international' |
+| profile | string | yes | 'libya' or 'international' |
 | country_code | string | yes | ISO 3166-1 alpha-2 |
 | language | string | no | Default: 'en' |
 | timezone | string | no | e.g. 'Africa/Nairobi' |
@@ -155,15 +155,13 @@ domain_config:
 |----------|----------|-------------|
 | SESSION_SECRET | yes | Flask session secret (random string) |
 | DATABASE_URL | yes | PostgreSQL connection string |
-| CARA_PROFILE | yes | 'international' or 'us_state' |
+| CARA_PROFILE | yes | 'libya' or 'international' |
 | ENABLE_SCRAPERS | no | Set to 0 to disable scheduler (default: 1) |
 | ACLED_API_KEY | for conflict | ACLED API key |
 | ACLED_EMAIL | for conflict | ACLED registered email |
 | EMDAT_API_KEY | for disasters | EM-DAT API key |
 | OPENAQ_API_KEY | no | OpenAQ key (improves rate limits) |
 | NOAA_CDO_TOKEN | no | NOAA CDO token (improves rate limits) |
-| AIRNOW_API_KEY | for US air quality | EPA AirNow key |
-| CENSUS_API_KEY | for US demographics | US Census key |
 
 ## Scoring formula
 

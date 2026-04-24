@@ -2,9 +2,8 @@
 Extreme Heat Risk Domain
 
 Scores extreme heat risk using meteorological data and population vulnerability.
-Works with any connector providing temperature, heat index, or climate summary data:
-  - US deployments: NOAA/NWS heat alerts, NOAA climate normals
-  - International deployments: NOAA GSOD (Global Surface Summary of Day), ERA5
+Works with any connector providing temperature, heat index, or climate summary
+data (NOAA GSOD, ERA5, etc.).
 
 The domain combines:
   - Climatological exposure (days above threshold, heat wave frequency)
@@ -35,10 +34,10 @@ class ExtremeHeatDomain(BaseDomain):
             "label": self.DOMAIN_LABEL,
             "description": (
                 "Scores extreme heat risk using meteorological data and population vulnerability. "
-                "Compatible with US (NOAA/NWS) and international (NOAA GSOD, ERA5) data sources."
+                "Compatible with international (NOAA GSOD, ERA5) data sources."
             ),
             "methodology": "Weighted composite: 35% climatological exposure, 30% vulnerability, 20% resilience (inverted), 15% health impact.",
-            "applicable_profiles": ["us_state", "international"],
+            "applicable_profiles": ["libya", "international"],
         }
 
     def calculate(self, connector_data, jurisdiction_config, profile="international"):
