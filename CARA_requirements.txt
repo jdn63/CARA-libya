@@ -27,6 +27,7 @@ folium>=0.19.5
 
 # PDF Generation
 fpdf>=1.7.2
+weasyprint>=68.0
 
 # API and Web Scraping
 beautifulsoup4>=4.13.3

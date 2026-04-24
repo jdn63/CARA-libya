@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>خطة العمل التحضيري — {{ jurisdiction.name_ar }}</title>
+<style>
+/* ── Embedded fonts (resolved relative to the PDF base_url) ────────── */
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 400;
+    src: url('static/fonts/Cairo-Regular.woff2') format('woff2'),
+         url('static/fonts/Cairo-Latin-Regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 600;
+    src: url('static/fonts/Cairo-SemiBold.woff2') format('woff2'),
+         url('static/fonts/Cairo-Latin-SemiBold.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 700;
+    src: url('static/fonts/Cairo-Bold.woff2') format('woff2'),
+         url('static/fonts/Cairo-Latin-Bold.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('static/fonts/Inter-Regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    src: url('static/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    src: url('static/fonts/Inter-Bold.woff2') format('woff2');
+}
+
+/* ── Page layout ─────────────────────────────────────────────────── */
+@page {
+    size: A4;
+    margin: 18mm 14mm 22mm 14mm;
+    @bottom-center {
+        content: counter(page) " / " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 8pt;
+        color: #6c757d;
+    }
+    @bottom-right {
+        content: "للاستخدام الرسمي فقط · Official Use Only";
+        font-family: 'Cairo', sans-serif;
+        font-size: 7.5pt;
+        color: #c0392b;
+    }
+    @bottom-left {
+        content: "Libya CARA · {{ now.strftime('%Y-%m-%d') }}";
+        font-family: 'Inter', sans-serif;
+        font-size: 7.5pt;
+        color: #6c757d;
+    }
+}
+
+@page :first {
+    @bottom-center { content: none; }
+    @bottom-right  { content: none; }
+    @bottom-left   { content: none; }
+}
+
+/* ── Base typography ─────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+html, body {
+    direction: rtl;
+    font-family: 'Cairo', 'Inter', sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: #1f2937;
+    margin: 0;
+    padding: 0;
+}
+
+[dir="ltr"], .en, .lat {
+    direction: ltr;
+    font-family: 'Inter', 'Cairo', sans-serif;
+    unicode-bidi: isolate;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    color: #0a3d62;
+    margin: 0 0 .35em 0;
+}
+h1 { font-size: 18pt; }
+h2 { font-size: 14pt; }
+h3 { font-size: 11pt; }
+h4 { font-size: 10pt; }
+
+p { margin: 0 0 .5em 0; }
+
+/* ── Cover / first-page header ───────────────────────────────────── */
+.cover {
+    page-break-after: always;
+    text-align: center;
+    padding-top: 20mm;
+}
+.cover .crest {
+    font-size: 34pt;
+    color: #0a3d62;
+    margin-bottom: 1rem;
+}
+.cover h1 {
+    font-size: 22pt;
+    margin-bottom: .25em;
+}
+.cover .subtitle {
+    font-size: 11pt;
+    color: #475569;
+    margin-bottom: 2.5em;
+}
+.cover .juris-block {
+    background: linear-gradient(135deg, #0a3d62 0%, #1a6fa8 100%);
+    color: #fff;
+    padding: 14mm 12mm;
+    border-radius: 6px;
+    margin: 0 auto 12mm;
+    max-width: 140mm;
+}
+.cover .juris-block .name-ar { font-size: 18pt; font-weight: 700; }
+.cover .juris-block .name-en { font-size: 12pt; opacity: .85; margin-top: .25em; }
+.cover .juris-block .pop {
+    margin-top: 1em;
+    font-size: 9.5pt;
+    opacity: .85;
+    border-top: 1px solid rgba(255,255,255,.25);
+    padding-top: .75em;
+}
+.cover .meta-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 8mm;
+    margin: 8mm auto 6mm;
+    font-size: 9pt;
+    max-width: 150mm;
+}
+.cover .meta-row .item {
+    flex: 1;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 6px 4px;
+}
+.cover .meta-row .item .lbl {
+    color: #6b7280;
+    font-size: 7.5pt;
+    margin-bottom: 2px;
+}
+.cover .meta-row .item .val {
+    font-weight: 600;
+    color: #1f2937;
+}
+.cover .ouo {
+    margin-top: 6mm;
+    display: inline-block;
+    background: #c0392b;
+    color: #fff;
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: .08em;
+    padding: 4px 12px;
+    border-radius: 3px;
+}
+.cover .footer-note {
+    margin-top: 14mm;
+    font-size: 7.5pt;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* ── Score summary cards row ─────────────────────────────────────── */
+.scores-row {
+    display: table;
+    width: 100%;
+    border-spacing: 4mm 0;
+    margin: 0 -4mm 6mm;
+    table-layout: fixed;
+}
+.score-cell {
+    display: table-cell;
+    width: 25%;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-top: 3px solid #6c757d;
+    border-radius: 4px;
+    padding: 6px 4px;
+    text-align: center;
+    vertical-align: top;
+}
+.score-cell.danger  { border-top-color: #dc3545; }
+.score-cell.warning { border-top-color: #fd7e14; }
+.score-cell.info    { border-top-color: #0dcaf0; }
+.score-cell.success { border-top-color: #198754; }
+.score-cell .lbl-en { font-size: 7.5pt; color: #6b7280; }
+.score-cell .val    { font-size: 16pt; font-weight: 700; line-height: 1.1; }
+.score-cell .scale  { font-size: 7pt; color: #9ca3af; }
+.score-cell .lbl-ar { font-size: 8.5pt; font-weight: 600; margin-top: 2px; }
+.score-cell .level-pill {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 7pt;
+    padding: 1px 6px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.txt-danger  { color: #dc3545; }
+.txt-warning { color: #fd7e14; }
+.txt-info    { color: #0a6ea5; }
+.txt-success { color: #198754; }
+.txt-secondary { color: #6c757d; }
+
+.bg-danger  { background: #dc3545; }
+.bg-warning { background: #fd7e14; }
+.bg-info    { background: #0a6ea5; }
+.bg-success { background: #198754; }
+.bg-secondary { background: #6c757d; }
+
+/* ── Data quality alert ──────────────────────────────────────────── */
+.dq-alert {
+    background: #fff8e1;
+    border-right: 4px solid #fd7e14;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 6mm;
+    font-size: 9pt;
+}
+.dq-alert .title { color: #856404; font-weight: 700; margin-bottom: 3px; }
+.dq-alert .body  { color: #533f03; }
+.dq-alert .body .en { display: block; margin-top: 3px; font-style: italic; }
+
+/* ── Summary table ───────────────────────────────────────────────── */
+.section-head {
+    background: #1f2937;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10pt;
+    font-weight: 700;
+}
+.section-head .count {
+    background: rgba(255,255,255,.18);
+    border-radius: 8px;
+    padding: 1px 8px;
+    font-size: 8pt;
+    font-weight: 600;
+}
+
+table.summary {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e5e7eb;
+    border-radius: 0 0 4px 4px;
+    margin-bottom: 8mm;
+}
+table.summary th {
+    background: #f3f4f6;
+    color: #374151;
+    font-weight: 700;
+    font-size: 8.5pt;
+    padding: 5px 6px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: right;
+}
+table.summary td {
+    padding: 5px 6px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 8.5pt;
+    vertical-align: middle;
+}
+table.summary tr:last-child td { border-bottom: none; }
+table.summary .num { color: #6b7280; width: 20pt; text-align: center; }
+table.summary .domain-cell strong { display: block; }
+table.summary .domain-cell .en {
+    font-size: 7.5pt;
+    color: #6b7280;
+}
+.bar-wrap {
+    display: inline-block;
+    background: #e5e7eb;
+    width: 60pt;
+    height: 5pt;
+    border-radius: 3pt;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-left: 4pt;
+}
+.bar-wrap .bar { height: 100%; }
+
+.pillar-pill, .level-pill, .sendai-pill {
+    display: inline-block;
+    font-size: 7.5pt;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: #fff;
+    white-space: nowrap;
+}
+.pillar-hazard        { background: #dc3545; }
+.pillar-vulnerability { background: #fd7e14; }
+.pillar-coping        { background: #0a6ea5; }
+
+.sendai-1 { background: #e8f4f8; color: #0a6ea5; border: 1px solid #0a6ea5; }
+.sendai-2 { background: #f3e8f8; color: #7d3c98; border: 1px solid #7d3c98; }
+.sendai-3 { background: #e8f8ec; color: #1a7a3a; border: 1px solid #1a7a3a; }
+.sendai-4 { background: #fff3e0; color: #b7540a; border: 1px solid #b7540a; }
+
+/* ── Detailed action cards ───────────────────────────────────────── */
+.detail-h {
+    margin: 4mm 0 4mm;
+    font-size: 13pt;
+    color: #0a3d62;
+    border-bottom: 2px solid #0a3d62;
+    padding-bottom: 3px;
+}
+
+.domain-card {
+    border: 1px solid #e5e7eb;
+    border-right: 4px solid #adb5bd;
+    border-radius: 4px;
+    margin-bottom: 5mm;
+    page-break-inside: avoid;
+    overflow: hidden;
+}
+.domain-card.level-critical { border-right-color: #dc3545; }
+.domain-card.level-high     { border-right-color: #fd7e14; }
+.domain-card.level-moderate { border-right-color: #ffc107; }
+.domain-card.level-low      { border-right-color: #0dcaf0; }
+.domain-card.level-minimal  { border-right-color: #198754; }
+
+.domain-card .head {
+    background: #f9fafb;
+    padding: 6px 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.domain-card .head .ttl {
+    font-weight: 700;
+    font-size: 10.5pt;
+    color: #0a3d62;
+}
+.domain-card .head .ttl-en {
+    font-size: 8pt;
+    color: #6b7280;
+    margin-top: 1px;
+}
+.domain-card .head .pills {
+    margin-top: 4px;
+    display: flex;
+    gap: 4pt;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.domain-card .head .score-pill {
+    font-size: 8pt;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.domain-card .body { padding: 6px 10px; }
+
+.gov-row {
+    background: #f9fafb;
+    border-radius: 3px;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    font-size: 8.5pt;
+}
+.gov-row .lbl {
+    font-weight: 700;
+    color: #374151;
+    margin-left: 4pt;
+}
+.gov-row .en-line {
+    color: #9ca3af;
+    font-size: 7.5pt;
+    margin-top: 1px;
+    padding-right: 4pt;
+}
+
+.sendai-note {
+    background: #f0f7fb;
+    border-right: 3px solid #0a6ea5;
+    padding: 4px 8px;
+    margin: 4px 0 6px;
+    border-radius: 3px;
+    font-size: 8.5pt;
+}
+
+/* Timeline columns rendered as a 3-column table for reliable WeasyPrint layout */
+table.timeline {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4pt 0;
+    table-layout: fixed;
+    page-break-inside: avoid;
+}
+table.timeline > thead > tr > th {
+    font-size: 9pt;
+    font-weight: 700;
+    padding: 3px 0;
+    border-bottom: 2px solid #dee2e6;
+    text-align: right;
+    width: 33.33%;
+}
+table.timeline th.immediate { color: #dc3545; border-bottom-color: #dc3545; }
+table.timeline th.short     { color: #b7540a; border-bottom-color: #fd7e14; }
+table.timeline th.long      { color: #198754; border-bottom-color: #198754; }
+table.timeline th .term-en {
+    display: block;
+    font-weight: 400;
+    font-size: 7.5pt;
+    color: #6b7280;
+}
+table.timeline > tbody > tr > td {
+    vertical-align: top;
+    padding-top: 4pt;
+}
+.action-list { list-style: none; padding: 0; margin: 0; }
+.action-item {
+    padding: 0 10pt 0 0;
+    margin-bottom: 4pt;
+    position: relative;
+    page-break-inside: avoid;
+}
+.action-item::before {
+    content: '◆';
+    position: absolute;
+    right: 0;
+    top: 1.5pt;
+    font-size: 5pt;
+    color: #6b7280;
+}
+.action-item .ar { display: block; font-size: 8.5pt; font-weight: 500; }
+.action-item .en { display: block; font-size: 7.5pt; color: #6b7280; font-style: italic; }
+
+/* ── Methodology / footer card ───────────────────────────────────── */
+.methodology {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 6mm;
+    font-size: 8.5pt;
+    color: #4b5563;
+    margin-top: 6mm;
+    page-break-inside: avoid;
+}
+.methodology table { width: 100%; }
+.methodology td { vertical-align: top; padding-left: 4mm; }
+.methodology td:last-child { padding-left: 0; padding-right: 4mm; }
+.methodology .h { font-weight: 700; color: #1f2937; display: block; margin-bottom: 2px; }
+.methodology .en { font-style: italic; color: #6b7280; }
+.methodology .ouo {
+    background: #c0392b;
+    color: #fff;
+    font-weight: 700;
+    font-size: 7pt;
+    letter-spacing: .08em;
+    padding: 2px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+/* Helpful for headings to stick with their content */
+h2, h3, .detail-h { page-break-after: avoid; }
+</style>
+</head>
+<body>
+
+{# ── Macros for re-use ───────────────────────────────────────────── #}
+{%- macro score_color(s) -%}
+{%- if s is none -%}secondary
+{%- elif s > 0.6 -%}danger
+{%- elif s > 0.4 -%}warning
+{%- elif s > 0.2 -%}info
+{%- else -%}success
+{%- endif -%}
+{%- endmacro -%}
+
+{# ── Cover page ─────────────────────────────────────────────────── #}
+<div class="cover">
+    <div class="crest">★</div>
+    <h1>خطة العمل التحضيري للحد من مخاطر الكوارث</h1>
+    <div class="subtitle"><span class="en">Disaster Risk Reduction Preparedness Action Plan</span></div>
+
+    <div class="juris-block">
+        <div class="name-ar">{{ jurisdiction.name_ar }}</div>
+        <div class="name-en"><span class="en">{{ jurisdiction.name_en }}</span></div>
+        {% if jurisdiction.population %}
+        <div class="pop">
+            عدد السكان التقديري · <span class="en">Estimated population</span>:
+            <strong>{{ '{:,}'.format(jurisdiction.population|int) }}</strong>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="meta-row">
+        <div class="item">
+            <div class="lbl">الإطار المرجعي · Framework</div>
+            <div class="val">Sendai 2015–2030</div>
+        </div>
+        <div class="item">
+            <div class="lbl">المؤشر · Index</div>
+            <div class="val">INFORM Risk</div>
+        </div>
+        <div class="item">
+            <div class="lbl">صادر · Issued</div>
+            <div class="val"><span class="en">{{ now.strftime('%d %b %Y') }}</span></div>
+        </div>
+        <div class="item">
+            <div class="lbl">عدد المجالات · Domains</div>
+            <div class="val">{{ action_domains|length }}</div>
+        </div>
+    </div>
+
+    <div class="ouo">للاستخدام الرسمي فقط · OFFICIAL USE ONLY</div>
+
+    <div class="footer-note">
+        أُعدّت هذه الوثيقة تلقائياً بواسطة أداة CARA لليبيا استناداً إلى مؤشر INFORM للمخاطر
+        وإطار سيندا للحد من مخاطر الكوارث 2015–2030.
+        <br>
+        <span class="en">
+            Generated automatically by Libya CARA from the INFORM Risk Index and the Sendai
+            Framework for Disaster Risk Reduction 2015–2030.
+        </span>
+    </div>
+</div>
+
+{# ── Page 2+ : INFORM score row ─────────────────────────────────── #}
+{% set h_score = hazard.get('score') %}
+{% set v_score = vuln.get('score') %}
+{% set c_score = coping.get('score') %}
+{% set i_score = inform.get('score') %}
+
+<h2>ملخص درجات INFORM <span class="en" style="font-weight:400; color:#475569; font-size:11pt">/ INFORM Score Summary</span></h2>
+
+<div class="scores-row">
+    {% for label_ar, label_en, score, level in [
+        ('مؤشر الخطر والتعرض',     'Hazard &amp; Exposure',    h_score, hazard.get('level','unavailable')),
+        ('مؤشر الضعف والهشاشة',   'Vulnerability',            v_score, vuln.get('level','unavailable')),
+        ('القدرة على التكيف',        'Coping Capacity (Lack of)', c_score, coping.get('level','unavailable')),
+        ('مؤشر INFORM الإجمالي',    'Overall INFORM Risk',      i_score, inform.get('level','unavailable')),
+    ] %}
+    {% set color = score_color(score) %}
+    <div class="score-cell {{ color }}">
+        <div class="lbl-en"><span class="en">{{ label_en|safe }}</span></div>
+        <div class="val txt-{{ color }}">
+            {{ '%.1f'|format(score * 10) if score is not none else '—' }}
+        </div>
+        <div class="scale">/10</div>
+        <div class="lbl-ar">{{ label_ar }}</div>
+        {% if level and level != 'unavailable' %}
+        <span class="level-pill bg-{{ color }}">{{ level_labels_ar.get(level, '') }}</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{# ── Data quality notice ──────────────────────────────────────── #}
+{% set pillars_with_data = [] %}
+{% if hazard.get('available') %}{% set _ = pillars_with_data.append(1) %}{% endif %}
+{% if vuln.get('available') %}{% set _ = pillars_with_data.append(1) %}{% endif %}
+{% if coping.get('available') %}{% set _ = pillars_with_data.append(1) %}{% endif %}
+{% set real_pillars = pillars_with_data | length %}
+
+{% if real_pillars < 3 %}
+<div class="dq-alert">
+    <div class="title">أولوية تحسين جودة البيانات · <span class="en">Data Quality Improvement — Top Priority</span></div>
+    <div class="body">
+        {% if real_pillars == 0 %}
+        يعتمد هذا التقييم بالكامل على متوسطات إقليمية تقديرية — لا تتوفر بيانات حقيقية لأي من الركائز الثلاث.
+        <span class="en">This assessment relies entirely on proxy regional averages — no real data is available for any of the three INFORM pillars.</span>
+        {% elif real_pillars == 1 %}
+        ركيزة واحدة فقط تستند إلى بيانات حقيقية؛ ركيزتان تستخدمان متوسطات إقليمية تقديرية.
+        <span class="en">Only one INFORM pillar uses real data; two pillars rely on proxy regional averages.</span>
+        {% else %}
+        ركيزتان تستندان إلى بيانات حقيقية؛ ركيزة واحدة تستخدم متوسطاً إقليمياً تقديرياً.
+        <span class="en">Two pillars use real data; one pillar relies on a proxy regional average.</span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{# ── Executive summary table ──────────────────────────────────── #}
+<div class="section-head">
+    <span>ملخص مناطق الأولوية · <span class="en">Priority Areas Summary</span></span>
+    <span class="count">{{ action_domains|length }} مجال · domains</span>
+</div>
+<table class="summary">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>المجال · Domain</th>
+            <th>الركيزة · Pillar</th>
+            <th>الدرجة · Score</th>
+            <th>المستوى · Level</th>
+            <th>سيندا · Sendai</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in action_domains %}
+        {% set color = score_color(d.score) %}
+        <tr>
+            <td class="num">{{ loop.index }}</td>
+            <td class="domain-cell">
+                <strong>{{ d.label_ar }}</strong>
+                <span class="en">{{ d.label_en }}</span>
+            </td>
+            <td>
+                <span class="pillar-pill pillar-{{ d.pillar_key }}">{{ d.pillar_ar }}</span>
+            </td>
+            <td>
+                <strong class="txt-{{ color }}">{{ '%.1f'|format(d.score_10) }}</strong>
+                <span class="bar-wrap">
+                    <span class="bar bg-{{ color }}" style="width:{{ (d.score * 100)|round|int }}%"></span>
+                </span>
+            </td>
+            <td>
+                <span class="level-pill bg-{{ color }}">{{ level_labels_ar.get(d.level, d.level) }}</span>
+            </td>
+            <td>
+                <span class="sendai-pill sendai-{{ d.sendai_priority }}">
+                    {{ d.sendai_priority }} · {{ sendai_labels[d.sendai_priority].ar }}
+                </span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{# ── Detailed action cards ────────────────────────────────────── #}
+<h2 class="detail-h">الإجراءات التفصيلية <span class="en" style="font-weight:400; color:#475569; font-size:11pt">/ Detailed Action Steps</span></h2>
+
+{% for d in action_domains %}
+{% set color = score_color(d.score) %}
+<div class="domain-card level-{{ d.level }}">
+
+    <div class="head">
+        <div class="ttl">{{ d.label_ar }}</div>
+        <div class="ttl-en"><span class="en">{{ d.label_en }}</span></div>
+        <div class="pills">
+            <span class="pillar-pill pillar-{{ d.pillar_key }}"><span class="en">{{ d.pillar_en }}</span></span>
+            <span class="sendai-pill sendai-{{ d.sendai_priority }}">
+                سيندا {{ d.sendai_priority }} · {{ sendai_labels[d.sendai_priority].ar }}
+            </span>
+            <span class="score-pill bg-{{ color }}">
+                {{ '%.1f'|format(d.score_10) }}/10 · {{ level_labels_ar.get(d.level, '') }}
+            </span>
+        </div>
+    </div>
+
+    <div class="body">
+
+        <div class="gov-row">
+            <span class="lbl">الجهات الحكومية المعنية:</span>{{ d.gov_ar }}
+            <div class="en-line"><span class="en">{{ d.gov_en }}</span></div>
+        </div>
+        <div class="gov-row">
+            <span class="lbl">منظومة الأمم المتحدة:</span>{{ d.cluster_ar }}
+            <div class="en-line"><span class="en">{{ d.cluster_en }}</span></div>
+        </div>
+
+        <div class="sendai-note">
+            <strong>أولوية سيندا {{ d.sendai_priority }}:</strong>
+            {{ sendai_labels[d.sendai_priority].ar }}
+            <span class="en" style="color:#6b7280"> / {{ sendai_labels[d.sendai_priority].en }}</span>
+        </div>
+
+        <table class="timeline">
+            <thead>
+                <tr>
+                    {% for term_style, action_group in [
+                        ('immediate', d.actions[0] if d.actions|length > 0 else None),
+                        ('short',     d.actions[1] if d.actions|length > 1 else None),
+                        ('long',      d.actions[2] if d.actions|length > 2 else None),
+                    ] %}
+                    <th class="{{ term_style }}">
+                        {% if action_group %}
+                            {{ action_group.term_ar }}
+                            <span class="term-en"><span class="en">{{ action_group.term_en }}</span></span>
+                        {% else %}&nbsp;{% endif %}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for term_style, action_group in [
+                        ('immediate', d.actions[0] if d.actions|length > 0 else None),
+                        ('short',     d.actions[1] if d.actions|length > 1 else None),
+                        ('long',      d.actions[2] if d.actions|length > 2 else None),
+                    ] %}
+                    <td>
+                        {% if action_group %}
+                        <ul class="action-list">
+                            {% for ar_text, en_text in action_group['items'] %}
+                            <li class="action-item">
+                                <span class="ar">{{ ar_text }}</span>
+                                <span class="en"><span class="en">{{ en_text }}</span></span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endfor %}
+
+{# ── Methodology footer ──────────────────────────────────────── #}
+<div class="methodology">
+    <table>
+        <tr>
+            <td>
+                <span class="h">منهجية التسجيل · Scoring Methodology</span>
+                تستند الدرجات إلى مؤشر INFORM للمخاطر (الخطر × الهشاشة × ضعف القدرة على التكيف)^⅓.
+                الأولويات الواردة في هذه الخطة مرتبة تنازلياً حسب درجة المخاطر المحسوبة من البيانات المتاحة.
+                <br>
+                <span class="en">Scores based on INFORM Risk Index (H × V × C)^⅓. Priorities ordered descending by computed risk score.</span>
+            </td>
+            <td>
+                <span class="h">الإطار المرجعي · Reference Framework</span>
+                إطار سيندا للحد من مخاطر الكوارث 2015–2030 · منظومة الأمم المتحدة للمجموعات الإنسانية ·
+                وكالات الأمم المتحدة العاملة في ليبيا.
+                <br>
+                <span class="en">Sendai Framework for DRR 2015–2030 · UN Cluster System · UN agencies operating in Libya.</span>
+                <br><br>
+                <span class="ouo">للاستخدام الرسمي فقط · OFFICIAL USE ONLY</span>
+                &nbsp;&nbsp;<span style="color:#6b7280">صادر · Issued: <span class="en">{{ now.strftime('%d %b %Y') }}</span></span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

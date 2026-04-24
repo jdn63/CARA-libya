@@ -1525,62 +1525,103 @@ def _run_pillars(jurisdiction_id: str, jurisdiction_config: dict) -> dict:
 # Routes
 # ---------------------------------------------------------------------------
 
+def _build_action_plan_context(jurisdiction_id: str):
+    """Resolve jurisdiction + pillar data + action domains for the action plan.
+
+    Returns a dict ready to feed into either the on-screen template or the
+    PDF template, or `None` if the jurisdiction id was not found.
+    """
+    from utils.action_plan_content import get_action_domains, SENDAI_LABELS
+
+    jm = _get_jm()
+
+    if jurisdiction_id.upper() in ('LY', 'LIBYA', 'LY-NATIONAL'):
+        jurisdiction = {
+            'id': 'LY',
+            'name_ar': 'ليبيا — التقييم الوطني',
+            'name_en': 'Libya — National Assessment',
+            'level': 1,
+            'population': 6931000,
+            'region': '',
+        }
+    else:
+        jurisdiction = jm.get_by_id(jurisdiction_id)
+        if not jurisdiction:
+            return None
+
+    jurisdiction_config = jm.get_country_config()
+    pillar_data    = _run_pillars(jurisdiction_id, jurisdiction_config)
+    action_domains = get_action_domains(pillar_data, min_score=0.15)
+
+    return {
+        'jurisdiction':    jurisdiction,
+        'pillar_data':     pillar_data,
+        'action_domains':  action_domains,
+        'inform':          pillar_data.get('inform_score', {}),
+        'hazard':          pillar_data.get('hazard', {}),
+        'vuln':            pillar_data.get('vulnerability', {}),
+        'coping':          pillar_data.get('coping', {}),
+        'sendai_labels':   SENDAI_LABELS,
+        'level_labels_ar': LEVEL_LABELS_AR,
+        'level_labels_en': LEVEL_LABELS_EN,
+        'now':             datetime.utcnow(),
+    }
+
+
 @dashboard_bp.route('/action-plan/<jurisdiction_id>')
 def action_plan(jurisdiction_id):
     """Bilingual Arabic/English preparedness action plan — Libya CARA."""
     try:
-        from utils.action_plan_content import get_action_domains, SENDAI_LABELS
-
-        jm = _get_jm()
-
-        if jurisdiction_id.upper() in ('LY', 'LIBYA', 'LY-NATIONAL'):
-            jurisdiction = {
-                'id': 'LY',
-                'name_ar': 'ليبيا — التقييم الوطني',
-                'name_en': 'Libya — National Assessment',
-                'level': 1,
-                'population': 6931000,
-                'region': '',
-            }
-            jurisdiction_config = jm.get_country_config()
-        else:
-            jurisdiction = jm.get_by_id(jurisdiction_id)
-            if not jurisdiction:
-                return render_template(
-                    'error.html',
-                    message=f'البلدية غير موجودة / Municipality not found: {jurisdiction_id}'
-                )
-            jurisdiction_config = jm.get_country_config()
-
-        pillar_data   = _run_pillars(jurisdiction_id, jurisdiction_config)
-        action_domains = get_action_domains(pillar_data, min_score=0.15)
-
-        # INFORM summary row for the header card
-        inform  = pillar_data.get('inform_score', {})
-        hazard  = pillar_data.get('hazard', {})
-        vuln    = pillar_data.get('vulnerability', {})
-        coping  = pillar_data.get('coping', {})
-
-        return render_template(
-            'action_plan_libya.html',
-            jurisdiction=jurisdiction,
-            pillar_data=pillar_data,
-            action_domains=action_domains,
-            inform=inform,
-            hazard=hazard,
-            vuln=vuln,
-            coping=coping,
-            sendai_labels=SENDAI_LABELS,
-            level_labels_ar=LEVEL_LABELS_AR,
-            level_labels_en=LEVEL_LABELS_EN,
-            now=datetime.utcnow(),
-        )
+        ctx = _build_action_plan_context(jurisdiction_id)
+        if ctx is None:
+            return render_template(
+                'error.html',
+                message=f'البلدية غير موجودة / Municipality not found: {jurisdiction_id}'
+            )
+        return render_template('action_plan_libya.html', **ctx)
     except Exception as e:
         logger.error(f'Action plan error for {jurisdiction_id}: {e}', exc_info=True)
         return render_template(
             'error.html',
             message='حدث خطأ أثناء إنشاء خطة العمل. / An error occurred generating the action plan.'
         )
+
+
+@dashboard_bp.route('/action-plan/<jurisdiction_id>/export.pdf')
+def action_plan_pdf(jurisdiction_id):
+    """Server-rendered PDF of the action plan via WeasyPrint.
+
+    Falls back to a clear bilingual error page if PDF generation fails
+    (e.g. WeasyPrint native deps missing).
+    """
+    try:
+        ctx = _build_action_plan_context(jurisdiction_id)
+        if ctx is None:
+            return render_template(
+                'error.html',
+                message=f'البلدية غير موجودة / Municipality not found: {jurisdiction_id}'
+            ), 404
+
+        from utils.pdf_export import render_pdf_response
+
+        # Build a stable, ASCII-safe filename:
+        #   Libya_CARA_Action_Plan_<id>_<YYYY-MM-DD>.pdf
+        slug = (ctx['jurisdiction'].get('id') or jurisdiction_id).replace('/', '-')
+        date_part = ctx['now'].strftime('%Y-%m-%d')
+        filename = f'Libya_CARA_Action_Plan_{slug}_{date_part}.pdf'
+
+        return render_pdf_response(
+            'action_plan_pdf.html',
+            filename=filename,
+            context=ctx,
+            inline=False,
+        )
+    except Exception as e:
+        logger.error(f'Action plan PDF error for {jurisdiction_id}: {e}', exc_info=True)
+        return render_template(
+            'error.html',
+            message='تعذّر إنشاء ملف PDF لخطة العمل. / Could not generate the action plan PDF.'
+        ), 500
 
 
 @dashboard_bp.route('/dashboard/<jurisdiction_id>')
