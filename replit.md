@@ -53,8 +53,11 @@ Pillar 3 (Lack of Coping Capacity): emergency response time, data availability, 
 ## Geography
 - National assessment: Libya (LY)
 - 148 municipalities across 3 regions: West (الغرب), East (الشرق), South (الجنوب)
-- 106 municipalities populated as of initial dataset; 42 flagged needs_verification
+- 106 municipalities populated as of initial dataset; 42 still pending addition to reach the 148 target
 - Districts organized under each region in data/libya_municipalities.json
+- Population provenance (per-baladiya): OCHA Libya HNO 2021 (CC BY 4.0, via HDX) — Non-displaced + Returnees columns. National anchor: UN World Population Prospects 2024 medium variant = 7,458,567. Refresh script: scripts/refresh_population.py (--dry-run, --no-fetch, --print-deltas, --audit-log). Each entry carries population_year, population_source, population_method, population_status, population_in_national_total, and (for verified entries) population_ocha_pcode + population_match_confidence (exact|high|approximate). Audit logs written to data/cache/hdx/audit/.
+- Population status distribution: 59 verified_ocha (matched to OCHA HNO baladiya, in_national_total=True), 18 sub_baladiya_estimate (admin-4 muhalla zones inside Tripoli LY021104 / Benghazi LY010304, in_national_total=False to prevent double-counting their parent baladiya), 29 estimated_pending_verification (small villages outside HNO 100, in_national_total=True). Tests: tests/test_population_data.py (21 tests).
+- National rollups MUST sum only entries where population_in_national_total is True. This deduped figure is also pre-computed and pinned at _metadata.national_total_deduped (currently 6,658,098 ≈ 89.3% of UN WPP 2024). The shortfall is real and reflects the ~41 OCHA HNO baladiyas not yet matched in this file — see _metadata.data_gap_note. The naive sum across all 106 entries (7,888,098) double-counts the Tripoli/Benghazi muhalla overlays and must NOT be used for national rollups.
 
 ## Key Design Decisions
 - Armed clashes domain: OMITTED pending further political sensitivity review
