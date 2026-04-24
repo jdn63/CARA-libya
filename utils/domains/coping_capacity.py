@@ -213,20 +213,6 @@ class CopingCapacityDomain(BaseDomain):
 
         return 0.45, True
 
-    def _weighted_average(self, scores: Dict[str, float], weights: Dict[str, float]):
-        """Compute weighted average. Returns (score, data_coverage)."""
-        total = 0.0
-        weight_sum = 0.0
-        for key, weight in weights.items():
-            val = scores.get(key)
-            if val is not None:
-                total += weight * float(val)
-                weight_sum += weight
-        if weight_sum == 0:
-            return 0.0, 0.0
-        coverage = weight_sum / sum(weights.values()) if weights else 0.0
-        return round(min(1.0, total / weight_sum * sum(weights.values())), 4), round(coverage, 4)
-
     def domain_info(self) -> dict:
         return {
             'id': 'coping_capacity',

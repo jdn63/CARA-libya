@@ -91,3 +91,58 @@ class BaseDomain(ABC):
         if max_val <= min_val:
             return 0.0
         return max(0.0, min(1.0, (value - min_val) / (max_val - min_val)))
+
+    def _weighted_average(
+        self,
+        scores: Dict[str, Optional[float]],
+        weights: Dict[str, float],
+    ) -> tuple:
+        """
+        Combine sub-indicator scores into a pillar score.
+
+        Single source of truth for the pillar scoring math used by all three
+        INFORM pillars (hazard & exposure, vulnerability, lack of coping
+        capacity). Each pillar module calls this helper instead of carrying
+        its own copy so the formula can only be fixed in one place.
+
+        Behaviour:
+            * Only entries in ``weights`` are considered. Extra keys in
+              ``scores`` are ignored.
+            * An entry whose score is ``None`` (or missing from ``scores``)
+              is treated as unavailable and excluded from the average.
+            * When some entries are missing, the available weights are
+              effectively rescaled to the full weight sum — i.e. the score
+              is the weighted mean of the present entries, expressed on the
+              same 0..1 scale the fully-populated case would produce.
+              Concretely: ``score = (sum(w_i * s_i) / sum(w_i)) * sum(weights)``
+              for present entries, then clamped to ``[0, 1]``.
+            * When **every** entry is missing (``weight_sum == 0``), returns
+              ``(0.0, 0.0)`` rather than raising ``ZeroDivisionError`` or
+              propagating ``NaN``.
+            * The score is clamped to ``[0, 1]`` and rounded to 4 decimals;
+              data_coverage is the fraction of total weight present (also
+              rounded to 4 decimals).
+
+        Args:
+            scores: Mapping of indicator key -> score in ``[0, 1]`` or
+                ``None`` if unavailable.
+            weights: Mapping of indicator key -> weight. Need not sum to 1.
+
+        Returns:
+            Tuple ``(score, data_coverage)`` with both values in ``[0, 1]``.
+        """
+        total = 0.0
+        weight_sum = 0.0
+        for key, weight in weights.items():
+            val = scores.get(key)
+            if val is not None:
+                total += weight * float(val)
+                weight_sum += weight
+        if weight_sum == 0:
+            return 0.0, 0.0
+        full_weight = sum(weights.values())
+        if full_weight == 0:
+            return 0.0, 0.0
+        score = total / weight_sum * full_weight
+        coverage = weight_sum / full_weight
+        return round(min(1.0, score), 4), round(coverage, 4)

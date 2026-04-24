@@ -237,22 +237,6 @@ class HazardExposureDomain(BaseDomain):
                 pass
         return default
 
-    def _weighted_average(self, scores: Dict[str, float], weights: Dict[str, float]):
-        """Compute weighted average of scores. Returns (score, data_coverage)."""
-        total = 0.0
-        weight_sum = 0.0
-        for key, weight in weights.items():
-            val = scores.get(key)
-            if val is not None:
-                total += weight * float(val)
-                weight_sum += weight
-        if weight_sum == 0:
-            return 0.0, 0.0
-        if weight_sum < sum(weights.values()) and weight_sum > 0:
-            total = total / weight_sum * sum(weights.values())
-        coverage = weight_sum / sum(weights.values()) if weights else 0.0
-        return round(min(1.0, total), 4), round(coverage, 4)
-
     def domain_info(self) -> dict:
         return {
             'id': 'hazard_exposure',
