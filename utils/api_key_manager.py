@@ -111,10 +111,22 @@ class APIKeyManager:
             return result
             
         except (requests.exceptions.RequestException, ValueError, KeyError, TypeError) as e:
+            # Intentionally do NOT log or surface the exception message body
+            # here. The per-service _validate_*_key methods already catch and
+            # convert requests.RequestException to a returned tuple, so the
+            # only exceptions that reach this outer handler are response-
+            # parsing bugs in our own code (ValueError / KeyError / TypeError).
+            # Logging only the exception class name keeps the API key — which
+            # several upstream services require to be embedded in the request
+            # URL — out of the log file and out of the admin status UI, and
+            # closes CodeQL py/clear-text-logging-sensitive-data without
+            # depending on a custom sanitizer the analyzer cannot verify.
             error_type = type(e).__name__
-            safe_msg = _redact_secrets(str(e), api_key)
-            logger.error("Error validating %s (%s): %s", service, error_type, safe_msg)
-            result = (False, f"Validation error ({error_type}): {safe_msg}")
+            logger.error(
+                "Unexpected error validating %s: %s (see server traceback for details)",
+                service, error_type,
+            )
+            result = (False, f"Validation error ({error_type}) — see server logs")
             with self._lock:
                 self.validation_cache[cache_key] = (time.time(), result)
             return result
