@@ -208,11 +208,21 @@ document.addEventListener('DOMContentLoaded', function () {
     var btn = document.getElementById('view-municipality-btn');
 
     if (sel && btn) {
+        // Strict allow-list for Libya jurisdiction IDs: "LY" (national)
+        // or "LY-" followed by 1-4 digits (e.g. LY-063). Anything else
+        // is rejected so that a tampered <option value="..."> (CodeQL
+        // js/xss-through-dom) cannot smuggle a javascript:, data:, or
+        // protocol-relative URL into window.location.href.
+        var ID_RE = /^LY(-\d{1,4})?$/;
+
         sel.addEventListener('change', function () {
-            btn.disabled = !this.value;
+            btn.disabled = !ID_RE.test(this.value || '');
         });
         btn.addEventListener('click', function () {
-            if (sel.value) window.location.href = '/dashboard/' + sel.value;
+            var v = sel.value || '';
+            if (ID_RE.test(v)) {
+                window.location.href = '/dashboard/' + encodeURIComponent(v);
+            }
         });
     }
 });
