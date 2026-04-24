@@ -1,8 +1,9 @@
 """
 US connector stub — EPA AirNow.
 
-For a full US state deployment, implement this connector by adapting
-utils/air_quality_data.py from the Wisconsin CARA repository.
+Placeholder adapter retained for any future fork that targets a US state
+(profile == "us_state" in config/jurisdiction.yaml). The Libya deployment
+never instantiates this class.
 
 API docs: https://docs.airnowapi.org/
 Requires: AIRNOW_API_KEY environment variable.
@@ -19,12 +20,14 @@ logger = logging.getLogger(__name__)
 
 class AirNowConnector(BaseConnector):
     """
-    Stub connector for EPA AirNow (US deployments only).
+    Stub connector for EPA AirNow (us_state profile only).
 
-    To implement:
-    1. Copy utils/air_quality_data.py from the Wisconsin repo into this class.
+    To implement for a US-state fork:
+    1. Replace fetch() with a real call against the AirNow REST API
+       (observations/zipCode or observations/latLong endpoints).
     2. Map the jurisdiction_id to the nearest AirNow monitoring stations.
-    3. Return data in the standard connector dict format.
+    3. Return data in the standard BaseConnector dict format
+       (see utils/connectors/base_connector.py).
     """
 
     name = "airnow"
@@ -48,7 +51,7 @@ class AirNowConnector(BaseConnector):
 
         logger.warning(
             "AirNowConnector.fetch() is a stub. "
-            "Implement by adapting utils/air_quality_data.py from the Wisconsin repo."
+            "Implement against https://docs.airnowapi.org/ for a us_state fork."
         )
         return {
             "available": False,

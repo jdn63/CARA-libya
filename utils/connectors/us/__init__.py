@@ -1,19 +1,22 @@
 """
-US-specific connector stubs for CARA template.
+US-specific connector stubs for the CARA template.
 
-These connectors wrap the Wisconsin CARA data utilities for use in other
-US state deployments. Each stub documents which Wisconsin source file to
-adapt and what the connector expects.
+These are placeholder adapters retained for any future fork that targets
+profile == "us_state" in config/jurisdiction.yaml. The active Libya
+deployment never instantiates them; they exist as a coherent skeleton
+alongside the wider us_state plumbing in core.py, utils/domains/*, and
+config/risk_weights.yaml.
 
-Available stubs:
+Available stubs (each currently returns "Stub not implemented"):
     airnow_connector.AirNowConnector    — EPA AirNow (requires AIRNOW_API_KEY)
-    nws_connector.NWSConnector          — NOAA NWS heat forecasts (keyless)
-    open_fema_connector.OpenFEMAConnector — OpenFEMA declarations/NFIP/HMA (keyless)
+    nws_connector.NWSConnector          — NOAA NWS heat / alerts (keyless)
+    open_fema_connector.OpenFEMAConnector — OpenFEMA declarations / NFIP / HMA (keyless)
     cdc_nssp_connector.CDCNSSPConnector — CDC NSSP ED visits (keyless)
 
-To activate a US connector:
-1. Implement its fetch() method by adapting the Wisconsin source file noted in
-   each connector's module docstring.
-2. Add the connector name to config/profiles/us_state.yaml under connectors:.
+To activate a US connector in a fork:
+1. Implement its fetch() method against the public API documented in the
+   connector's own module docstring.
+2. Add a config/profiles/us_state.yaml file that lists the connector name
+   under connectors:.
 3. Register any required environment variables in .env.example.
 """

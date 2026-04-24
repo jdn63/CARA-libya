@@ -1,11 +1,12 @@
 """
 US connector stub — OpenFEMA APIs.
 
-For a full US state deployment, implement this connector by adapting
-utils/fema_data.py from the Wisconsin CARA repository.
+Placeholder adapter retained for any future fork that targets a US state
+(profile == "us_state" in config/jurisdiction.yaml). The Libya deployment
+never instantiates this class.
 
 OpenFEMA is keyless: https://www.fema.gov/about/reports-and-data/openfema
-Endpoints used in Wisconsin:
+Typical endpoints worth wiring up:
   - Disaster Declarations Summaries v2
   - NFIP Redacted Claims v2
   - Hazard Mitigation Assistance Projects v4
@@ -21,12 +22,14 @@ logger = logging.getLogger(__name__)
 
 class OpenFEMAConnector(BaseConnector):
     """
-    Stub connector for OpenFEMA (US deployments only).
+    Stub connector for OpenFEMA (us_state profile only).
 
-    To implement:
-    1. Copy utils/fema_data.py from the Wisconsin repo into this class.
+    To implement for a US-state fork:
+    1. Replace fetch() with real calls against the OpenFEMA endpoints listed
+       in this module's docstring.
     2. Filter requests by the jurisdiction's state code.
-    3. Return data in the standard connector dict format.
+    3. Return data in the standard BaseConnector dict format
+       (see utils/connectors/base_connector.py).
     """
 
     name = "open_fema"
@@ -40,7 +43,7 @@ class OpenFEMAConnector(BaseConnector):
     def fetch(self, jurisdiction_id: str = "", **kwargs) -> Dict[str, Any]:
         logger.warning(
             "OpenFEMAConnector.fetch() is a stub. "
-            "Implement by adapting utils/fema_data.py from the Wisconsin repo."
+            "Implement against https://www.fema.gov/about/reports-and-data/openfema for a us_state fork."
         )
         return {
             "available": False,

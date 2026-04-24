@@ -1,8 +1,9 @@
 """
 US connector stub — NOAA National Weather Service.
 
-For a full US state deployment, implement this connector by adapting
-utils/heat_risk.py from the Wisconsin CARA repository.
+Placeholder adapter retained for any future fork that targets a US state
+(profile == "us_state" in config/jurisdiction.yaml). The Libya deployment
+never instantiates this class.
 
 NWS API is keyless: https://www.weather.gov/documentation/services-web-api
 """
@@ -17,12 +18,14 @@ logger = logging.getLogger(__name__)
 
 class NWSConnector(BaseConnector):
     """
-    Stub connector for NOAA NWS heat forecast data (US deployments only).
+    Stub connector for NOAA NWS heat / weather alert data (us_state profile only).
 
-    To implement:
-    1. Copy utils/heat_risk.py from the Wisconsin repo into this class.
-    2. Map the jurisdiction_id (state county FIPS or name) to NWS grid points.
-    3. Return data in the standard connector dict format.
+    To implement for a US-state fork:
+    1. Replace fetch() with a real call against the NWS API
+       (/points, /gridpoints, /alerts/active endpoints).
+    2. Map the jurisdiction_id (county FIPS or place name) to NWS grid points.
+    3. Return data in the standard BaseConnector dict format
+       (see utils/connectors/base_connector.py).
     """
 
     name = "nws"
@@ -36,7 +39,7 @@ class NWSConnector(BaseConnector):
     def fetch(self, jurisdiction_id: str = "", **kwargs) -> Dict[str, Any]:
         logger.warning(
             "NWSConnector.fetch() is a stub. "
-            "Implement by adapting utils/heat_risk.py from the Wisconsin repo."
+            "Implement against https://www.weather.gov/documentation/services-web-api for a us_state fork."
         )
         return {
             "available": False,

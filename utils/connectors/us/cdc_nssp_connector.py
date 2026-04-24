@@ -1,11 +1,12 @@
 """
 US connector stub — CDC NSSP Emergency Department Visits.
 
-For a full US state deployment, implement this connector by adapting
-utils/nssp_respiratory.py from the Wisconsin CARA repository.
+Placeholder adapter retained for any future fork that targets a US state
+(profile == "us_state" in config/jurisdiction.yaml). The Libya deployment
+never instantiates this class.
 
 Endpoint (keyless): https://data.cdc.gov/resource/vutn-jzwm.json
-Updated every Friday. Provides percent of ED visits for Influenza, COVID-19, RSV.
+Updated weekly. Provides percent of ED visits for Influenza, COVID-19, RSV.
 """
 
 import logging
@@ -18,12 +19,14 @@ logger = logging.getLogger(__name__)
 
 class CDCNSSPConnector(BaseConnector):
     """
-    Stub connector for CDC NSSP respiratory ED visit surveillance (US only).
+    Stub connector for CDC NSSP respiratory ED visit surveillance (us_state profile only).
 
-    To implement:
-    1. Copy utils/nssp_respiratory.py from the Wisconsin repo into this class.
-    2. Filter by the appropriate state/jurisdiction.
-    3. Return data in the standard connector dict format.
+    To implement for a US-state fork:
+    1. Replace fetch() with a real call against the Socrata endpoint
+       https://data.cdc.gov/resource/vutn-jzwm.json.
+    2. Filter by the appropriate state / jurisdiction.
+    3. Return data in the standard BaseConnector dict format
+       (see utils/connectors/base_connector.py).
     """
 
     name = "cdc_nssp"
@@ -37,7 +40,7 @@ class CDCNSSPConnector(BaseConnector):
     def fetch(self, jurisdiction_id: str = "", **kwargs) -> Dict[str, Any]:
         logger.warning(
             "CDCNSSPConnector.fetch() is a stub. "
-            "Implement by adapting utils/nssp_respiratory.py from the Wisconsin repo."
+            "Implement against https://data.cdc.gov/resource/vutn-jzwm.json for a us_state fork."
         )
         return {
             "available": False,
