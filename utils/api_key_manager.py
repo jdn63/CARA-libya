@@ -116,12 +116,23 @@ class APIKeyManager:
             # convert requests.RequestException to a returned tuple, so the
             # only exceptions that reach this outer handler are response-
             # parsing bugs in our own code (ValueError / KeyError / TypeError).
-            # Logging only the exception class name keeps the API key — which
-            # several upstream services require to be embedded in the request
-            # URL — out of the log file and out of the admin status UI, and
-            # closes CodeQL py/clear-text-logging-sensitive-data without
-            # depending on a custom sanitizer the analyzer cannot verify.
-            error_type = type(e).__name__
+            #
+            # The error_type label is built from string LITERALS via an
+            # isinstance dispatch (never from type(e).__name__) so CodeQL's
+            # taint analysis can statically prove no data derived from the
+            # exception object — and therefore none of the API key that
+            # several upstream services require to be embedded in the
+            # request URL — flows into the logger or the admin status UI.
+            # This closes py/clear-text-logging-sensitive-data without
+            # relying on a custom sanitizer the analyzer cannot verify.
+            if isinstance(e, requests.exceptions.RequestException):
+                error_type = "RequestException"
+            elif isinstance(e, ValueError):
+                error_type = "ValueError"
+            elif isinstance(e, KeyError):
+                error_type = "KeyError"
+            else:
+                error_type = "TypeError"
             logger.error(
                 "Unexpected error validating %s: %s (see server traceback for details)",
                 service, error_type,
