@@ -17,6 +17,26 @@ import json
 
 logger = logging.getLogger(__name__)
 
+
+def _redact_secrets(text: str, *secrets: Optional[str]) -> str:
+    """Replace any occurrence of the given secret strings in ``text`` with ``***REDACTED***``.
+
+    Used before logging or returning exception messages from this module, because
+    ``requests`` exception messages routinely embed the full request URL — and
+    several upstream APIs (Census, OpenWeatherMap, AirNow) require the API key
+    in the URL query string, which would otherwise leak the key into logs and
+    into the cached status returned by ``get_all_service_status()``. Closes
+    CodeQL py/clear-text-logging-sensitive-data.
+    """
+    if text is None:
+        return ""
+    out = str(text)
+    for secret in secrets:
+        if secret and len(secret) >= 4 and secret in out:
+            out = out.replace(secret, "***REDACTED***")
+    return out
+
+
 class APIKeyManager:
     """Centralized API key management and validation"""
     
@@ -92,8 +112,9 @@ class APIKeyManager:
             
         except (requests.exceptions.RequestException, ValueError, KeyError, TypeError) as e:
             error_type = type(e).__name__
-            logger.error(f"Error validating {service} ({error_type}): {e}")
-            result = (False, f"Validation error ({error_type}): {str(e)}")
+            safe_msg = _redact_secrets(str(e), api_key)
+            logger.error("Error validating %s (%s): %s", service, error_type, safe_msg)
+            result = (False, f"Validation error ({error_type}): {safe_msg}")
             with self._lock:
                 self.validation_cache[cache_key] = (time.time(), result)
             return result
@@ -112,7 +133,7 @@ class APIKeyManager:
                 return (False, f"Census API returned status {response.status_code}")
                 
         except requests.RequestException as e:
-            return (False, f"Census API connection error: {str(e)}")
+            return (False, f"Census API connection error: {_redact_secrets(str(e), api_key)}")
     
     def _validate_openweather_key(self, api_key: str) -> Tuple[bool, str]:
         """Validate OpenWeatherMap API key"""
@@ -128,7 +149,7 @@ class APIKeyManager:
                 return (False, f"OpenWeatherMap API returned status {response.status_code}")
                 
         except requests.RequestException as e:
-            return (False, f"OpenWeatherMap API connection error: {str(e)}")
+            return (False, f"OpenWeatherMap API connection error: {_redact_secrets(str(e), api_key)}")
     
     def _validate_fbi_key(self, api_key: str) -> Tuple[bool, str]:
         """Validate FBI Crime Data API key"""
@@ -146,7 +167,7 @@ class APIKeyManager:
                 return (False, f"FBI API returned status {response.status_code}")
                 
         except requests.RequestException as e:
-            return (False, f"FBI API connection error: {str(e)}")
+            return (False, f"FBI API connection error: {_redact_secrets(str(e), api_key)}")
     
     def _validate_openai_key(self, api_key: str) -> Tuple[bool, str]:
         """Validate OpenAI API key"""
@@ -166,7 +187,7 @@ class APIKeyManager:
                 return (False, f"OpenAI API returned status {response.status_code}")
                 
         except requests.RequestException as e:
-            return (False, f"OpenAI API connection error: {str(e)}")
+            return (False, f"OpenAI API connection error: {_redact_secrets(str(e), api_key)}")
     
     def _validate_airnow_key(self, api_key: str) -> Tuple[bool, str]:
         """Validate AirNow API key"""
@@ -192,7 +213,7 @@ class APIKeyManager:
                 return (False, f"AirNow API returned status {response.status_code}")
                 
         except requests.RequestException as e:
-            return (False, f"AirNow API connection error: {str(e)}")
+            return (False, f"AirNow API connection error: {_redact_secrets(str(e), api_key)}")
     
     def get_all_service_status(self) -> Dict[str, Dict[str, Any]]:
         """Get validation status for all configured services"""
@@ -235,12 +256,18 @@ class APIRetryManager:
             except requests.exceptions.RequestException as e:
                 last_exception = e
                 
+                # Redact every known API key from the exception text before
+                # logging — caller-built request URLs may include keys in
+                # query strings (Census, OpenWeatherMap, AirNow) and would
+                # otherwise be written to logs in clear text.
+                _all_keys = list(api_key_manager.api_keys.values()) if 'api_key_manager' in globals() else []
+                safe_msg = _redact_secrets(str(e), *_all_keys)
                 if attempt == self.max_retries:
-                    logger.error(f"API call failed after {self.max_retries} retries: {e}")
+                    logger.error("API call failed after %d retries: %s", self.max_retries, safe_msg)
                     raise e
                 
                 delay = self.base_delay * (self.backoff_factor ** attempt)
-                logger.warning(f"API call failed (attempt {attempt + 1}), retrying in {delay}s: {e}")
+                logger.warning("API call failed (attempt %d), retrying in %ss: %s", attempt + 1, delay, safe_msg)
                 time.sleep(delay)
         
         if last_exception:
