@@ -101,20 +101,13 @@ class CopingCapacityDomain(BaseDomain):
         Score the gap in emergency response capability.
         High score = slow/absent emergency response.
         """
-        coi = data.get('coi_libya', {})
-        worldbank = data.get('worldbank', {})
-
-        avg_response_min = coi.get('avg_ambulance_response_minutes', None)
-        if avg_response_min is not None:
-            score = min(1.0, float(avg_response_min) / 60.0)
-            return round(score, 4), False
-
-        health_infra = worldbank.get('hospital_beds_per_1000', None)
-        if health_infra is not None:
-            gap = 1.0 - min(1.0, float(health_infra) / 5.0)
-            return round(gap, 4), False
-
-        return 0.60, True
+        return self._primary_or_proxy(
+            [
+                (data.get('coi_libya', {}), 'avg_ambulance_response_minutes', lambda v: v / 60.0),
+                (data.get('worldbank', {}), 'hospital_beds_per_1000', lambda v: 1.0 - min(1.0, v / 5.0)),
+            ],
+            proxy_default=0.60,
+        )
 
     def _data_availability_gap(self, data: Dict[str, Any]):
         """
@@ -149,20 +142,13 @@ class CopingCapacityDomain(BaseDomain):
         Score the absence of community support systems (NGOs, volunteers).
         High score = weak community support networks.
         """
-        coi = data.get('coi_libya', {})
-        worldbank = data.get('worldbank', {})
-
-        ngo_presence = coi.get('ngo_presence_score', None)
-        if ngo_presence is not None:
-            gap = 1.0 - max(0.0, min(1.0, float(ngo_presence)))
-            return round(gap, 4), False
-
-        civil_society = worldbank.get('civil_society_index', None)
-        if civil_society is not None:
-            gap = 1.0 - max(0.0, min(1.0, float(civil_society)))
-            return round(gap, 4), False
-
-        return 0.55, True
+        return self._primary_or_proxy(
+            [
+                (data.get('coi_libya', {}), 'ngo_presence_score', lambda v: 1.0 - v),
+                (data.get('worldbank', {}), 'civil_society_index', lambda v: 1.0 - v),
+            ],
+            proxy_default=0.55,
+        )
 
     def _healthcare_access_gap(self, data: Dict[str, Any]):
         """
@@ -200,18 +186,13 @@ class CopingCapacityDomain(BaseDomain):
         High poverty = low capacity to absorb and recover from shocks.
         """
         worldbank = data.get('worldbank', {})
-
-        poverty_headcount = worldbank.get('poverty_headcount_ratio', None)
-        if poverty_headcount is not None:
-            score = min(1.0, float(poverty_headcount) / 100.0)
-            return round(score, 4), False
-
-        gni_per_capita = worldbank.get('gni_per_capita', None)
-        if gni_per_capita is not None:
-            gap = 1.0 - min(1.0, float(gni_per_capita) / 15000.0)
-            return round(gap, 4), False
-
-        return 0.45, True
+        return self._primary_or_proxy(
+            [
+                (worldbank, 'poverty_headcount_ratio', lambda v: v / 100.0),
+                (worldbank, 'gni_per_capita', lambda v: 1.0 - min(1.0, v / 15000.0)),
+            ],
+            proxy_default=0.45,
+        )
 
     def domain_info(self) -> dict:
         return {

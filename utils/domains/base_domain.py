@@ -8,7 +8,7 @@ using the PHRAT quadratic mean formula.
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, Iterable, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -91,6 +91,60 @@ class BaseDomain(ABC):
         if max_val <= min_val:
             return 0.0
         return max(0.0, min(1.0, (value - min_val) / (max_val - min_val)))
+
+    def _primary_or_proxy(
+        self,
+        sources: Iterable[Tuple[Dict[str, Any], str, Callable[[float], float]]],
+        proxy_default: float,
+    ) -> Tuple[float, bool]:
+        """
+        Resolve a sub-indicator score from a prioritised list of signals.
+
+        This captures the "try a primary signal, then a fallback signal,
+        then fall back to a documented proxy default" pattern that recurs
+        across the vulnerability and lack-of-coping-capacity sub-indicator
+        helpers (and is closely related to ``hazard_exposure._extract``).
+
+        ``sources`` is iterated in priority order. Each entry is a tuple
+        ``(data, key, normaliser)`` where:
+          * ``data``       — connector result dict (use ``data.get('foo', {})``
+            at the call site so a missing connector becomes ``{}``).
+          * ``key``        — the field name to look up inside ``data``.
+          * ``normaliser`` — a callable mapping the raw float value to a
+            ``[0, 1]`` score (for example, scaling against a cap or inverting
+            a positive indicator).
+
+        For each source in turn:
+          1. Look up ``key`` in ``data`` (skipping non-dict entries).
+          2. If the value is missing or cannot be coerced to ``float``,
+             continue to the next source.
+          3. Apply ``normaliser`` to the float value, clamp the result to
+             ``[0, 1]``, round to 4 decimals, and return ``(score, False)``.
+
+        If every source is unusable, return ``(proxy_default, True)`` so
+        the caller can flag ``proxy_used`` for the indicator.
+
+        Args:
+            sources: Ordered iterable of ``(data, key, normaliser)`` tuples.
+            proxy_default: Documented fallback value in ``[0, 1]`` to use
+                when no source produces a valid value.
+
+        Returns:
+            Tuple ``(score, proxy_used)`` where ``score`` is in ``[0, 1]``.
+        """
+        for entry in sources:
+            data, key, normaliser = entry
+            if not isinstance(data, dict):
+                continue
+            raw = data.get(key)
+            if raw is None:
+                continue
+            try:
+                score = float(normaliser(float(raw)))
+            except (ValueError, TypeError, ZeroDivisionError):
+                continue
+            return round(max(0.0, min(1.0, score)), 4), False
+        return proxy_default, True
 
     def _weighted_average(
         self,
