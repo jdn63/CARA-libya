@@ -96,6 +96,21 @@ nav .en-text,
     letter-spacing: 1px;
 }
 
+.cara-logo-img {
+    height: 36px;
+    width: auto;
+    display: block;
+    border-radius: 4px;
+    background: var(--cara-cream, #f4ecd8);
+    padding: 2px 4px;
+}
+
+.cara-logo-img.small {
+    height: 24px;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
 .cara-brand-sub {
     font-family: var(--font-en);
     font-size: 0.70rem;
