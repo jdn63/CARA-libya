@@ -169,13 +169,57 @@ def _load_connector_data(jurisdiction_id: str) -> dict:
     except Exception as e:
         logger.warning(f'IOM load failed for {jurisdiction_id}: {e}')
 
-    # World Bank
+    # World Bank — passthrough raw connector keys plus derived/renamed keys
+    # the domain helpers expect (electricity_access_gap, water_access_gap,
+    # poverty_headcount_ratio, government_effectiveness, ...). Without this
+    # mapping every WB-driven sub-indicator silently falls back to its
+    # documented proxy default.
     try:
         from utils.connectors.worldwide.worldbank_connector import WorldBankConnector
         c = WorldBankConnector(country_code='LY')
         raw = c.fetch(jurisdiction_id)
         if raw.get('available'):
-            data['worldbank'] = raw
+            wb_norm = dict(raw)
+
+            ae = raw.get('access_electricity')
+            if ae is not None:
+                wb_norm['electricity_access_gap'] = round(
+                    max(0.0, min(1.0, (100.0 - float(ae)) / 100.0)), 4
+                )
+            acw = raw.get('access_clean_water')
+            if acw is not None:
+                wb_norm['water_access_gap'] = round(
+                    max(0.0, min(1.0, (100.0 - float(acw)) / 100.0)), 4
+                )
+            asn = raw.get('access_sanitation')
+            if asn is not None:
+                wb_norm['sanitation_access_gap'] = round(
+                    max(0.0, min(1.0, (100.0 - float(asn)) / 100.0)), 4
+                )
+
+            ph = raw.get('poverty_headcount')
+            if ph is not None:
+                wb_norm['poverty_headcount_ratio'] = ph
+
+            ug = raw.get('urban_growth_pct')
+            if ug is not None:
+                wb_norm['urban_growth_rate'] = ug
+
+            ge = raw.get('government_effectiveness_wgi')
+            if ge is not None:
+                wb_norm['government_effectiveness'] = round(
+                    max(0.0, min(1.0, (float(ge) + 2.5) / 5.0)), 4
+                )
+
+            rl = raw.get('rule_of_law_wgi')
+            if rl is not None:
+                wb_norm['rule_of_law'] = rl
+            ps = raw.get('political_stability_wgi')
+            if ps is not None:
+                wb_norm['political_stability'] = ps
+
+            data['worldbank']     = wb_norm
+            data['worldbank_raw'] = raw
     except Exception as e:
         logger.warning(f'WorldBank load failed for {jurisdiction_id}: {e}')
 

@@ -118,6 +118,21 @@ def test_infrastructure_hazard_missing_data_falls_back_to_proxy():
     assert proxy is True
 
 
+def test_infrastructure_hazard_partial_data_does_not_flag_pure_proxy():
+    """
+    Per-sub-domain `proxy_used` is True only when EVERY sub-component fell
+    back. With only WB electricity_access_gap available, dam_safety and
+    water_sewage still default but the sub-domain reports proxy_used=False
+    because at least one component (electric_grid) used real data.
+    Locks in the April 2026 proxy-flag semantics.
+    """
+    h = _hazard()
+    score, proxy = h._infrastructure_hazard({
+        'worldbank': {'electricity_access_gap': 0.6},
+    })
+    assert proxy is False
+
+
 # --- _natural_hazard --------------------------------------------------------
 
 def test_natural_hazard_real_data_uses_em_dat_and_openaq():
@@ -145,6 +160,18 @@ def test_natural_hazard_missing_data_falls_back_to_proxy():
     assert proxy is True
 
 
+def test_natural_hazard_partial_data_does_not_flag_pure_proxy():
+    """
+    Only OpenAQ PM2.5 available -> sandstorm sub-component is real, the
+    other three default. proxy_used must be False (not pure proxy).
+    """
+    h = _hazard()
+    _, proxy = h._natural_hazard({
+        'openaq': {'pm25_annual_mean': 50},
+    })
+    assert proxy is False
+
+
 # --- _epidemiological_hazard ----------------------------------------------
 
 def test_epidemiological_hazard_real_data_uses_ncdc_libya():
@@ -166,6 +193,18 @@ def test_epidemiological_hazard_missing_data_falls_back_to_proxy():
     # 0.60*0.35 + 0.40*0.30 = 0.21 + 0.12 = 0.33
     assert _approx(score, 0.33)
     assert proxy is True
+
+
+def test_epidemiological_hazard_partial_data_does_not_flag_pure_proxy():
+    """
+    Only NCDC infectious_disease_rate available -> infectious_disease is
+    real, vector_borne defaults. proxy_used must be False.
+    """
+    h = _hazard()
+    _, proxy = h._epidemiological_hazard({
+        'ncdc_libya': {'infectious_disease_rate': 100},
+    })
+    assert proxy is False
 
 
 # --- _road_safety_hazard ---------------------------------------------------

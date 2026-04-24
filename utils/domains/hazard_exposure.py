@@ -136,7 +136,11 @@ class HazardExposureDomain(BaseDomain):
             proxy['water_sewage'] = True
 
         infra_score, _ = self._weighted_average(scores, INFRA_WEIGHTS)
-        has_proxy = any(proxy.values())
+        # proxy_used is True only when every sub-component fell back to its
+        # documented default — matching the _primary_or_proxy convention. If
+        # any sub-component (e.g. electric_grid from World Bank) was sourced
+        # from real data, the overall sub-domain is not purely a proxy.
+        has_proxy = all(proxy.get(k, False) for k in scores)
         return infra_score, has_proxy
 
     def _natural_hazard(self, data: Dict[str, Any]):
@@ -177,7 +181,7 @@ class HazardExposureDomain(BaseDomain):
             proxy['sandstorm'] = True
 
         nat_score, _ = self._weighted_average(scores, NATURAL_WEIGHTS)
-        has_proxy = any(proxy.values())
+        has_proxy = all(proxy.get(k, False) for k in scores)
         return nat_score, has_proxy
 
     def _epidemiological_hazard(self, data: Dict[str, Any]):
@@ -207,7 +211,7 @@ class HazardExposureDomain(BaseDomain):
             proxy['vector_borne'] = True
 
         epid_score, _ = self._weighted_average(scores, EPID_WEIGHTS)
-        has_proxy = any(proxy.values())
+        has_proxy = all(proxy.get(k, False) for k in scores)
         return epid_score, has_proxy
 
     def _road_safety_hazard(self, data: Dict[str, Any]):

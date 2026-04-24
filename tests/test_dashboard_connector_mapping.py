@@ -263,11 +263,19 @@ def _patch_worldbank(monkeypatch) -> Dict[str, Any]:
         "source": "World Bank Open Data (synthetic)",
         "last_updated": "2026-01-01",
         "population": 7_000_000,
-        "access_electricity": 80,
-        "access_clean_water": 78,
-        "access_sanitation": 70,
-        "poverty_headcount": 25,
+        "access_electricity": 80,           # -> electricity_access_gap = 0.20
+        "access_clean_water": 78,           # -> water_access_gap       = 0.22
+        "access_sanitation": 70,            # -> sanitation_access_gap  = 0.30
+        "poverty_headcount": 25,            # -> poverty_headcount_ratio = 25
         "urban_population_pct": 80,
+        "urban_growth_pct": 2.5,            # -> urban_growth_rate = 2.5
+        "literacy_rate": 91.0,
+        "gni_per_capita": 7200.0,
+        "health_expenditure_pct_gdp": 4.5,
+        "road_fatality_rate": 18.0,
+        "government_effectiveness_wgi": -1.0,  # -> government_effectiveness = 0.30
+        "rule_of_law_wgi": -1.5,
+        "political_stability_wgi": -2.0,
         "vulnerability_index": 0.4,
     }
 
@@ -441,22 +449,67 @@ def test_iom_namespace_present_with_municipality_match(normalised_data):
 
 
 # ===========================================================================
-# WorldBank — passthrough under `worldbank` (no further key normalisation)
+# WorldBank — raw connector keys passthrough + derived/renamed keys for
+# domain helpers (electricity_access_gap, water_access_gap,
+# poverty_headcount_ratio, government_effectiveness, urban_growth_rate, ...).
+# Raw payload also exposed under `worldbank_raw` for popovers.
 # ===========================================================================
 
-def test_worldbank_passthrough_only(normalised_data):
-    """
-    `_load_connector_data` does not rename WB keys — the raw connector
-    payload (with WB's own field names) is exposed as-is. Pinning this
-    documents the gap: domain helpers expect names like
-    `urban_growth_rate`, but the connector emits `urban_population_pct`.
-    """
+def test_worldbank_namespace_present(normalised_data):
     assert "worldbank" in normalised_data
+    assert "worldbank_raw" in normalised_data
+    assert normalised_data["worldbank"]["available"] is True
+
+
+def test_worldbank_raw_keys_pass_through_unchanged(normalised_data):
+    """Raw connector field names must remain accessible (popovers / tiles)."""
     wb = normalised_data["worldbank"]
-    assert wb["available"] is True
-    assert wb["access_electricity"] == 80
-    assert wb["poverty_headcount"] == 25
+    assert wb["access_electricity"]  == 80
+    assert wb["access_clean_water"]  == 78
+    assert wb["access_sanitation"]   == 70
+    assert wb["poverty_headcount"]   == 25
     assert wb["urban_population_pct"] == 80
+    assert wb["literacy_rate"]       == 91.0
+    assert wb["gni_per_capita"]      == 7200.0
+    assert wb["health_expenditure_pct_gdp"] == 4.5
+    raw = normalised_data["worldbank_raw"]
+    assert raw["access_electricity"] == 80
+    assert raw["government_effectiveness_wgi"] == -1.0
+
+
+def test_worldbank_access_gaps_derived_from_access_pct(normalised_data):
+    """access_* (% access) is inverted to *_access_gap on a 0..1 scale."""
+    wb = normalised_data["worldbank"]
+    assert wb["electricity_access_gap"] == pytest.approx(0.20, abs=1e-3)
+    assert wb["water_access_gap"]       == pytest.approx(0.22, abs=1e-3)
+    assert wb["sanitation_access_gap"]  == pytest.approx(0.30, abs=1e-3)
+
+
+def test_worldbank_poverty_headcount_renamed_to_ratio(normalised_data):
+    """`poverty_headcount` raw -> `poverty_headcount_ratio` exposed key."""
+    wb = normalised_data["worldbank"]
+    assert wb["poverty_headcount_ratio"] == 25
+
+
+def test_worldbank_urban_growth_renamed_for_helpers(normalised_data):
+    """`urban_growth_pct` raw -> `urban_growth_rate` exposed key."""
+    wb = normalised_data["worldbank"]
+    assert wb["urban_growth_rate"] == 2.5
+
+
+def test_worldbank_governance_indicators_normalised_or_passthrough(normalised_data):
+    """
+    `government_effectiveness` is normalised from the raw WGI [-2.5, 2.5]
+    estimate to a 0..1 scale (the agency-capacity helper does `1 - v`).
+    `rule_of_law` and `political_stability` pass through raw because the
+    security-vulnerability helper performs the (v + 2.5) / 5 normalisation
+    itself.
+    """
+    wb = normalised_data["worldbank"]
+    # (-1.0 + 2.5) / 5 = 0.30
+    assert wb["government_effectiveness"] == pytest.approx(0.30, abs=1e-3)
+    assert wb["rule_of_law"]         == -1.5
+    assert wb["political_stability"] == -2.0
 
 
 # ===========================================================================
@@ -542,48 +595,83 @@ def test_round_trip_vulnerability_uses_idmc_total_idps_via_mapping(normalised_da
 
 
 # ---------------------------------------------------------------------------
-# Negative seam — pin the current state of the World Bank plumbing gap.
-# `_load_connector_data` does not rename WB connector keys, so helpers
-# that look for renamed WB keys (electricity_access_gap, urban_growth_rate,
-# poverty_headcount_ratio, ...) all fall back to proxy defaults even when
-# real WB data is loaded. The above round-trip tests therefore can't
-# distinguish "real WB data flowed through" from "proxy fallback fired";
-# this test pins the current behaviour so a future fix to the WB key
-# mapping will trip these assertions and force the suite to be updated
-# in lockstep with the helpers.
+# Positive seam — every WB-driven sub-indicator must flow real data
+# through the loader and out of the pillar helpers. With a real WB cache
+# loaded, none of these helpers should fall back to its documented proxy
+# default. This is the regression guard for the WB key-mapping fix.
 # ---------------------------------------------------------------------------
 
-def test_worldbank_dependent_helpers_currently_fall_back_to_proxy(normalised_data):
+def test_round_trip_infrastructure_hazard_uses_worldbank_via_mapping(normalised_data):
     """
-    Canary for the WB-key plumbing gap. The two pillar helpers that
-    accept ONLY renamed WB keys (with no alternative WB-emitted
-    fallback) must still report `proxy_used=True` even with WB data
-    loaded, because `_load_connector_data` does not produce those
-    renamed keys today:
-
-    - `_infrastructure_hazard` looks for `electricity_access_gap` and
-      `water_access_gap`; the connector emits `access_electricity` /
-      `access_clean_water` instead.
-    - `_poverty_vulnerability` looks for `poverty_headcount_ratio` and
-      `gni_per_capita`; the connector emits `poverty_headcount` and no
-      GNI metric.
-
-    When the mapping is fixed, these assertions should flip and be
-    replaced with non-proxy seam assertions mirroring
-    `test_round_trip_vulnerability_uses_idmc_total_idps_via_mapping`.
-    Other WB-touching helpers (`_urban_sprawl`, `_health_unawareness`,
-    `_security_vulnerability`) intentionally aren't included because
-    they accept either WB keys the connector does emit (`urban_population_pct`)
-    or non-WB inputs (vaccination coverage, COI security incident rate).
+    `_infrastructure_hazard` derives `electric_grid` and `water_sewage`
+    from `worldbank.electricity_access_gap` / `water_access_gap`. With WB
+    data loaded the sub-domain is no longer a pure proxy (proxy_used
+    flips False even though `dam_safety` still uses its default, because
+    the helper now reports `proxy_used` only when EVERY sub-component
+    fell back).
     """
     HazardExposureDomain = _import("utils.domains.hazard_exposure").HazardExposureDomain
-    CopingCapacityDomain = _import("utils.domains.coping_capacity").CopingCapacityDomain
-
     h = HazardExposureDomain().calculate(normalised_data, jurisdiction_config={})
-    c = CopingCapacityDomain().calculate(normalised_data, jurisdiction_config={})
+    infra = h["sub_domains"]["infrastructure_hazard"]
+    assert infra["proxy_used"] is False
+    assert 0.0 < infra["score"] < 1.0
 
-    assert h["sub_domains"]["infrastructure_hazard"]["proxy_used"] is True
-    assert c["indicators"]["poverty_vulnerability"]["proxy_used"] is True
+
+def test_round_trip_poverty_vulnerability_uses_worldbank_via_mapping(normalised_data):
+    """
+    `_poverty_vulnerability` reads `worldbank.poverty_headcount_ratio`
+    (renamed from `poverty_headcount`). proxy_used must be False and the
+    score must reflect 25 / 100 = 0.25.
+    """
+    CopingCapacityDomain = _import("utils.domains.coping_capacity").CopingCapacityDomain
+    c = CopingCapacityDomain().calculate(normalised_data, jurisdiction_config={})
+    pov = c["indicators"]["poverty_vulnerability"]
+    assert pov["proxy_used"] is False
+    assert pov["score"] == pytest.approx(0.25, abs=1e-3)
+
+
+def test_round_trip_urban_sprawl_uses_worldbank_growth_rate(normalised_data):
+    """
+    `_urban_sprawl` prefers `worldbank.urban_growth_rate` (renamed from
+    `urban_growth_pct`). With 2.5 %/yr the score is 2.5 / 5 = 0.5.
+    """
+    VulnerabilityDomain = _import("utils.domains.vulnerability").VulnerabilityDomain
+    v = VulnerabilityDomain().calculate(normalised_data, jurisdiction_config={})
+    sprawl = v["indicators"]["urban_sprawl"]
+    assert sprawl["proxy_used"] is False
+    assert sprawl["score"] == pytest.approx(0.5, abs=1e-3)
+
+
+def test_round_trip_health_unawareness_uses_worldbank_literacy(normalised_data):
+    """
+    `_health_unawareness` averages (1 - vacc_coverage) and
+    (1 - literacy_rate). Both signals are present so proxy_used=False.
+    """
+    VulnerabilityDomain = _import("utils.domains.vulnerability").VulnerabilityDomain
+    v = VulnerabilityDomain().calculate(normalised_data, jurisdiction_config={})
+    hu = v["indicators"]["health_unawareness"]
+    assert hu["proxy_used"] is False
+    # vaccination 73% -> unawareness 0.27; literacy 91% -> unawareness 0.09;
+    # mean = 0.18
+    assert hu["score"] == pytest.approx(0.18, abs=1e-3)
+
+
+def test_round_trip_security_vulnerability_prefers_local_over_worldbank(normalised_data):
+    """
+    With both COI security_incident_rate and WB rule_of_law /
+    political_stability available, the helper takes the local signal
+    first (0.35) and proxy_used is False. The WB governance indicators
+    are still present in the loader output so that future helpers can
+    consume them.
+    """
+    VulnerabilityDomain = _import("utils.domains.vulnerability").VulnerabilityDomain
+    v = VulnerabilityDomain().calculate(normalised_data, jurisdiction_config={})
+    sec = v["indicators"]["security_vulnerability"]
+    assert sec["proxy_used"] is False
+    assert sec["score"] == pytest.approx(COI_SECURITY, abs=1e-3)
+    wb = normalised_data["worldbank"]
+    assert "rule_of_law" in wb
+    assert "political_stability" in wb
 
 
 # ---------------------------------------------------------------------------

@@ -21,9 +21,11 @@ INDICATORS = {
     'population':               'SP.POP.TOTL',
     'population_density':       'EN.POP.DNST',
     'gdp_per_capita':           'NY.GDP.PCAP.CD',
+    'gni_per_capita':           'NY.GNP.PCAP.CD',
     'poverty_headcount':        'SI.POV.DDAY',
     'gini_index':               'SI.POV.GINI',
     'urban_population_pct':     'SP.URB.TOTL.IN.ZS',
+    'urban_growth_pct':         'SP.URB.GROW',
     'access_clean_water':       'SH.H2O.BASW.ZS',
     'access_sanitation':        'SH.STA.BASS.ZS',
     'access_electricity':       'EG.ELC.ACCS.ZS',
@@ -33,6 +35,11 @@ INDICATORS = {
     'food_insecurity_pct':      'SN.ITK.MSFI.ZS',
     'refugee_population_orig':  'SM.POP.REFG.OR',
     'refugee_population_asyl':  'SM.POP.REFG',
+    'literacy_rate':            'SE.ADT.LITR.ZS',
+    'road_fatality_rate':       'SH.STA.TRAF.P5',
+    'government_effectiveness_wgi': 'GE.EST',
+    'rule_of_law_wgi':          'RL.EST',
+    'political_stability_wgi':  'PV.EST',
 }
 
 
