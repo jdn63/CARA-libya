@@ -175,14 +175,33 @@ Compensating fix in core utility:
 Note on remaining "tribal" string matches in utils/action_plan_content.py: those refer to Libyan tribal networks and religious institutions as a social-cohesion / coping resource, not Wisconsin tribal nations, and are intentionally retained.
 
 ## Test Suite
-tests/smoke_test.py: 7 tests, all pass. Each test exercises the Libya domain pipeline:
+21 tests total, all pass via `pytest -q`.
+
+tests/smoke_test.py: 7 tests. Each exercises the Libya domain pipeline:
 domain modules import, instantiate, return required keys (location, score, dominant_factor, available),
 keep score in 0..1, and return non-empty strings for dominant_factor and the data-availability flag.
+
+tests/test_inform.py: 14 tests covering the INFORM Risk Index pipeline:
+- 6 cube-root composition tests on routes.dashboard._compute_inform_score
+  (all-zero, all-one, equal-mixed 0.5/0.5/0.5, asymmetric 0.8/0.5/0.2, one-missing-pillar
+  collapses to 0, unequal 0.4/0.6/0.8).
+- 6 banding cut-point tests on utils.action_plan_content._inform_classify covering all
+  five bands (very_low / low / medium / high / very_high) at and around the 0.20 / 0.40 /
+  0.60 / 0.80 cut points, plus the unavailable path for None / non-numeric / negative input.
+- 1 end-to-end consistency test that monkeypatches routes.dashboard._load_connector_data
+  with an empty dict (forcing the documented proxy fallbacks), runs _run_pillars('LY', ...),
+  and asserts the headline INFORM score equals (h*v*c)^(1/3) of the three pillar scores it
+  produced and that the formula_values block and level banding are internally consistent.
+- 1 end-to-end deterministic fixture test that pins each pillar domain's calculate() return
+  to fixed scores (h=0.5, v=0.4, c=0.6) and asserts the exact expected national INFORM score
+  (0.4932), formula_values block (h=5.0, v=4.0, c=6.0, result=4.9), dashboard level
+  ('moderate' / 'warning' badge), and action-plan template band ('medium').
+
 The 7 legacy Wisconsin/PHRAT pipeline tests (load_weights_international, composite_score_valid_range,
 inform_formula_cube_root via risk_engine, classify_risk, compute_all_domains_returns_all_7_international_domains,
 risk_engine_end_to_end_pipeline, data_processor_orchestration) were removed when the underlying
-risk_engine.py and data_processor.py modules were deleted; rebuilding INFORM-formula tests against the
-current routes/dashboard.py/_run_pillars() pipeline is a follow-up task.
+risk_engine.py and data_processor.py modules were deleted; the new tests/test_inform.py covers
+the equivalent INFORM-formula coverage against the current routes/dashboard.py/_run_pillars() pipeline.
 
 ## Local-Agency Data Entry
 Domain-driven pipeline that lets local response agencies upload municipal-level data via Excel.
