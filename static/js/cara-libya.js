@@ -116,6 +116,67 @@
         tooltipEls.forEach(function (el) {
             new bootstrap.Tooltip(el);
         });
+
+        // ── Back-to-top floating button ───────────────────────────────
+        var backToTop = document.getElementById('back-to-top');
+        if (backToTop) {
+            var SHOW_AFTER_PX = 320;
+            var ticking = false;
+
+            function getScrollTop() {
+                // Iframe-safe scroll position read.
+                return window.pageYOffset
+                    || document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || 0;
+            }
+
+            function updateVisibility() {
+                ticking = false;
+                var visible = getScrollTop() > SHOW_AFTER_PX;
+                backToTop.classList.toggle('is-visible', visible);
+                backToTop.setAttribute('aria-hidden', visible ? 'false' : 'true');
+                backToTop.tabIndex = visible ? 0 : -1;
+            }
+
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateVisibility);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Anchor-link navigation (e.g. /methodology#data-sources) scrolls
+            // the page before our scroll handler is bound, and `scroll-behavior:
+            // smooth` makes it asynchronous. Re-check on load and on hashchange,
+            // and poll briefly to catch mid-smooth-scroll states.
+            function recheckAfterAnchorScroll() {
+                updateVisibility();
+                setTimeout(updateVisibility, 250);
+                setTimeout(updateVisibility, 750);
+                setTimeout(updateVisibility, 1500);
+            }
+            window.addEventListener('load', recheckAfterAnchorScroll);
+            window.addEventListener('hashchange', recheckAfterAnchorScroll);
+
+            backToTop.addEventListener('click', function () {
+                var reduced = window.matchMedia &&
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: reduced ? 'auto' : 'smooth'
+                });
+                // Move focus to the skip-link / main content for keyboard users
+                var main = document.getElementById('main-content');
+                if (main && typeof main.focus === 'function') {
+                    main.setAttribute('tabindex', '-1');
+                    main.focus({ preventScroll: true });
+                }
+            });
+
+            updateVisibility();
+        }
     });
 
 })();

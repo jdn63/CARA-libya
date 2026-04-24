@@ -111,6 +111,66 @@ nav .en-text,
     border-radius: 3px;
 }
 
+/* Floating "back to top" button (RTL: pinned bottom-left) */
+.back-to-top {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 1040;
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--cara-primary, #0a3d62);
+    color: var(--cara-gold, #f4d03f);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    font-size: 1.1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .25s ease, transform .25s ease, background .2s ease;
+    pointer-events: none;
+}
+
+.back-to-top.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.back-to-top:hover,
+.back-to-top:focus {
+    background: #0d4d7a;
+    color: #fff;
+    outline: none;
+}
+
+.back-to-top:focus-visible {
+    box-shadow: 0 0 0 3px rgba(244, 208, 63, 0.6),
+                0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 576px) {
+    .back-to-top {
+        bottom: 1rem;
+        left: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .back-to-top {
+        transition: opacity .15s ease;
+        transform: none;
+    }
+}
+
 .cara-brand-sub {
     font-family: var(--font-en);
     font-size: 0.70rem;
