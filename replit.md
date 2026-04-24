@@ -101,6 +101,16 @@ Logout button is visible in the top navigation bar at all times.
 GET /health returns JSON: status, service, municipalities_loaded, municipalities_target, data_coverage_pct.
 No authentication required. Suitable for readiness probes and monitoring agents.
 
+## Logging & Audit Trail
+Wired in `core._setup_logging()` (called from `initialize_app`). Three channels under `logs/` (git-ignored):
+- `logs/cara_app.log` — JSON-structured app log, 10 MB × 10 rotation, includes Flask request context (URL, IP, user-agent) for debugging.
+- `logs/cara_errors.log` — ERROR-only mirror, 10 MB × 5 rotation.
+- `logs/cara_audit.log` — partner-auditable trail, JSON, 5 MB × 30 rotation, **PII-free** (`include_request_context=False`). Records two event types today:
+  - `upload_accepted` — when a workshop xlsx is saved (master/master_split/single_domain), with domain, source filename, stored path, byte count.
+  - `local_override_applied` — when a municipal upload replaces a national value on the dashboard, with jurisdiction, indicator code, agency, year, replaced/new values. Per-request dedupe via `g._audit_overrides_seen`.
+Use `from utils.logging_config import audit; audit('event_name', **fields)` to add new audit events.
+Optional Sentry integration auto-activates when `SENTRY_DSN` is set (sentry-sdk already in deps).
+
 ## Wisconsin Cleanup Status (April 2026)
 The following Wisconsin/HERC-specific files have been permanently deleted:
 - routes/herc.py

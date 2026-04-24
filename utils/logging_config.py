@@ -18,8 +18,17 @@ import json
 
 
 class JSONFormatter(logging.Formatter):
-    """Custom JSON formatter for structured logging."""
-    
+    """Custom JSON formatter for structured logging.
+
+    ``include_request_context`` controls whether Flask request metadata
+    (URL, user-agent, client IP) is auto-injected. Set to ``False`` for
+    the audit log to keep PII out of the partner-auditable trail.
+    """
+
+    def __init__(self, include_request_context: bool = True):
+        super().__init__()
+        self.include_request_context = include_request_context
+
     def format(self, record):
         """Format log record as JSON for better parsing and analysis."""
         log_data = {
@@ -32,23 +41,24 @@ class JSONFormatter(logging.Formatter):
             'line': record.lineno
         }
         
-        # Add request context if available
-        try:
-            from flask import g, request
-            
-            if hasattr(g, 'request_id'):
-                log_data['request_id'] = g.request_id
-                
-            if request:
-                log_data['request'] = {
-                    'method': request.method,
-                    'url': request.url,
-                    'user_agent': request.headers.get('User-Agent', ''),
-                    'remote_addr': request.remote_addr
-                }
-        except RuntimeError:
-            # Working outside of application context - skip request context
-            pass
+        # Add request context if available (skipped for audit log)
+        if self.include_request_context:
+            try:
+                from flask import g, request
+
+                if hasattr(g, 'request_id'):
+                    log_data['request_id'] = g.request_id
+
+                if request:
+                    log_data['request'] = {
+                        'method': request.method,
+                        'url': request.url,
+                        'user_agent': request.headers.get('User-Agent', ''),
+                        'remote_addr': request.remote_addr
+                    }
+            except RuntimeError:
+                # Working outside of application context - skip request context
+                pass
             
         # Add exception information if present
         if record.exc_info:
@@ -271,3 +281,66 @@ def log_performance_metrics(app):
 def get_contextual_logger(name):
     """Get a contextual logger instance for a specific module."""
     return ContextualLogger(name)
+
+
+# --------------------------------------------------------------------------- #
+# Audit log — partner-auditable trail for high-trust events.
+#
+# Separate file (logs/cara_audit.log), JSON-formatted, daily rotation,
+# 90-day retention. Does NOT propagate to the root logger so audit events
+# stay isolated from the noisy application log.
+#
+# Use ``audit(event, **fields)`` from anywhere to record an event, e.g.
+#
+#     audit('upload_accepted', kind='master', file=name, bytes=size,
+#           domains=['mnch', 'tb'], agency=ag)
+#     audit('local_override_applied', municipality='LY12', indicator='tb_inc',
+#           agency='Tripoli MoH', replaced_value=63.0, new_value=58.0)
+# --------------------------------------------------------------------------- #
+
+AUDIT_LOGGER_NAME = 'cara.audit'
+
+
+def setup_audit_log() -> None:
+    """Configure the dedicated audit-log channel.
+
+    Idempotent — safe to call repeatedly (e.g. on gunicorn ``--reload``).
+    """
+    audit_logger = logging.getLogger(AUDIT_LOGGER_NAME)
+    if getattr(audit_logger, '_cara_configured', False):
+        return
+
+    log_dir = os.path.join(os.getcwd(), 'logs')
+    os.makedirs(log_dir, exist_ok=True)
+
+    audit_file = os.path.join(log_dir, 'cara_audit.log')
+    # Size-based rotation (not time-based) so the rollover boundary is not a
+    # race window when multiple gunicorn workers ever write the same file.
+    # 5 MB × 30 backups ≈ 150 MB ceiling; plenty for a low-volume audit channel.
+    handler = logging.handlers.RotatingFileHandler(
+        audit_file,
+        maxBytes=5 * 1024 * 1024,
+        backupCount=30,
+    )
+    handler.setLevel(logging.INFO)
+    # PII-free formatter: do NOT auto-inject request URL / user-agent / IP.
+    handler.setFormatter(JSONFormatter(include_request_context=False))
+
+    audit_logger.handlers.clear()
+    audit_logger.addHandler(handler)
+    audit_logger.setLevel(logging.INFO)
+    audit_logger.propagate = False  # keep audit events out of cara_app.log
+    audit_logger._cara_configured = True  # type: ignore[attr-defined]
+
+
+def audit(event: str, **fields) -> None:
+    """Record a high-trust event to the audit log.
+
+    Always includes the event name and any structured key/value fields.
+    Safe to call before ``setup_audit_log()`` runs (falls back to a
+    standard logger; nothing is lost, just not separated to its own file).
+    """
+    audit_logger = logging.getLogger(AUDIT_LOGGER_NAME)
+    extra = {'event': event}
+    extra.update(fields)
+    audit_logger.info(event, extra=extra)

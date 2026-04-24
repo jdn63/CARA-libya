@@ -20,9 +20,29 @@ logger = logging.getLogger(__name__)
 
 def initialize_app(app: Flask) -> None:
     """Called once at startup after db.create_all()."""
+    _setup_logging(app)
     _log_startup_info()
     _validate_configuration()
     _start_scheduler(app)
+
+
+def _setup_logging(app: Flask) -> None:
+    """Wire production logging + audit-log channel.
+
+    Both are file-rotated under ``logs/`` (ignored from git). The audit
+    log is a separate JSON-lines file that records partner-auditable
+    events (data uploads, local overrides applied, etc.) for the trust
+    posture of the tool.
+    """
+    try:
+        from utils.logging_config import (
+            setup_production_logging, setup_audit_log, setup_sentry_integration,
+        )
+        setup_production_logging(app)
+        setup_audit_log()
+        setup_sentry_integration(app)
+    except Exception as exc:  # pragma: no cover - never block startup on logging
+        logger.warning("Could not initialise production logging: %s", exc)
 
 
 def _log_startup_info() -> None:

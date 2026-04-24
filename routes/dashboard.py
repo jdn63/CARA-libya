@@ -761,6 +761,7 @@ def _stamp_source_kinds(tile_tree: dict, jurisdiction_id: str,
                 if code and code in local_idx:
                     ov = local_idx[code]
                     agency = ov.get('agency') or ''
+                    replaced = tile.get('value')
                     tile['source_kind'] = 'local'
                     tile['agency'] = agency
                     tile['year'] = ov.get('year') or tile.get('year')
@@ -769,6 +770,32 @@ def _stamp_source_kinds(tile_tree: dict, jurisdiction_id: str,
                         + (f' — {agency}' if agency else '')
                     )
                     tile['source'] = src
+                    try:
+                        from flask import g
+                        from utils.logging_config import audit
+                        # Per-request dedupe so re-entering this stamping
+                        # function for the same render never double-counts
+                        # the same override event in the audit trail.
+                        seen = getattr(g, '_audit_overrides_seen', None)
+                        if seen is None:
+                            seen = set()
+                            g._audit_overrides_seen = seen
+                        key = (jurisdiction_id, tid, code,
+                               tile.get('year'), ov.get('value'))
+                        if key not in seen:
+                            seen.add(key)
+                            audit(
+                                'local_override_applied',
+                                jurisdiction_id=jurisdiction_id,
+                                indicator=code,
+                                tile_id=tid,
+                                agency=agency,
+                                year=tile.get('year'),
+                                replaced_value=replaced,
+                                new_value=ov.get('value'),
+                            )
+                    except Exception:  # never break a dashboard render
+                        pass
                     continue
                 src_label = tile.get('source') or ''
                 if src_label in _NATIONAL_ONLY_SOURCES:

@@ -196,7 +196,10 @@ def master_upload():
     safe_stem = re.sub(r"[^A-Za-z0-9_.-]+", "_", Path(filename).stem)[:60]
     nonce = secrets.token_hex(3)
 
+    from utils.logging_config import audit
+
     saved_labels: list[str] = []
+    saved_keys: list[str] = []
     for domain_key, per_domain_bytes in accepted.items():
         spec = get_domain(domain_key)
         if spec is None:  # shouldn't happen, but be safe
@@ -210,9 +213,26 @@ def master_upload():
         try:
             target.write_bytes(per_domain_bytes)
             saved_labels.append(spec.name_en)
+            saved_keys.append(domain_key)
+            audit(
+                "upload_accepted",
+                kind="master_split",
+                domain=domain_key,
+                source_filename=filename,
+                stored_path=str(target.relative_to(Path.cwd())),
+                bytes=len(per_domain_bytes),
+            )
         except Exception as exc:  # pragma: no cover
             logger.exception("Could not save master split for %s: %s",
                              domain_key, exc)
+    audit(
+        "upload_accepted",
+        kind="master",
+        source_filename=filename,
+        bytes=len(raw),
+        domains=saved_keys,
+        skipped=list(skipped),
+    )
 
     skipped_labels = [
         get_domain(k).name_en for k in skipped if get_domain(k) is not None
@@ -360,6 +380,16 @@ def domain_upload(key: str):
         flash("تعذّر حفظ الملف على الخادم. / "
               "Could not save the uploaded file.", "danger")
         return redirect(url_for("data_entry.domain_page", key=key))
+
+    from utils.logging_config import audit
+    audit(
+        "upload_accepted",
+        kind="single_domain",
+        domain=spec.key,
+        source_filename=filename,
+        stored_path=str(target.relative_to(Path.cwd())),
+        bytes=len(raw),
+    )
 
     try:
         table = consolidated_table(spec)
