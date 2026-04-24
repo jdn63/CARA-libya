@@ -1,7 +1,7 @@
 [project]
 name = "repl-nix-workspace"
 version = "0.1.0"
-description = "CARA - Comprehensive Automated Risk Assessment for Wisconsin Public Health Departments"
+description = "CARA Libya - Comprehensive Automated Risk Assessment (INFORM Risk Index, bilingual Arabic/English)"
 requires-python = ">=3.11"
 dependencies = [
     "alembic>=1.18.4",
