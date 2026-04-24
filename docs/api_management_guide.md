@@ -1,100 +1,77 @@
-# API Management and Health Monitoring Guide
+# Libya CARA - External API and Health Monitoring Guide
 
 ## Overview
 
-The CARA application now includes a comprehensive API key management and health monitoring system that provides:
+Libya CARA fetches risk data from a small set of public humanitarian
+APIs on a scheduled cadence. None of the active connectors used by
+the Libya profile require an API key. This document describes:
 
-- Centralized API key validation
-- Automatic retry logic for API failures  
-- Health check endpoints for external services
-- Cached validation results to reduce overhead
+- What external services Libya CARA depends on
+- How to monitor their availability via the platform's health endpoints
+- The retry and validation helpers in `utils/api_key_manager.py` for
+  the optional services that do require credentials
+- How to add a new optional API key safely
 
-## API Health Check Endpoints
+## 1. Active Connectors (no API key required)
 
-### 1. All Services Health Check
-```
-GET /health/apis
-```
-Returns the health status of all configured API services.
+The Libya profile relies entirely on public humanitarian endpoints
+that do not require authentication. They are scheduled by APScheduler
+and cached on disk under `data/cache/`.
 
-**Example Response:**
-```json
-{
-  "overall_health": "healthy",
-  "configured_services": 3,
-  "total_services": 4,
-  "services": {
-    "AIRNOW_API_KEY": {
-      "configured": true,
-      "valid": true,
-      "status": "AirNow API key valid",
-      "last_checked": "2025-09-09T10:36:44.056163"
-    },
-    "FBI_CRIME_DATA_API_KEY": {
-      "configured": true,
-      "valid": true,
-      "status": "FBI Crime Data API key valid",
-      "last_checked": "2025-09-09T10:36:44.196337"
-    }
-  },
-  "timestamp": "2025-07-05T10:36:44.429064"
-}
-```
+| Connector | Endpoint | Auth | Schedule |
+|-----------|----------|------|----------|
+| OCHA HDX (CKAN) | data.humdata.org/api/3/ | none | weekly (168 h) |
+| HeiGIT Accessibility | hot.storage.heigit.org | none | weekly (168 h) |
+| IDMC via OCHA HDX | data.humdata.org/api/3/ | none | weekly (168 h) |
+| WHO Libya via OCHA HDX | data.humdata.org/api/3/ | none | monthly (720 h) |
+| WHO GHO (legacy fallback) | ghoapi.azureedge.net/api/ | none | monthly (720 h) |
+| World Bank Open Data | api.worldbank.org/v2/ | none | monthly (720 h) |
+| OpenAQ | api.openaq.org/v2/ | none | monthly (720 h) |
 
-### 2. Individual Service Health Check
-```
-GET /health/apis/<service>
-```
-Returns detailed health status for a specific API service.
+Connector registry: `utils/connector_registry.py`. Scheduler config:
+`data/config/scheduler_config.json`.
 
-**Example:**
-```bash
-curl http://localhost:5000/health/apis/AIRNOW_API_KEY
-```
+File-based and manual-upload sources (EM-DAT, NCDC Libya, COI Libya,
+IOM DTM fallback) are described in
+`docs/data_sources_comprehensive_analysis.md`.
 
-### 3. System Health Check
-```
-GET /health/system
-```
-Comprehensive health check including database and all API services.
+## 2. Optional Services that Require Credentials
 
-**Example Response:**
-```json
-{
-  "system_health": "healthy",
-  "database": {
-    "status": "healthy",
-    "error": null
-  },
-  "api_services": {
-    "configured_count": 3,
-    "healthy_count": 3,
-    "status": "healthy"
-  },
-  "timestamp": "2025-07-05T10:36:53.964986"
-}
+Only the following service requires a credential and only when the
+corresponding optional feature is enabled:
+
+| Environment variable | Used for |
+|----------------------|----------|
+| `CARA_ACCESS_PASSWORD` | Session-based access gate (set this Replit secret to enable password-gating). If unset, the app runs in open development mode |
+| `OPENAI_API_KEY` | Optional AI-assisted analysis; the app degrades gracefully if absent |
+
+To set or rotate a secret in Replit, use the Secrets pane. Do not
+commit credentials to source control.
+
+## 3. Health Endpoints
+
+### 3.1 Application Health
+
+```
+GET /health
 ```
 
-## Using API Management in Code
+Returns a small JSON document with the application status. Used by
+deployment health checks. This route is exempt from authentication.
 
-### 1. API Key Validation Decorator
+### 3.2 Connector Cache Status (operator view)
 
-Use the `@api_key_required` decorator to ensure API keys are available:
+The dashboard surfaces a per-tile freshness badge that shows the
+reporting year of each indicator and tags whether the value is
+`local`, `measured`, `national`, `national_proxy`, or `proxy` (see
+`docs/data_dictionary.md`). Operators can confirm cache health by
+listing files under `data/cache/<connector>/` and checking their
+modification times.
 
-```python
-from utils.api_key_manager import api_key_required
+## 4. Retry Helper
 
-# Note: Census data now uses local CSV files for enhanced accuracy and reliability
-# @api_key_required('CENSUS_API_KEY')  # No longer needed
-def fetch_census_data(county_name):
-    # Census data loaded from local files - no API key required
-    from utils.census_data_loader import WisconsinCensusDataLoader
-    # ... your API call code
-```
-
-### 2. Automatic Retry Decorator
-
-Use the `@with_retry` decorator to add automatic retry logic:
+`utils/api_key_manager.py` exposes a `with_retry` decorator for any
+external HTTP call. It applies an exponential backoff:
 
 ```python
 from utils.api_key_manager import with_retry
@@ -107,95 +84,61 @@ def fetch_external_data(url):
     return response.json()
 ```
 
-### 3. Combined Usage
+Default behaviour:
 
-You can combine both decorators for robust API calls:
+- Up to 3 retry attempts after the initial call
+- Delays: 1 s, 2 s, 4 s
+- Errors are logged with secrets redacted before logging
 
-```python
-from utils.api_key_manager import api_key_required, with_retry
+## 5. Optional API Key Decorator
 
-@api_key_required('AIRNOW_API_KEY')
-@with_retry(max_retries=3, base_delay=1.0, backoff_factor=2.0)
-def fetch_air_quality_data(location):
-    api_key = os.environ.get('AIRNOW_API_KEY')
-    url = f"https://www.airnowapi.org/aq/observation/zipCode/current/?format=json&zipCode={location}&API_KEY={api_key}"
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
-```
-
-## Supported API Services
-
-The system currently supports validation for:
-
-1. **AIRNOW_API_KEY** - EPA AirNow API for air quality data
-2. **FBI_CRIME_DATA_API_KEY** - FBI Crime Data API for active shooter risk
-3. **OPENAI_API_KEY** - AI analysis (optional)
-4. **OPENAI_API_KEY** - OpenAI API
-
-## Configuration
-
-API keys are configured via environment variables:
-
-```bash
-export AIRNOW_API_KEY="your_airnow_api_key"
-# Note: Census data now uses local CSV files for enhanced accuracy
-export FBI_CRIME_DATA_API_KEY="your_fbi_api_key"
-export OPENAI_API_KEY="your_openai_api_key"
-```
-
-## Features
-
-### Intelligent Caching
-- API key validations are cached for 1 hour to reduce overhead
-- Cache can be force-refreshed by individual service health checks
-
-### Exponential Backoff
-- Automatic retry with exponential backoff (1s, 2s, 4s delays)
-- Configurable retry parameters
-- Comprehensive error logging
-
-### Error Handling
-- Specific exception handling for different failure types
-- Detailed error messages in health check responses
-- Graceful degradation when services are unavailable
-
-### Monitoring
-- Real-time health status for all external dependencies
-- Timestamp tracking for last validation attempts
-- Service availability statistics
-
-## Best Practices
-
-1. **Always use decorators** for external API calls to ensure reliability
-2. **Monitor health endpoints** regularly in production
-3. **Set appropriate timeout values** for API calls (recommended: 10 seconds)
-4. **Handle fallback scenarios** when external services are unavailable
-5. **Log API failures** for debugging and monitoring
-
-## Example Implementation
-
-Here's a complete example showing how to enhance an existing API function:
+For optional services that require a credential, the
+`@api_key_required` decorator short-circuits the call when the key is
+absent:
 
 ```python
-# Before - unreliable API call
-# def get_census_data(county_fips):
-#     api_key = os.environ.get('CENSUS_API_KEY')
-#     url = f"https://api.census.gov/data/2022/acs/acs5?get=NAME&for=county:{county_fips}&key={api_key}"
-#     response = requests.get(url)
-#     return response.json()
+from utils.api_key_manager import api_key_required
 
-# After - enhanced with local data files for strategic planning
-from utils.census_data_loader import WisconsinCensusDataLoader
-
-def get_census_data(county_name):
-    """Get census data from local CSV files - no API required"""
-    wisconsin_census = WisconsinCensusDataLoader()
-    return {
-        'mobile_home_percentage': wisconsin_census.get_mobile_home_percentage(county_name),
-        'pct_aged_65_plus': wisconsin_census.get_elderly_population_percentage(county_name),
-        'total_population': wisconsin_census.get_county_population(county_name)
-    }
+@api_key_required('OPENAI_API_KEY')
+def generate_briefing(text):
+    ...
 ```
 
-This enhancement provides automatic retries, API key validation, and proper error handling with minimal code changes.
+When the key is missing, the wrapped function returns `None` (or a
+documented degraded response) instead of raising, so the dashboard can
+continue to render with the rest of the indicators.
+
+## 6. Secret Redaction in Logs
+
+`_redact_secrets()` (in `utils/api_key_manager.py`) replaces any
+occurrence of a known secret string with `***REDACTED***` before
+logging or before returning an error message in a status payload.
+This protects against accidental key leakage through `requests`
+exception messages that embed the request URL. Closes CodeQL
+`py/clear-text-logging-sensitive-data`.
+
+## 7. Adding a New Optional API Key
+
+1. Add the key name to `APIKeyManager.__init__` so it is loaded from
+   the environment.
+2. Implement the upstream call inside its own connector module under
+   `utils/connectors/`, decorated with `@api_key_required` and
+   `@with_retry`.
+3. Register the connector in `utils/connector_registry.py`.
+4. Add the connector to a scheduler job in `core.py` under the
+   `CARA_PROFILE=libya` block.
+5. Document the key, the upstream endpoint, and the cache path in
+   `docs/data_sources_comprehensive_analysis.md` and
+   `docs/data_dictionary.md`.
+6. Add the key as a Replit secret in the deployment environment.
+
+## 8. Best Practices
+
+- Always set a short timeout (recommended: 10 seconds) on external
+  HTTP calls.
+- Never log API keys or full request URLs that contain query-string
+  credentials. Use `_redact_secrets()` before logging when in doubt.
+- Cache external responses on disk under `data/cache/<connector>/`
+  so user-facing requests never block on an upstream call.
+- Treat any credentialed service as optional: the dashboard must
+  continue to render even if the credential is unset.

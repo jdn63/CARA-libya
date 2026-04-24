@@ -56,11 +56,9 @@ class RiskConfigManager:
         logger.warning("Loading fallback configuration")
         self.config = {
             'overall_risk_weights': {
-                'natural_hazards': 0.35,
-                'health_metrics': 0.20,
-                'active_shooter': 0.15,
-                'extreme_heat': 0.15,
-                'cybersecurity': 0.15
+                'hazard_exposure': 0.333,
+                'vulnerability': 0.333,
+                'coping_capacity': 0.334,
             },
             'temporal_weights': {
                 'strategic_planning': {
@@ -139,7 +137,7 @@ class RiskConfigManager:
         Get sub-domain weights for a specific risk domain.
         
         Args:
-            domain: Risk domain name (e.g., 'active_shooter', 'natural_hazards')
+            domain: Risk domain name (e.g., 'hazard_exposure', 'vulnerability', 'coping_capacity')
             
         Returns:
             Dictionary of sub-domain weights

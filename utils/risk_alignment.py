@@ -42,7 +42,6 @@ def compute_display_scores(risk_data):
     # Add major risk categories with normalized keys (remove "_risk" suffix)
     major_risks = {
         'health': 'health_risk',
-        'active_shooter': 'active_shooter_risk', 
         'extreme_heat': 'extreme_heat_risk',
         'cybersecurity': 'cybersecurity_risk',
         'air_quality': 'air_quality_risk',
@@ -90,7 +89,6 @@ def format_risk_name(risk_key):
     """
     name_mapping = {
         'health': 'Health Risk',
-        'active_shooter': 'Active Shooter Risk',
         'extreme_heat': 'Extreme Heat Risk',
         'cybersecurity': 'Cybersecurity Risk',
         'air_quality': 'Air Quality Risk',

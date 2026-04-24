@@ -1,291 +1,250 @@
-# CARA Data Dictionary
+# Libya CARA - Data Dictionary
 
 ## Overview
 
-This document provides a comprehensive reference for all data variables, risk metrics, and calculated fields used in the CARA (Comprehensive Automated Risk Assessment) platform. CARA serves 95 Wisconsin public health jurisdictions with multi-domain risk assessments.
+This document is the reference for variables, scores, and identifiers
+used by the Libya CARA platform. Libya CARA scores subnational
+disaster and crisis risk for Libya at the national level (LY) and
+across 148 municipalities, using the INFORM Risk Index methodology
+aligned with the Sendai Framework.
 
 ## Table of Contents
 
-- [Risk Assessment Variables](#risk-assessment-variables)
+- [Score Variables](#score-variables)
+- [Hazard and Exposure Pillar](#hazard-and-exposure-pillar)
+- [Vulnerability Pillar](#vulnerability-pillar)
+- [Coping Capacity Pillar](#coping-capacity-pillar)
 - [Geographic Variables](#geographic-variables)
 - [Temporal Variables](#temporal-variables)
-- [Data Sources](#data-sources)
-- [Calculated Fields](#calculated-fields)
-- [API Response Formats](#api-response-formats)
+- [Source Kinds and Tile Badges](#source-kinds-and-tile-badges)
+- [API Response Format](#api-response-format)
 
-## Risk Assessment Variables
+## Score Variables
 
-### Overall Risk Score
-
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `overall_risk` | Float | 0.0 - 1.0 | Normalized | Combined risk score across all domains |
-| `risk_level` | String | - | Categorical | LOW, MODERATE, HIGH, VERY_HIGH |
-| `confidence` | Float | 0.0 - 1.0 | Normalized | Statistical confidence in assessment |
-
-### Natural Hazards
-
-#### Winter Storm Risk
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `winter_storm_exposure` | Float | 0.0 - 1.0 | Normalized | Historical frequency and severity of winter storms |
-| `winter_storm_vulnerability` | Float | 0.0 - 1.0 | Normalized | Infrastructure and population vulnerability |
-| `winter_storm_resilience` | Float | 0.0 - 1.0 | Normalized | Emergency response and recovery capacity |
-| `snowfall_inches_annual` | Float | 0 - 200 | Inches | Average annual snowfall |
-| `ice_storm_frequency` | Float | 0 - 10 | Events/year | Historical ice storm frequency |
-
-#### Flood Risk
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `flood_exposure` | Float | 0.0 - 1.0 | Normalized | FEMA flood zone and historical flooding |
-| `flood_vulnerability` | Float | 0.0 - 1.0 | Normalized | Population and infrastructure in flood zones |
-| `flood_resilience` | Float | 0.0 - 1.0 | Normalized | Flood mitigation and response capacity |
-| `fema_flood_zone` | String | - | Categorical | A, AE, X, etc. (FEMA flood zone designations) |
-| `dam_count` | Integer | 0 - 50 | Count | Number of dams in jurisdiction |
-
-#### Tornado Risk
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `tornado_exposure` | Float | 0.0 - 1.0 | Normalized | Historical tornado frequency and strength |
-| `tornado_vulnerability` | Float | 0.0 - 1.0 | Normalized | Mobile home density and shelter availability |
-| `tornado_resilience` | Float | 0.0 - 1.0 | Normalized | Warning systems and shelter capacity |
-| `tornado_frequency_annual` | Float | 0 - 5 | Events/year | Average annual tornado frequency |
-| `f3_plus_historical` | Integer | 0 - 20 | Count | Historical F3+ tornadoes (1950-present) |
-
-### Extreme Heat Risk (Climate-Adjusted)
+### Composite Score
 
 | Variable | Type | Range | Unit | Description |
 |----------|------|-------|------|-------------|
-| `heat_exposure` | Float | 0.0 - 0.95 | Normalized | Climate-adjusted heat exposure |
-| `heat_vulnerability` | Float | 0.0 - 1.0 | Normalized | Population vulnerability to extreme heat |
-| `heat_resilience` | Float | 0.0 - 1.0 | Normalized | Cooling resources and adaptation capacity |
-| `wet_bulb_risk` | Float | 0.0 - 1.0 | Normalized | Dangerous humidity-heat combinations |
-| `climate_trend_factor` | Float | 1.0 - 1.5 | Multiplier | Climate change amplification factor |
-| `heat_island_factor` | Float | 1.0 - 1.4 | Multiplier | Urban heat island amplification |
-| `cooling_degree_days` | Integer | 0 - 2000 | Degree Days | Annual cooling energy demand |
-| `heat_days_90f_projected` | Integer | 0 - 60 | Days/year | Projected 90°F+ days by 2050 |
+| `inform_score` | Float | 0.0 - 1.0 | Normalised | Geometric-mean composite of the three pillars |
+| `risk_band` | String | - | Categorical | very_low, low, medium, high, very_high (returns `unavailable` for missing input) |
+| `hazard_exposure_score` | Float | 0.0 - 1.0 | Normalised | Pillar 1 weighted average |
+| `vulnerability_score` | Float | 0.0 - 1.0 | Normalised | Pillar 2 weighted average |
+| `coping_capacity_score` | Float | 0.0 - 1.0 | Normalised | Pillar 3 weighted average (LACK of coping; high = low resilience) |
 
-### Air Quality Risk (Strategic)
+INFORM formula:
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `air_quality_exposure` | Float | 0.0 - 1.0 | Normalized | Historical AQI patterns and projections |
-| `air_quality_vulnerability` | Float | 0.0 - 1.0 | Normalized | Sensitive population density |
-| `air_quality_resilience` | Float | 0.0 - 1.0 | Normalized | Healthcare capacity and air quality programs |
-| `aqi_baseline_5year` | Float | 0 - 200 | AQI | 5-year average Air Quality Index |
-| `ozone_action_days_annual` | Integer | 0 - 30 | Days/year | Annual ozone action days |
-| `pm25_exposure_projected` | Float | 0.0 - 1.0 | Normalized | Projected PM2.5 exposure increase |
-| `wildfire_smoke_risk` | Float | 0.0 - 1.0 | Normalized | Projected wildfire smoke episodes |
+```
+inform_score = (hazard_exposure_score * vulnerability_score * coping_capacity_score) ^ (1/3)
+```
 
-### Infectious Disease Risk
+### Risk Bands
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `disease_exposure` | Float | 0.0 - 1.0 | Normalized | Disease transmission potential |
-| `disease_vulnerability` | Float | 0.0 - 1.0 | Normalized | Population susceptibility |
-| `disease_resilience` | Float | 0.0 - 1.0 | Normalized | Healthcare and public health capacity |
-| `population_density` | Float | 0 - 5000 | People/sq mi | Population density |
-| `vaccination_rate` | Float | 0.0 - 1.0 | Proportion | Age-appropriate vaccination coverage |
-| `healthcare_capacity` | Float | 0.0 - 1.0 | Normalized | Hospital beds per capita |
-| `syndromic_surveillance` | Float | 0.0 - 1.0 | Normalized | Disease surveillance capability |
+`utils.action_plan_content._inform_classify` (upper-exclusive cuts):
 
-### Active Shooter Risk
+| Band | Score range |
+|------|-------------|
+| very_low | 0.00 - 0.20 |
+| low | 0.20 - 0.40 |
+| medium | 0.40 - 0.60 |
+| high | 0.60 - 0.80 |
+| very_high | 0.80 - 1.00 |
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `shooter_exposure` | Float | 0.0 - 1.0 | Normalized | Venue density and historical patterns |
-| `shooter_vulnerability` | Float | 0.0 - 1.0 | Normalized | Population concentration in vulnerable venues |
-| `shooter_resilience` | Float | 0.0 - 1.0 | Normalized | Law enforcement and emergency response |
-| `school_count` | Integer | 0 - 200 | Count | Number of educational institutions |
-| `venue_density_score` | Float | 0.0 - 1.0 | Normalized | Soft target venue concentration |
-| `law_enforcement_ratio` | Float | 0 - 10 | Officers/1000 | Law enforcement officers per 1000 residents |
+## Hazard and Exposure Pillar
+
+Pillar weight: 0.333. Sub-domains weighted equally (0.25 each).
+
+### Infrastructure Hazard
+
+| Variable | Range | Source | Description |
+|----------|-------|--------|-------------|
+| `dam_safety` | 0.0 - 1.0 | Government data | Structural risk of major dams (Derna events as historical anchor) |
+| `electric_grid` | 0.0 - 1.0 | World Bank `EG.ELC.ACCS.ZS`, government data | Grid reliability and access |
+| `water_sewage` | 0.0 - 1.0 | World Bank water/sanitation indicators, NCDC outbreak signals | Water and sewage system risk |
+
+### Natural Hazard
+
+| Variable | Range | Source | Description |
+|----------|-------|--------|-------------|
+| `flooding` | 0.0 - 1.0 | EM-DAT, IDMC disaster events | Pluvial and fluvial flooding (Storm Daniel 2023 anchor) |
+| `wildfire` | 0.0 - 1.0 | EM-DAT | Wildfire and bushfire frequency and severity |
+| `extreme_cold` | 0.0 - 1.0 | EM-DAT, NOAA reanalysis where available | Extreme cold events |
+| `sandstorm` | 0.0 - 1.0 | EM-DAT, NCDC respiratory signals | Sandstorm frequency and impact |
+
+### Epidemiological Hazard
+
+| Variable | Range | Source | Description |
+|----------|-------|--------|-------------|
+| `infectious_disease` | 0.0 - 1.0 | NCDC Libya, WHO Libya HDX | Combined burden of infectious and emerging diseases |
+| `vector_borne` | 0.0 - 1.0 | NCDC Libya, WHO Libya HDX | Vector-borne disease incidence |
+| `tb_inc` | Float | WHO Libya HDX | Tuberculosis incidence per 100k (overridable per municipality) |
+| `u5mort` | Float | WHO Libya HDX | Under-5 mortality per 1000 live births (overridable per municipality) |
+| `neo_mort` | Float | WHO Libya HDX | Neonatal mortality per 1000 live births (overridable per municipality) |
+
+### Road Safety Hazard
+
+| Variable | Range | Source | Description |
+|----------|-------|--------|-------------|
+| `accident_rate` | 0.0 - 1.0 | WHO Libya HDX, government statistics | Road accident rate |
+
+## Vulnerability Pillar
+
+Pillar weight: 0.333. Sub-indicators weighted equally (0.20 each).
+
+| Variable | Range | Source | Description |
+|----------|-------|--------|-------------|
+| `agency_capacity_gap` | 0.0 - 1.0 | OCHA 3W, COI Libya | Understaffing, underfunding of emergency response agencies |
+| `urban_sprawl` | 0.0 - 1.0 | World Bank urbanisation, government data | Rate of unplanned residential building |
+| `displacement_vulnerability` | 0.0 - 1.0 | IDMC via HDX, IOM DTM, UNHCR | IDP and migrant exposure to compounded risk |
+| `health_unawareness` | 0.0 - 1.0 | WHO Libya HDX literacy / education proxies | Lack of health awareness |
+| `security_vulnerability` | 0.0 - 1.0 | Government data, news monitoring | Rate of violence and insecurity (armed-clashes domain omitted by design) |
+
+## Coping Capacity Pillar
+
+Pillar weight: 0.333. Sub-indicators weighted equally (0.20 each).
+Scores represent the LACK of coping capacity (high score = low
+resilience).
+
+| Variable | Range | Source | Description |
+|----------|-------|--------|-------------|
+| `response_time_gap` | 0.0 - 1.0 | HeiGIT travel time, COI Libya | Emergency response time gap |
+| `data_availability_gap` | 0.0 - 1.0 | Internal completeness audit | Lack of historical and interoperable data |
+| `community_support_gap` | 0.0 - 1.0 | OCHA 3W presence, COI Libya | Weak community-level mutual support and civil-society engagement |
+| `healthcare_access_gap` | 0.0 - 1.0 | HeiGIT hospital and primary-care travel time | Healthcare access gap |
+| `institutional_capacity_gap` | 0.0 - 1.0 | World Bank governance indicators, COI Libya | Government readiness for DRR investment |
+| `water` | Float | World Bank `SH.H2O.BASW.ZS` | Basic drinking water access (overridable per municipality) |
+| `sanitation` | Float | World Bank `SH.STA.BASS.ZS` | Basic sanitation access (overridable per municipality) |
+| `electricity` | Float | World Bank `EG.ELC.ACCS.ZS` | Electricity access (overridable per municipality) |
+| `pm25` | Float | OpenAQ where available | Annual mean PM2.5 (overridable per municipality) |
 
 ## Geographic Variables
 
 ### Jurisdiction Information
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `jurisdiction_id` | String | - | ID | Unique jurisdiction identifier |
-| `jurisdiction_name` | String | - | Text | Official jurisdiction name |
-| `jurisdiction_type` | String | - | Categorical | COUNTY, TRIBAL, MUNICIPAL |
-| `fips_code` | String | 5 digits | Code | Federal Information Processing Standards code |
-| `herc_region` | Integer | 1 - 7 | Region | Health Emergency Readiness Coalition region |
-| `wem_region` | String | - | Code | Wisconsin Emergency Management region |
+| Variable | Type | Description |
+|----------|------|-------------|
+| `jurisdiction_id` | String | `LY` for the national view; `LY-NNN` for one of the 148 municipalities |
+| `jurisdiction_name` | String | Official jurisdiction name (Arabic primary, English secondary) |
+| `jurisdiction_type` | String | `national`, `municipality` |
+| `region` | String | West (الغرب), East (الشرق), South (الجنوب) |
+| `district` | String | One of 22 ADM1 districts |
+| `needs_verification` | Boolean | Flagged when identifier or population estimate is pending Libyan government confirmation |
+
+Source: `data/libya_municipalities.json`. Loader:
+`utils/geography/jurisdiction_manager.py`.
 
 ### Geographic Characteristics
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `area_square_miles` | Float | 0 - 2000 | Square miles | Total jurisdiction area |
-| `population_total` | Integer | 0 - 1000000 | People | Total population (latest census) |
-| `population_density` | Float | 0 - 5000 | People/sq mi | Population per square mile |
-| `urban_percentage` | Float | 0.0 - 1.0 | Proportion | Urban vs rural population split |
-| `coastline_miles` | Float | 0 - 200 | Miles | Great Lakes coastline length |
-| `elevation_mean` | Integer | 500 - 1500 | Feet | Mean elevation above sea level |
-
-### Boundary Data
-
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `geometry` | GeoJSON | - | Geographic | Jurisdiction boundary polygon |
-| `centroid_lat` | Float | 42.5 - 47.3 | Degrees | Geographic center latitude |
-| `centroid_lon` | Float | -92.9 - -86.2 | Degrees | Geographic center longitude |
-| `bounding_box` | Array | - | Coordinates | [min_lon, min_lat, max_lon, max_lat] |
+| Variable | Type | Description |
+|----------|------|-------------|
+| `population_total` | Integer | Population estimate (latest available) |
+| `area_square_km` | Float | Total jurisdiction area in km^2 |
+| `centroid_lat` | Float | Geographic centre latitude |
+| `centroid_lon` | Float | Geographic centre longitude |
 
 ## Temporal Variables
 
-### Assessment Timing
+| Variable | Type | Description |
+|----------|------|-------------|
+| `assessment_date` | DateTime | ISO 8601 timestamp of the assessment run |
+| `data_freshness_days` | Integer | Days since each connector cache was refreshed |
+| `connector_year` | Integer | Reporting year of the underlying source value (per indicator) |
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `assessment_date` | DateTime | - | ISO 8601 | Timestamp of risk assessment |
-| `data_freshness` | Integer | 0 - 365 | Days | Days since data last updated |
-| `temporal_framework` | String | - | Categorical | STRATEGIC, OPERATIONAL, TACTICAL |
-| `planning_horizon` | String | - | Categorical | ANNUAL, SEASONAL, MONTHLY |
+### Refresh Cadence
 
-### Strategic Planning Weights
+| Job | Cadence | Connectors |
+|-----|---------|------------|
+| `refresh_libya_hdx` | 168 h (weekly) | OCHA HDX (IOM DTM, OCHA 3W, UNHCR), HeiGIT, IDMC via HDX |
+| `refresh_libya_global` | 720 h (monthly) | WHO Libya HDX (primary), WHO GHO (legacy fallback), World Bank, OpenAQ |
 
-| Variable | Type | Range | Unit | Description |
-|----------|------|-------|------|-------------|
-| `baseline_weight` | Float | 0.0 - 1.0 | Proportion | Weight given to baseline historical data |
-| `seasonal_weight` | Float | 0.0 - 1.0 | Proportion | Weight given to seasonal patterns |
-| `trend_weight` | Float | 0.0 - 1.0 | Proportion | Weight given to trend analysis |
-| `acute_weight` | Float | 0.0 - 1.0 | Proportion | Weight given to acute current conditions |
+Scheduler config: `data/config/scheduler_config.json`.
 
-## Data Sources
+## Source Kinds and Tile Badges
 
-### External APIs
+`_stamp_source_kinds` (in `routes/dashboard.py`) tags every tile with
+one of the following source kinds for transparency. The dashboard
+template renders a green "محلي / Local" badge for `local` data and an
+amber "وطني / National" badge whenever a country-level value is being
+applied as a per-municipality proxy.
 
-| Source | Update Frequency | Variables | Coverage |
-|--------|-----------------|-----------|----------|
-| US Census Bureau ACS | Annual (local CSV) | Demographics, housing, mobile homes | All jurisdictions |
-| NOAA NCEI Storm Events | Quarterly (scheduler cache) | Storm event counts by type | County level |
-| NOAA/NWS | Daily (scheduler cache) | Heat forecasts, weather data | Statewide |
-| EPA AirNow | Daily (scheduler cache) | Air quality indices | Monitoring stations |
-| OpenFEMA (3 endpoints) | Weekly (scheduler cache) | Declarations, NFIP claims, HMA | Statewide |
-| WI DNR Dam Safety | Weekly (scheduler cache) | Dam inventory, hazard classifications | Statewide |
-| CDC/ATSDR SVI 2022 | Annual (scheduler cache) | Social vulnerability percentiles | All 72 WI counties |
-| WI DHS Respiratory | Weekly (web scraper cache) | ILI, COVID, RSV activity | Statewide |
-| WI DHS EPHT (VBD) | Weekly (CSV download cache) | Lyme/WNV incidence rates | All 72 WI counties |
-| FEMA NRI | Static file | Census tract hazard scores | Statewide |
+| `source_kind` | Meaning |
+|---------------|---------|
+| `local` | Value comes from a consolidated municipal upload |
+| `measured` | Direct measurement at this jurisdiction |
+| `national` | Country-level value applied as-is for the national view |
+| `national_proxy` | Country-level value used at the municipal level |
+| `proxy` | Regional or ADM1 value propagated to municipal level |
 
-### Internal Data Processing
+Local override scope (subnational only, seven indicators):
+`tb_inc`, `u5mort`, `neo_mort`, `water`, `sanitation`, `electricity`,
+`pm25`. The national LY view never applies overrides. See
+`utils/local_overrides.py`.
 
-| Dataset | Update Frequency | Source | Variables |
-|---------|-----------------|--------|-----------|
-| Jurisdiction boundaries | As needed | Wisconsin DHS | Geographic boundaries |
-| Tribal territories | As needed | Bureau of Indian Affairs | Tribal jurisdiction data |
-| HERC regions | As needed | Wisconsin DHS | Health region assignments |
-| Risk weights | Configurable | `config/risk_weights.yaml` | Domain weights, SVI adjustment factors |
+## API Response Format
 
-## Calculated Fields
-
-### Risk Score Formulas
-
-```
-PHRAT Quadratic Mean:
-Total Risk = sqrt(w1 * R1^2 + w2 * R2^2 + ... + w7 * R7^2)
-
-Where:
-- R1..R7: Individual domain risk scores (0.0-1.0) from 7 primary domains
-- w1..w7: Domain weights from config/risk_weights.yaml (sum to 1.0)
-- p=2 (quadratic mean emphasizes higher-risk domains)
-
-Per-Domain (EVR Framework for natural hazards, dam failure):
-Residual Risk = (Exposure * Vulnerability * Health_Impact_Factor) / Resilience
-```
-
-### Confidence Calculations
-
-```
-Confidence = min(Data_Quality, Model_Accuracy, Temporal_Relevance)
-
-Where:
-- Data_Quality: Completeness and accuracy of input data (0.0-1.0)
-- Model_Accuracy: Validated performance of risk algorithms (0.0-1.0)  
-- Temporal_Relevance: Recency and relevance of data (0.0-1.0)
-```
-
-### Climate Adjustment Factors
-
-```
-Climate_Adjusted_Risk = Base_Risk × Climate_Trend_Factor × Heat_Island_Factor
-
-Where:
-- Base_Risk: Historical baseline risk level
-- Climate_Trend_Factor: IPCC regional warming projections (1.0-1.5)
-- Heat_Island_Factor: Urban heat amplification (1.0-1.4)
-```
-
-## API Response Formats
-
-### Risk Assessment Response
+`GET /api/risk-assessment/<jurisdiction_id>`:
 
 ```json
 {
-  "jurisdiction_id": "55025",
-  "jurisdiction_name": "Dane County",
-  "assessment_date": "2024-01-15T14:30:00Z",
-  "overall_risk": 0.68,
-  "risk_level": "MODERATE",
-  "confidence": 0.82,
-  "domains": {
-    "natural_hazards": {
-      "winter_storm": {
-        "exposure": 0.72,
-        "vulnerability": 0.58,
-        "resilience": 0.75,
-        "overall_risk": 0.56
+  "jurisdiction_id": "LY-063",
+  "jurisdiction_name": "Misrata",
+  "jurisdiction_name_ar": "مصراتة",
+  "assessment_date": "2026-04-24T08:00:00Z",
+  "inform_score": 0.58,
+  "risk_band": "medium",
+  "pillars": {
+    "hazard_exposure": {
+      "score": 0.62,
+      "sub_domains": {
+        "infrastructure_hazard": 0.55,
+        "natural_hazard": 0.71,
+        "epidemiological_hazard": 0.60,
+        "road_safety_hazard": 0.62
       }
     },
-    "climate_risks": {
-      "extreme_heat": {
-        "exposure": 0.65,
-        "vulnerability": 0.52,
-        "resilience": 0.78,
-        "wet_bulb_risk": 0.48,
-        "climate_trend_factor": 1.35,
-        "overall_risk": 0.61
+    "vulnerability": {
+      "score": 0.55,
+      "indicators": {
+        "agency_capacity_gap": 0.50,
+        "urban_sprawl": 0.65,
+        "displacement_vulnerability": 0.60,
+        "health_unawareness": 0.50,
+        "security_vulnerability": 0.50
+      }
+    },
+    "coping_capacity": {
+      "score": 0.57,
+      "indicators": {
+        "response_time_gap": 0.60,
+        "data_availability_gap": 0.65,
+        "community_support_gap": 0.50,
+        "healthcare_access_gap": 0.55,
+        "institutional_capacity_gap": 0.55
       }
     }
   },
   "metadata": {
-    "methodology": "CARA v2.1",
-    "temporal_framework": "STRATEGIC",
-    "data_sources": ["US_CENSUS", "NOAA", "WI_DHS"],
-    "last_updated": "2024-01-15T06:00:00Z"
+    "methodology": "INFORM",
+    "profile": "libya",
+    "sendai_aligned": true,
+    "armed_clashes_omitted": true,
+    "connectors": ["who_hdx", "idmc_hdx", "heigit", "iom", "worldbank", "ncdc_libya", "coi_libya"]
   }
 }
 ```
 
-## Data Quality Standards
+## Out of Scope by Design
 
-### Completeness Requirements
+The armed-clashes / political-violence domain present in the upstream
+INFORM model is intentionally omitted from the published Libya score
+pending political sensitivity review.
 
-- **Tier 1** (Critical): 100% complete (jurisdiction boundaries, population)
-- **Tier 2** (Important): 90% complete (most risk variables)
-- **Tier 3** (Supplementary): 70% complete (enhanced risk factors)
+## Test Coverage
 
-### Accuracy Standards
-
-- **Geographic Data**: ±100 meter accuracy for boundaries
-- **Population Data**: ±5% accuracy (latest census estimates)
-- **Risk Scores**: ±0.05 normalized scale accuracy
-- **Temporal Data**: ±1 hour for current conditions
-
-### Update Frequencies
-
-- **Real-time**: Weather conditions, air quality (hourly)
-- **Daily**: Disease surveillance, emergency declarations
-- **Weekly**: Seasonal risk adjustments
-- **Monthly**: Economic and social indicators
-- **Annually**: Demographics, infrastructure, baseline risks
+`tests/test_inform.py` validates the cube-root composition, the 0-1
+banding helper, and a full national-level dashboard score
+end-to-end with synthetic connector data. See `tests/README.md` for
+the full suite description.
 
 ---
 
-*This data dictionary is maintained as part of the CARA platform documentation and reflects the current data model.*
-
-**Last Updated**: March 2026
-**Version**: 2.6.0
-**Coverage**: 95 Wisconsin Public Health Jurisdictions
+Last reviewed: April 2026.

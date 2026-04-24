@@ -1,201 +1,203 @@
-# CARA Application - Comprehensive Data Sources Analysis
+# Libya CARA - Data Sources Comprehensive Analysis
 
 ## Overview
 
-This document provides a complete mapping of all data sources used in the CARA application across all risk domains. All external data is pre-fetched by APScheduler jobs and stored in PostgreSQL cache. No external API calls occur during user assessments.
+This document inventories every data source feeding the Libya CARA
+INFORM Risk Index. All external data is fetched by APScheduler jobs
+(registered in `core.py` when `CARA_PROFILE=libya`) and cached on
+disk under `data/cache/`. No external API calls occur during user
+assessments. The connector registry is `utils/connector_registry.py`.
 
-## Data Source Categories
+Registered connectors:
 
-### Scheduler-Cached Data Sources (Active)
+```
+hdx, heigit, idmc_hdx, who_hdx, iom, who_gho, worldbank,
+openaq, ncdc_libya, coi_libya
+```
 
-These data sources are fetched on a schedule and cached in the database.
+## 1. Data Refresh Schedule
 
-1. **NOAA NCEI Storm Events Database**
-- Used For: County-level storm event counts (flood, tornado, winter storm, thunderstorm)
-- Method: Bulk CSV download
-- Refresh: Quarterly
-- Module: `utils/noaa_storm_events.py`
+| Job | Cadence | Connectors |
+|-----|---------|------------|
+| refresh_libya_hdx | 168 h (weekly) | OCHA HDX (IOM DTM, OCHA 3W, UNHCR), HeiGIT, IDMC via HDX |
+| refresh_libya_global | 720 h (monthly) | WHO Libya HDX (primary), WHO GHO (legacy fallback), World Bank, OpenAQ |
 
-2. **OpenFEMA APIs (keyless)**
-- Disaster Declarations Summaries v2: WI disaster declarations by county and disaster type
-- NFIP Redacted Claims v2: Flood insurance claims by county (flood exposure proxy)
-- Hazard Mitigation Assistance Projects v4: Mitigation project data
-- Refresh: Weekly
-- Module: `utils/openfema_data.py`
+Scheduler config: `data/config/scheduler_config.json`.
 
-3. **WI DNR Dam Safety Database (keyless, primary)**
-- Source: Wisconsin Repository of Dams ArcGIS FeatureServer
-- Used For: Dam inventory, hazard classifications, dam heights, downstream population exposure
-- Refresh: Weekly
-- Module: `utils/dam_failure_risk.py`, `utils/nid_data_fetcher.py`
+## 2. Automated Sources - Weekly
 
-4. **USACE NID ArcGIS FeatureServer (keyless, fallback)**
-- Source: National Inventory of Dams
-- Used For: Fallback dam inventory when WI DNR is unavailable
-- Limitation: Cloud-hosted IPs may receive 503 errors
-- Refresh: Weekly
+### 2.1 OCHA Humanitarian Data Exchange (HDX)
 
-5. **CDC/ATSDR SVI 2022 ArcGIS REST API (keyless)**
-- Used For: County-level Social Vulnerability Index percentile rankings for all 72 WI counties
-- Data: Real RPL_THEMES values (socioeconomic, household composition, minority status, housing type)
-- Method: Single bulk API call via `fetch_bulk_svi_data()`
-- Stored: `data/svi/wisconsin_svi_data.json`
-- Refresh: Annual
-- Module: `utils/svi_data.py`
+- Endpoint: data.humdata.org/api/3/
+- Authentication: none (public API)
+- Datasets: IOM DTM displacement, OCHA 3W presence, UNHCR Libya
+- Cache: `data/cache/hdx/`
+- INFORM mapping: Vulnerability / displacement_vulnerability,
+  Coping Capacity / institutional_capacity (3W presence)
+- Connector: `utils/connectors/hdx.py`
 
-6. **EPA AirNow API (keyed)**
-- Used For: Air Quality Index readings at monitoring stations near county centroids
-- Data: AQI values, pollutant categories, multi-point sampling
-- Refresh: Daily
-- Module: Air quality assessment in `utils/data_processor.py`
+### 2.2 HeiGIT Healthcare Accessibility
 
-7. **NOAA/NWS API (keyless)**
-- Used For: Heat forecasts, weather data for extreme heat risk
-- Refresh: Daily
+- Endpoint: hot.storage.heigit.org
+- Authentication: none (public)
+- Datasets: travel time to nearest hospital, primary healthcare,
+  education facility - 22 ADM1 districts for Libya
+- Cache: `data/cache/heigit/`
+- INFORM mapping: Coping Capacity / healthcare_access_gap
+- Notes: Values are produced at ADM1 (22 districts) and propagated to
+  all 148 municipalities as a documented regional proxy. Affected
+  tiles are flagged with the `proxy` source kind.
 
-8. **WI DHS Respiratory Illness Surveillance**
-- Source: Web scraper targeting dhs.wisconsin.gov respiratory illness pages
-- Data: ILI activity levels, COVID-19 metrics, RSV activity, vaccination rate indicators
-- Refresh: Weekly
-- Module: `utils/dhs_data.py`, `utils/web_scraper.py`
+### 2.3 IDMC via OCHA HDX
 
-9. **WI DHS EPHT Lyme/WNV Surveillance**
-- Source: CSV downloads from dhs.wisconsin.gov/epht
-- Files: `lyme-county.csv`, `west-nile-data-county.csv`
-- Data: County-level confirmed + probable case counts, crude incidence rates per 100,000 for all 72 WI counties
-- Refresh: Weekly automated CSV download
-- Module: `utils/vbd_data_fetcher.py`, `utils/vector_borne_disease_risk.py`
+- Endpoint: data.humdata.org/api/3/
+- Authentication: none
+- Datasets: annual conflict IDPs, IDP stock, disaster displacement
+  events (Storm Daniel 2023 etc.)
+- Cache: `data/cache/idmc/`
+- INFORM mapping: Vulnerability / displacement_vulnerability
+- Notes: Replaces direct IDMC API which returns 403 from most cloud
+  IPs.
 
-### Static/Local Data Sources
+## 3. Automated Sources - Monthly
 
-These are pre-loaded datasets stored locally in the application.
+### 3.1 WHO Libya via OCHA HDX (Primary)
 
-10. **FEMA National Risk Index (NRI)**
-- File: `attached_assets/NRI_Table_CensusTracts_Wisconsin_FloodTornadoWinterOnly.csv`
-- Used For: Census tract-level natural hazard baseline risk scores (flood, tornado, winter storm)
-- Update: Manual (static file from FEMA NRI download)
+- Endpoint: data.humdata.org/api/3/
+- Authentication: none
+- Datasets: 7 CSV files, 17 health indicators (April 2026 cutover)
+- Cache: `data/cache/who_hdx/`
+- INFORM mapping: all three pillars (mortality, immunisation,
+  workforce, infrastructure)
+- Connector: `utils/connectors/who_hdx.py`
 
-11. **US Census Bureau ACS (Local CSV Files)**
-- Files: `data/census/wisconsin_housing_data.csv`, `data/census/wisconsin_demographics.csv`
-- Used For: Mobile home counts/percentages, population aged 65+, total population by county
-- Update: Annual manual update with latest ACS release
+### 3.2 WHO Global Health Observatory (Legacy Fallback)
 
-12. **Gun Violence Archive 2023**
-- File: `attached_assets/GunViolenceArchive 2023 mass shootings data.csv`
-- Used For: Historical mass shooting incidents for active shooter risk assessment
-- Update: Manual (static 2023 data)
+- Endpoint: ghoapi.azureedge.net/api/
+- Authentication: none
+- Status: legacy fallback only - returns stale Libya data
+  (2008-2018 vintage)
+- Connector: `utils/connectors/who_gho.py`
 
-13. **NCES School Safety Data (SSOCS)**
-- File: `attached_assets/SSOCS 2019_2020 data.zip`
-- Used For: School safety indicators in active shooter risk calculations
-- Update: Manual (static 2019-2020 data)
+### 3.3 World Bank Open Data
 
-14. **NOAA Climate Normals 1991-2020**
-- Used For: Historical baseline for extreme heat risk calculations
-- Update: Static baselines embedded in code
+- Endpoint: api.worldbank.org/v2/
+- Authentication: none
+- Datasets: development indicators (poverty headcount, GDP per
+  capita, electricity access, water access, sanitation,
+  unemployment)
+- Cache: `data/cache/worldbank/`
+- INFORM mapping: Vulnerability and Coping Capacity pillars
+- Connector: `utils/connectors/worldbank.py`
 
-15. **USDA NLCD 2021 Forest Cover**
-- Used For: Forest cover percentage as tick habitat proxy for VBD risk
-- Update: Static data embedded in code
+### 3.4 OpenAQ
 
-16. **WI DNR Deer Density**
-- Used For: Deer population density as tick host proxy for VBD risk
-- Update: Static data embedded in code
+- Endpoint: api.openaq.org/v2/
+- Authentication: none
+- Status: no Libya stations confirmed as of April 2026; connector
+  remains registered for future activation
+- Cache: `data/cache/openaq/`
+- INFORM mapping: Hazard / pm25 (air quality)
+- Connector: `utils/connectors/openaq.py`
 
-## Risk Domain Data Source Mapping
+## 4. File-Based Sources (Public, Manual Download)
 
-### Natural Hazards Risk (28% PHRAT weight)
-- FEMA NRI census tract data (static CSV)
-- NOAA NCEI Storm Events (quarterly scheduler cache)
-- OpenFEMA Disaster Declarations, NFIP Claims, HMA Projects (weekly scheduler cache)
-- Census ACS demographics (local CSV)
-- CDC SVI percentiles (annual scheduler cache)
+### 4.1 EM-DAT (CRED / UCLouvain)
 
-### Active Shooter Risk (18% PHRAT weight)
-- Gun Violence Archive 2023 (static CSV)
-- NCES SSOCS 2019-2020 (static)
-- Census ACS demographics (local CSV)
-- CDC SVI percentiles (annual scheduler cache)
+- File: `data/emdat_libya.xlsx`
+- Coverage: Libya disaster history 2000-present (76 records, version
+  2026-04-17)
+- Update process: re-download from emdat.be and replace the file
+- INFORM mapping: Hazard and Exposure / hydrometeorological_hazard
+- Headline event: Storm Daniel 2023 (13,200 deaths, 1.6M affected,
+  $6.2B damage)
 
-### Health Metrics / Infectious Disease Risk (17% PHRAT weight)
-- WI DHS respiratory illness surveillance (weekly web scraper cache)
-- Census ACS demographics (local CSV)
+## 5. Manual Upload Sources (Restricted Government Data, no Public API)
 
-### Air Quality Risk (12% PHRAT weight)
-- EPA AirNow API (daily scheduler cache)
-- Census ACS demographics (local CSV)
-- CDC SVI housing/socioeconomic themes (annual scheduler cache)
+### 5.1 NCDC Libya
 
-### Extreme Heat Risk (11% PHRAT weight)
-- NOAA climate normals 1991-2020 (static)
-- NWS heat forecasts (daily scheduler cache)
-- Census ACS: population 65+, poverty rate (local CSV)
-- CDC SVI percentiles (annual scheduler cache)
+- Folder: `data/uploads/ncdc/`
+- Format: disease surveillance CSV
+- INFORM mapping: Hazard / epidemiological_hazard
+- Update process: government partner uploads through the admin
+  interface; loaded by `utils/connectors/ncdc_libya.py`
 
-### Dam Failure Risk (7% PHRAT weight)
-- WI DNR Dam Safety Database (weekly scheduler cache, primary)
-- USACE NID (weekly scheduler cache, fallback)
-- OpenFEMA NFIP Claims (weekly scheduler cache)
-- CDC SVI housing/transportation theme (annual scheduler cache)
-- Census ACS demographics (local CSV)
+### 5.2 COI Libya
 
-### Vector-Borne Disease Risk (7% PHRAT weight)
-- WI DHS EPHT Lyme county-level incidence rates (weekly scheduler cache)
-- WI DHS EPHT WNV county-level incidence rates (weekly scheduler cache)
-- USDA NLCD 2021 forest cover (static)
-- WI DNR deer density (static)
-- Climate-adjusted range expansion projections (static)
-- CDC SVI socioeconomic theme (annual scheduler cache)
+- Folder: `data/uploads/coi/`
+- Format: coordination capacity CSV
+- INFORM mapping: Coping Capacity / institutional_capacity
+- Connector: `utils/connectors/coi_libya.py`
 
-### Cybersecurity Risk (Supplementary, not in PHRAT)
-- Modeled from county characteristics and CDC SVI socioeconomic percentile
-- No direct cybersecurity incident data source
-- Proxy assumption: lower SVI socioeconomic scores correlate with fewer IT security resources
+### 5.3 IOM DTM Fallback
 
-### Utilities Risk (Supplementary, not in PHRAT for PH; 10% in EM)
-- Electrical outage risk: statistical model with proxy indicators
-- Utilities disruption risk: statistical model with proxy indicators
-- Supply chain disruption risk: statistical model with proxy indicators
-- Fuel shortage risk: statistical model with proxy indicators
-- No real utility company data sources
+- Folder: `data/uploads/iom/`
+- Used when the HDX download for IOM DTM fails
 
-## Data Refresh Schedule
+### 5.4 Local Consolidated Municipal Uploads
 
-| Data Source | Refresh Interval | Cache Location | Status |
-|-------------|------------------|----------------|--------|
-| NOAA Storm Events | Quarterly | PostgreSQL cache | Active |
-| OpenFEMA (3 endpoints) | Weekly | PostgreSQL cache | Active |
-| WI DNR Dam Safety | Weekly | PostgreSQL cache | Active |
-| USACE NID (fallback) | Weekly | PostgreSQL cache | Active (may 503 from cloud) |
-| CDC SVI 2022 | Annual | JSON file + cache | Active |
-| EPA AirNow | Daily | PostgreSQL cache | Active |
-| NOAA/NWS Heat | Daily | PostgreSQL cache | Active |
-| WI DHS Respiratory | Weekly | PostgreSQL cache | Active |
-| WI DHS EPHT (Lyme/WNV) | Weekly | PostgreSQL cache | Active |
-| Census ACS | Manual/Annual | Local CSV files | Active |
-| FEMA NRI | Manual | Local CSV file | Active |
-| GVA 2023 | Manual | Local CSV file | Static |
-| NCES SSOCS | Manual | Local ZIP file | Static (2019-2020) |
+- Index: `utils/local_overrides.py` (mtime-cached)
+- Override scope: seven mappable indicators on subnational
+  dashboards: `tb_inc`, `u5mort`, `neo_mort`, `water`, `sanitation`,
+  `electricity`, `pm25`
+- The national LY view never applies overrides
+- Tile badges: green "محلي / Local" for uploaded data, amber
+  "وطني / National" when a country-level value is applied as a
+  per-municipality proxy
 
-## Known Data Gaps
+## 6. Source Kinds and Tile Badges
 
-### Not Currently Addressable
-1. **Real cybersecurity incident data**: No free, county-level cybersecurity breach API exists. HHS Breach Portal, FBI IC3, and CISA KEV do not provide county-level data suitable for jurisdictional risk scoring.
-2. **Real utility outage data**: Requires data-sharing agreements with utility companies. No public API available.
-3. **Real-time hospital capacity**: Would require WHA API access or similar. Not currently integrated.
+`_stamp_source_kinds` (in `routes/dashboard.py`) tags every tile
+with one of the following source kinds for transparency:
 
-### Could Be Improved
-1. **GVA data freshness**: Currently using 2023 data. Could be updated annually with new GVA download.
-2. **NCES SSOCS data**: 2019-2020 vintage. Next SSOCS release would improve school safety indicators.
-3. **Climate projections**: Currently using static NOAA climate normals and basic trend factors. Could integrate CMIP6 downscaled projections for Wisconsin.
+| Source kind | Meaning |
+|-------------|---------|
+| local | Value comes from a consolidated municipal upload |
+| measured | Direct measurement at this jurisdiction |
+| national | Country-level value applied as-is for the national view |
+| national_proxy | Country-level value used at the municipal level |
+| proxy | Regional or ADM1 value propagated to municipal level |
 
-## Transparency Notes
+## 7. Coverage Gaps and Known Limitations
 
-**For Public Health Officials**: CARA uses a mix of scheduler-cached API data, static datasets, and proxy-modeled estimates. The seven primary PHRAT domains use real data from authoritative sources. The two supplementary domains (cybersecurity, utilities) use statistical models with proxy indicators and should be interpreted as relative planning estimates, not empirical risk measurements.
+1. **HeiGIT regional proxy.** Hospital, primary healthcare, and
+   education access values are produced at ADM1 (22 districts) and
+   propagated to all 148 municipalities. Tiles flagged with the
+   `proxy` source kind.
+2. **WHO GHO Libya staleness.** Direct WHO GHO returns 2008-2018
+   vintage data for Libya; the WHO Libya HDX dataset is the primary
+   source as of April 2026.
+3. **Direct IDMC API blocked.** IDMC's direct API returns 403 from
+   most cloud IPs; the OCHA HDX mirror is used instead.
+4. **OpenAQ coverage.** No Libya stations confirmed as of April
+   2026.
+5. **42 municipalities flagged needs_verification.** Identifier
+   stability and population estimates pending Libyan government
+   confirmation.
+6. **Armed-clashes domain omitted.** Pending political sensitivity
+   review (see `docs/risk_assessment_methodology.md`).
 
-**For Technical Users**: Data source configurations are in `data/config/scheduler_config.json`. Risk domain weights are in `config/risk_weights.yaml` and hard-coded in `utils/data_processor.py`. SVI adjustment factors are configurable in the weights YAML. Individual risk modules contain detailed documentation of their data processing methods.
+## 8. Data Lineage Summary
 
----
+Every published score can be traced from the dashboard tile back to
+the raw source via:
 
-**Last Updated**: March 2026
-**Version**: 2.6.0
+1. The tile popover (built by
+   `routes/dashboard.py::_build_show_work()`) which lists the raw
+   indicator value, the formula, the source agency, and the source
+   year.
+2. The cached file under `data/cache/<connector>/` for automated
+   sources, or `data/uploads/<source>/` for manual uploads.
+3. The connector module under `utils/connectors/` which documents
+   the upstream endpoint and the parsing logic.
+
+## 9. References
+
+1. OCHA Humanitarian Data Exchange. https://data.humdata.org
+2. WHO Global Health Observatory. https://www.who.int/data/gho
+3. EM-DAT International Disaster Database. https://www.emdat.be
+4. IDMC Internal Displacement Database.
+   https://www.internal-displacement.org
+5. HeiGIT Healthcare Accessibility Analysis.
+6. World Bank Open Data. https://data.worldbank.org
+7. OpenAQ Open Air Quality Data. https://openaq.org

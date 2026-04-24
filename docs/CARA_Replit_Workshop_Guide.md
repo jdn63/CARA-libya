@@ -70,7 +70,7 @@ List every subnational unit you want to assess. For each one, write down:
 
 **Decision 2: What risk domains matter for your context?**
 
-Discuss which of CARA's existing domains apply and what new ones you need. For reference, Wisconsin's CARA uses: Natural Hazards, Health Metrics, Active Shooter, Air Quality, and Extreme Heat.
+Discuss which of CARA's existing domains apply and what new ones you need. A typical domain set covers: Natural Hazards, Health Metrics, Infrastructure, Displacement and Vulnerability, and Coping Capacity.
 
 **Decision 3: What data sources might be available?**
 
@@ -209,7 +209,7 @@ After Replit makes the changes, click "Run" and verify that your jurisdiction na
 >
 > The weights add up to 100%.
 >
-> Please remove the Active Shooter and Air Quality domains (these are U.S.-specific). Remove Winter Storm and Tornado as natural hazard sub-types and replace them with Drought and Sandstorm. Keep Flood.
+> Please remove any domains that do not apply to our context. For example, remove Winter Storm and Tornado as natural hazard sub-types and replace them with Drought and Sandstorm. Keep Flood.
 >
 > For the new domains (Conflict/Security, Infrastructure, Displacement), create placeholder calculation functions that return a default score of 0.5 for now. We will connect real data later.
 >

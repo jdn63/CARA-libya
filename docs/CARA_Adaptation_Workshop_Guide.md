@@ -67,12 +67,12 @@ Walk participants through the live CARA demo. Show them:
 
 Key concepts to explain:
 
-**Risk Domains**: CARA organizes risk into separate categories (called "domains"). Wisconsin's CARA uses these domains:
-- Natural Hazards (floods, tornadoes, winter storms, thunderstorms)
-- Health Metrics (respiratory illness, vaccination coverage, healthcare capacity)
-- Active Shooter (historical incidents, school vulnerability, community factors)
-- Air Quality (pollution monitoring)
-- Extreme Heat (heat vulnerability, urban heat island effect)
+**Risk Domains**: CARA organizes risk into separate categories (called "domains"). A domain set typically covers:
+- Natural Hazards (floods, storms, drought, sandstorms, wildfire)
+- Health Metrics (disease surveillance, vaccination coverage, healthcare capacity)
+- Infrastructure (electricity, water, sanitation, road safety)
+- Displacement and Vulnerability (IDPs, migrants, urban sprawl)
+- Coping Capacity (response time, institutional readiness, community support)
 
 Each domain gets a weight reflecting how much it contributes to the overall risk score. These weights add up to 100%.
 
@@ -119,8 +119,8 @@ Domains you might add:
 - Supply Chain Disruption
 
 Domains you might remove:
-- Active Shooter (this is a U.S.-specific risk type)
-- Winter Storm (not applicable)
+- Winter Storm (not applicable in most desert and tropical contexts)
+- Tornado (geographically limited to a few regions)
 
 **3. What data sources are available?**
 
@@ -365,8 +365,8 @@ Find the section called `overall_risk_weights`:
 ```yaml
 overall_risk_weights:
   natural_hazards: 0.33
-  health_metrics: 0.20
-  active_shooter: 0.20
+  health_metrics: 0.25
+  infrastructure: 0.15
   extreme_heat: 0.13
   air_quality: 0.14
 ```
@@ -503,7 +503,7 @@ Add a section to `templates/methodology.html` describing your new domain, its da
 
 #### Removing a Domain
 
-To remove a domain you do not need (for example, Active Shooter):
+To remove a domain you do not need (for example, a hazard type that does not occur in your country):
 
 1. In `config/risk_weights.yaml`, remove the domain from `overall_risk_weights` and redistribute its weight among the remaining domains (must still total 1.0)
 2. In `templates/dashboard.html`, remove or comment out the dashboard card for that domain

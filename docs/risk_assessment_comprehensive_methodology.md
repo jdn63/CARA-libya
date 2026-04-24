@@ -1,284 +1,252 @@
-# CARA Comprehensive Risk Assessment Methodology
-## Version 2.6.0
+# Libya CARA - Comprehensive Risk Assessment Methodology
 
 ## 1. Overview
 
-This document provides detailed documentation of the CARA risk assessment methodology, including data sources, calculation formulas, domain weights, and known limitations. CARA serves 95 Wisconsin public health jurisdictions (101 total entries including multi-county secondary mappings), organized into 7 Healthcare Emergency Readiness Coalition (HERC) regions.
+Libya CARA scores subnational disaster and crisis risk for Libya at
+the national level (LY) and across 148 municipalities organised into
+three regions (West, East, South). It uses the INFORM Risk Index
+methodology published by the European Commission Joint Research
+Centre (JRC) and the Inter-Agency Standing Committee (IASC),
+explicitly aligned with the Sendai Framework for Disaster Risk
+Reduction 2015-2030.
 
-### 1.1 Scope
+### 1.1 Geographic Coverage
 
-Jurisdictions include:
-- 84 local health departments
-- 11 federally-recognized tribal nations
+- 148 municipalities loaded from `data/libya_municipalities.json`
+  (utils/geography/jurisdiction_manager.py)
+- 106 municipalities populated as of the initial dataset; 42 flagged
+  `needs_verification`
+- 22 ADM1 districts grouped under three regions:
+  West (الغرب), East (الشرق), South (الجنوب)
 
-### 1.2 PHRAT Formula
-
-CARA uses a Public Health Risk Assessment Tool (PHRAT) quadratic mean:
-
-```
-Total Risk Score = (w1 * R1^2 + w2 * R2^2 + ... + wn * Rn^2) ^ (1/2)
-```
-
-Where p=2 (quadratic mean). This formula emphasizes higher-risk domains more than a simple weighted average, ensuring that a single high-risk domain is not diluted by several low-risk domains.
-
-### 1.3 Dual-Discipline Support
-
-CARA supports both Public Health (PH) and Emergency Management (EM) assessment perspectives. Both use the same underlying data sources but apply different vulnerability/resilience sub-weights:
-- PH weights emphasize population health outcomes (elderly vulnerability, healthcare capacity, disease transmission)
-- EM weights emphasize critical infrastructure impacts (power grid, transportation, mutual aid capacity)
-
-EM assessments include an 8th primary domain (utilities, 10% weight) that is supplementary in PH mode.
-
-## 2. Primary PHRAT Domain Weights
-
-### 2.1 Public Health Weights (Default)
-
-| Domain | Weight | Key Data Sources |
-|--------|--------|-----------------|
-| Natural Hazards | 28% | NOAA Storm Events, OpenFEMA (declarations, NFIP claims, HMA), FEMA NRI, Census ACS |
-| Active Shooter | 18% | Gun Violence Archive 2023, NCES SSOCS 2019-2020, Census ACS demographics |
-| Health Metrics | 17% | WI DHS respiratory surveillance (web scraper), Census ACS |
-| Air Quality | 12% | EPA AirNow API, Census ACS, CDC SVI |
-| Extreme Heat | 11% | NOAA climate normals, NWS heat forecasts, Census ACS (65+, poverty), CDC SVI |
-| Dam Failure | 7% | WI DNR Dam Safety DB, USACE NID (fallback), OpenFEMA NFIP, CDC SVI |
-| Vector-Borne Disease | 7% | WI DHS EPHT Lyme/WNV county CSVs, USDA NLCD, WI DNR deer density |
-
-### 2.2 Emergency Management Weights
-
-| Domain | Weight |
-|--------|--------|
-| Natural Hazards | 32% |
-| Active Shooter | 13% |
-| Extreme Heat | 13% |
-| Health Metrics | 10% |
-| Utilities | 10% |
-| Air Quality | 8% |
-| Dam Failure | 8% |
-| Vector-Borne Disease | 6% |
-
-### 2.3 Weight Rationale
-
-Weights reflect relative frequency, severity, and breadth of public health impact for each hazard type in Wisconsin, informed by:
-- FEMA National Risk Index annualized expected loss data for Wisconsin
-- CDC PHEP (Public Health Emergency Preparedness) capability priorities
-- Wisconsin DHS Hazard Vulnerability Assessment guidance
-- Historical disaster declaration frequency (FEMA, 2000-2024)
-
-Weights are configurable in `config/risk_weights.yaml`.
-
-## 3. Data Sources and Integration
-
-### 3.1 Scheduler-Cached Data Sources
-
-All external data is pre-fetched by APScheduler jobs and stored in PostgreSQL cache. No external API calls occur during user assessments.
-
-| Source | Endpoint/Method | Data Retrieved | Refresh |
-|--------|-----------------|----------------|---------|
-| NOAA NCEI Storm Events | Bulk CSV download | County-level storm event counts by type | Quarterly |
-| OpenFEMA Disaster Declarations v2 | REST API (keyless) | WI disaster declarations by county and type | Weekly |
-| OpenFEMA NFIP Claims v2 | REST API (keyless) | Flood insurance claims by county | Weekly |
-| OpenFEMA HMA Projects v4 | REST API (keyless) | Hazard mitigation project data | Weekly |
-| WI DNR Dam Safety Database | ArcGIS FeatureServer (keyless) | Wisconsin dam inventory, hazard classifications | Weekly |
-| USACE NID | ArcGIS FeatureServer (keyless, fallback) | National dam inventory (used if DNR unavailable) | Weekly |
-| CDC/ATSDR SVI 2022 | ArcGIS REST API (keyless) | County-level SVI percentile rankings (all 72 WI counties) | Annual |
-| EPA AirNow | REST API (keyed) | AQI readings at monitoring stations | Daily |
-| NOAA/NWS | REST API (keyless) | Heat forecasts, weather data | Daily |
-| WI DHS Respiratory Surveillance | Web scraper (dhs.wisconsin.gov) | ILI, COVID-19, RSV activity levels | Weekly |
-| WI DHS EPHT (Lyme/WNV) | CSV download (dhs.wisconsin.gov/epht) | County-level Lyme and WNV incidence rates per 100k | Weekly |
-| US Census Bureau ACS | Local CSV files | Demographics, housing, mobile homes, elderly population | Annual (manual update) |
-
-### 3.2 Static/Local Data Sources
-
-| Source | File Path | Used For |
-|--------|-----------|----------|
-| FEMA NRI Census Tracts | `attached_assets/NRI_Table_CensusTracts_Wisconsin_FloodTornadoWinterOnly.csv` | Natural hazard baseline risk scores |
-| Gun Violence Archive 2023 | `attached_assets/GunViolenceArchive 2023 mass shootings data.csv` | Active shooter historical incidents |
-| NCES SSOCS 2019-2020 | `attached_assets/SSOCS 2019_2020 data.zip` | School safety indicators |
-| NOAA Climate Normals 1991-2020 | Static baselines in code | Heat risk baseline calculations |
-| USDA NLCD 2021 | Static data in code | Forest cover for VBD risk |
-| WI DNR Deer Density | Static data in code | Tick habitat proxy for VBD risk |
-
-### 3.3 Supplementary Domains (Proxy-Modeled, Not in PHRAT)
-
-| Domain | Method | Limitation |
-|--------|--------|------------|
-| Cybersecurity | Modeled from county characteristics and SVI socioeconomic percentile | No direct cybersecurity breach data. SVI-based adjustment assumes lower-income communities have fewer IT security resources -- a proxy assumption without direct empirical validation. |
-| Utilities | Composite of 4 sub-models (electrical outage 30%, utilities disruption 30%, supply chain 20%, fuel shortage 20%) | All use statistical models with proxy indicators, not real utility company data. |
-
-## 4. Risk Calculation Details
-
-### 4.1 Natural Hazards (EVR Framework)
-
-Each sub-type (flood, tornado, winter storm, thunderstorm) uses an Exposure-Vulnerability-Resilience framework with health impact factor:
+### 1.2 INFORM Formula
 
 ```
-Residual_Risk = (Exposure * Vulnerability * Health_Impact_Factor) / Resilience
+INFORM Risk = (Hazard and Exposure x Vulnerability x Lack of Coping Capacity) ^ (1/3)
 ```
 
-**Exposure** incorporates:
-- NOAA Storm Events historical counts (event frequency by county)
-- OpenFEMA disaster declarations (declaration frequency by disaster type)
-- OpenFEMA NFIP claims (flood insurance claims as flood exposure proxy)
-- FEMA NRI baseline scores (census tract level, aggregated to county)
+The geometric mean is the authoritative INFORM composition. Each
+pillar is itself a weighted average of its sub-indicators on a [0, 1]
+scale, where 1.0 represents the maximum risk and 0.0 represents no
+risk. The three pillars are equally weighted (0.333 each) for the
+published Libya profile.
 
-**Vulnerability** uses CDC SVI theme percentiles with hazard-specific sub-weights:
-- Flood: socioeconomic (0.20), housing/transportation (0.30), household composition (0.15), minority status (0.15), infrastructure density (0.15), mobile home factor (0.10), elderly factor (0.05), rural isolation (0.15) [PH weights shown; EM weights differ]
-- Tornado, winter storm, thunderstorm: similar SVI-based sub-weight structures with hazard-appropriate adjustments
+The legacy PHRAT quadratic-mean formula is retained in
+`config/risk_weights.yaml` (`phrat_formula_retained: true`) for
+historical reference only and is NOT the active formula for Libya
+deployments.
 
-**Resilience** uses inverse SVI scores as proxies for community adaptive capacity.
+## 2. Pillar Weights and Sub-Indicators
 
-**Health Impact Factor** scales risk by population health indicators (elderly percentage, poverty rate).
+All weights live in `config/risk_weights.yaml` under
+`profiles.libya`. Bilingual labels (Arabic primary, English secondary)
+are stored next to each weight.
 
-**Mobile home adjustment for tornado risk:**
-```
-mobile_home_factor = min(1.0, mobile_home_percentage * 5)
-adjusted_tornado_risk = min(1.0, base_tornado_risk * (1 + mobile_home_factor))
-```
+### 2.1 Pillar 1 - Hazard and Exposure (weight 0.333)
 
-The four sub-type scores are combined into a single natural hazards score.
+| Sub-domain | Weight | Component (weight) |
+|------------|--------|--------------------|
+| Infrastructure Hazard | 0.25 | Dam Safety (0.333), Electric Grid Reliability (0.333), Water and Sewage Systems (0.333) |
+| Natural Hazard | 0.25 | Flooding (0.30), Wildfires (0.20), Extreme Cold Events (0.25), Sandstorms (0.25) |
+| Epidemiological Hazard | 0.25 | Infectious and Emerging Diseases (0.60), Vector-Borne Diseases (0.40) |
+| Road Safety Hazard | 0.25 | Road Accident Rate (1.00) |
 
-### 4.2 Active Shooter Risk
+### 2.2 Pillar 2 - Vulnerability (weight 0.333)
 
-Multi-component risk model using:
-- Gun Violence Archive 2023 mass shooting data (static CSV)
-- NCES SSOCS 2019-2020 school safety survey data (static)
-- Census ACS demographics (population, density)
-- CDC SVI percentiles for vulnerability adjustment
+Equal weights (0.20 each):
 
-### 4.3 Health Metrics (Infectious Disease)
+| Sub-indicator | Notes |
+|---------------|-------|
+| Response Agency Capacity Gap | Understaffing, underfunding of emergency response agencies |
+| Urban Sprawl / Ad Hoc Construction | Rapid unplanned residential building increases structural risk |
+| Displacement and Migration Vulnerability | IDPs and migrants face compounded risks |
+| Lack of Health Awareness | Low health literacy amplifies disease burden and slows response |
+| Security and Safety Vulnerability | Rate of violence and insecurity; armed-clashes domain omitted pending review |
 
-Based on WI DHS respiratory illness surveillance data obtained via web scraper:
-- ILI (Influenza-like Illness) activity levels
-- COVID-19 metrics
-- RSV activity levels
-- Vaccination rate proxies
+### 2.3 Pillar 3 - Lack of Coping Capacity (weight 0.333)
 
-### 4.4 Air Quality Risk
+Scores represent the LACK of coping capacity (high score = low
+resilience). Each indicator is inverted from its positive form before
+aggregation. Equal weights (0.20 each):
 
-- EPA AirNow API provides daily AQI readings at monitoring stations
-- Multi-point sampling: nearest monitoring stations to county centroid
-- SVI adjustment: housing/transportation vulnerability (up to 30% increase) and socioeconomic status (up to 20% increase)
-- Combined SVI multiplier capped at 1.5x
+| Sub-indicator | Notes |
+|---------------|-------|
+| Emergency Response Time Gap | Longer ambulance and response times = higher lack of coping |
+| Lack of Data Availability | Limited historical disaster data and interoperability reduce resilience |
+| Community Support Gap | Weak community-level mutual support and civil society engagement |
+| Healthcare Access Gap | Distance and travel time to hospitals and primary care facilities |
+| Institutional Capacity Gap | Government institutional readiness for DRR investment |
 
-### 4.5 Extreme Heat Risk
+### 2.4 Out of Scope by Design
 
-Climate-adjusted heat vulnerability assessment using:
-- NOAA climate normals (1991-2020 baselines)
-- NWS heat forecast data (cached daily)
-- Census ACS: population 65+, poverty rate
-- CDC SVI percentiles
-- Climate trend factors and urban heat island multipliers
+The armed-clashes / political-violence domain present in the upstream
+INFORM model is intentionally omitted from the published Libya score
+pending a political sensitivity review. This decision is documented in
+`replit.md` under "Key Design Decisions".
 
-### 4.6 Dam Failure Risk (EVR)
+## 3. Data Sources and Connectors
 
-Standalone EVR domain:
-- WI DNR Dam Safety Database (ArcGIS FeatureServer, primary)
-- USACE NID (ArcGIS FeatureServer, keyless, fallback -- cloud IPs may receive 503 errors)
-- Downstream population exposure based on dam height, hazard classification, and proximity
-- OpenFEMA NFIP claims as flood exposure proxy
-- SVI housing/transportation adjustment (up to 20% increase)
+All external data is fetched by APScheduler jobs (registered in
+`core.py` when `CARA_PROFILE=libya`) and cached on disk under
+`data/cache/`. No external API calls occur during user assessments.
+The connector registry is `utils/connector_registry.py`.
 
-### 4.7 Vector-Borne Disease Risk
+### 3.1 Automated - Weekly (168 hours, `refresh_libya_hdx`)
 
-County-level Lyme disease and West Nile Virus assessment:
-- WI DHS EPHT CSV downloads: confirmed + probable case counts, crude rates per 100,000 for all 72 WI counties
-- Composite score: Lyme (65% weight) + WNV (35% weight), reflecting relative WI disease burden
-- Environmental factors: forest cover (USDA NLCD 2021), deer density (WI DNR)
-- Climate-adjusted range expansion projections (tick and mosquito habitat suitability under warming scenarios)
-- SVI socioeconomic adjustment (up to 15% increase)
+| Source | Endpoint | Used For | Cache |
+|--------|----------|----------|-------|
+| OCHA HDX (CKAN) | data.humdata.org/api/3/ | IOM DTM displacement, OCHA 3W presence, UNHCR Libya | data/cache/hdx/ |
+| HeiGIT Accessibility | hot.storage.heigit.org | Hospital, primary healthcare, education travel time by district (22 ADM1 units, propagated to 148 municipalities as documented proxy) | data/cache/heigit/ |
+| IDMC via OCHA HDX | data.humdata.org/api/3/ | Annual conflict IDPs, IDP stock, disaster displacement events (replaces direct IDMC API which returns 403) | data/cache/idmc/ |
 
-### 4.8 SVI Integration Across All Domains
+### 3.2 Automated - Monthly (720 hours, `refresh_libya_global`)
 
-CDC/ATSDR Social Vulnerability Index 2022 data covers all 72 Wisconsin counties. Real RPL_THEMES percentile values fetched via single bulk ArcGIS API call. Four themes used:
-- Socioeconomic Status (RPL_THEME1)
-- Household Characteristics and Disability (RPL_THEME2)
-- Racial and Ethnic Minority Status and Language (RPL_THEME3)
-- Housing Type and Transportation (RPL_THEME4)
+| Source | Endpoint | Used For |
+|--------|----------|----------|
+| WHO Libya via OCHA HDX (primary) | data.humdata.org/api/3/ | 7 CSV files, 17 health indicators (April 2026 cutover) |
+| WHO GHO (legacy fallback) | ghoapi.azureedge.net/api/ | Returns stale Libya data (2008-2018 vintage) - fallback only |
+| World Bank Open Data | api.worldbank.org/v2/ | Development indicators |
+| OpenAQ | api.openaq.org/v2/ | Air quality readings (no Libya stations confirmed as of April 2026) |
 
-SVI adjustment factors are configurable in `config/risk_weights.yaml` under `svi_adjustment_factors`.
+Scheduler config: `data/config/scheduler_config.json`.
 
-### 4.9 PHRAT Final Score Assembly
+### 3.3 File-Based (manual download, public)
+
+| Source | File | Used For |
+|--------|------|----------|
+| EM-DAT (CRED/UCLouvain) | data/emdat_libya.xlsx | Libya disaster history 2000-present (76 records, version 2026-04-17). Headline event: Storm Daniel 2023 (13,200 deaths, 1.6M affected, $6.2B damage) |
+
+### 3.4 Manual Upload (no public API - restricted government data)
+
+| Source | Folder | Used For |
+|--------|--------|----------|
+| NCDC Libya | data/uploads/ncdc/ | Disease surveillance CSV |
+| COI Libya | data/uploads/coi/ | Coordination capacity CSV |
+| IOM DTM fallback | data/uploads/iom/ | Used if HDX download fails |
+
+### 3.5 Local Consolidated Uploads
+
+`utils/local_overrides.py` builds an mtime-cached index of every
+consolidated municipal upload. On subnational dashboards, uploaded
+values substitute the national/proxy values for seven mappable
+indicators: `tb_inc`, `u5mort`, `neo_mort`, `water`, `sanitation`,
+`electricity`, `pm25`. The national LY view never applies overrides.
+
+## 4. Risk Calculation Pipeline
+
+Each per-pillar module in `utils/domains/` (hazard_exposure.py,
+vulnerability.py, coping_capacity.py) consumes the normalised
+connector data and returns a [0, 1] score for every sub-indicator.
+`routes/dashboard.py::_run_pillars()` then composes the geometric
+mean:
 
 ```python
-weights = {
-    'natural_hazards': 0.28,
-    'health_metrics': 0.17,
-    'active_shooter': 0.18,
-    'extreme_heat': 0.11,
-    'air_quality': 0.12,
-    'dam_failure': 0.07,
-    'vector_borne_disease': 0.07,
-}
-p = 2.0
-weighted_sum = sum(w * (risk ** p) for w, risk in zip(weights, risks))
-total_risk_score = max(0.0, min(1.0, weighted_sum ** (1.0 / p)))
+inform_score = (hazard ** (1/3)) * (vulnerability ** (1/3)) * (coping ** (1/3))
 ```
 
-## 5. Temporal Framework (BSTA)
+`_compute_inform_score()` clamps the result to [0, 1] and is pinned by
+`tests/test_inform.py`.
 
-CARA uses a Baseline-Seasonal-Trend-Acute (BSTA) temporal framework. In the default Annual Strategic Planning mode:
-- Baseline (60% weight): structural/foundational risks
-- Seasonal (25% weight): cyclical preparedness needs
-- Trend (15% weight): emerging long-term changes
-- Acute (informational only): current events for context
+### 4.1 Connector Pipeline
 
-A Dynamic Monitoring mode is available for emergency managers (40/20/20/20 split).
+`routes/dashboard.py::_load_connector_data()` loads who_hdx,
+idmc_hdx, heigit, iom, worldbank, coi_libya, and ncdc_libya from disk
+cache and normalises keys for the domain modules:
 
-See `docs/temporal_framework_usage_strategy.md` for full details.
+- WHO HDX beds per 10k divided by 10 -> per 1000
+- IDMC HDX `total_displacement_stock` mapped to `idmc.total_idps`
+- HeiGIT 22 ADM1 access values propagated to 148 municipalities as a
+  documented regional proxy
 
-## 6. Current Limitations
+### 4.2 Show-Your-Work Transparency
 
-### 6.1 Data Source Limitations
+`_build_show_work()` in `routes/dashboard.py` builds per-sub-domain
+Bootstrap popover HTML with raw indicator values, formula string, and
+data source attribution. `_build_indicator_tiles()` builds a 3-level
+hierarchy (pillar > sub-domain section > individual tile) with 34
+individual indicator tiles across 12 sub-domain sections, each with
+id, bilingual labels, raw value, unit, year, 0-1 score, 0-10 display,
+risk band, badge colour, availability flag, proxy flag, source,
+agency, formula, note, and pre-built popover_html.
 
-1. **Census Data Timing**: ACS 5-year estimates have statistical margins of error. Rural areas have higher uncertainty. Data updated annually from local CSV files.
-2. **Static Datasets**: GVA (2023), NCES SSOCS (2019-2020), FEMA NRI, and climate normals are point-in-time snapshots that require manual updates.
-3. **USACE NID Cloud Access**: The NID ArcGIS FeatureServer may return 503 errors from cloud-hosted IPs. WI DNR Dam Safety Database is the primary source and works from cloud.
-4. **DHS Web Scraper**: Respiratory surveillance data depends on WI DHS page structure remaining stable. Format changes can break the scraper.
-5. **VBD Data Lag**: WI DHS EPHT CSV data may have reporting delays of several weeks.
+### 4.3 Risk Banding
 
-### 6.2 Methodological Limitations
+`utils.action_plan_content._inform_classify` maps the 0-1 score to
+five bands using upper-exclusive cut points:
 
-1. **SVI as Proxy**: Using SVI percentiles as vulnerability/resilience proxies assumes socioeconomic factors correlate with disaster outcomes. The SVI-cybersecurity linkage is particularly indirect (no empirical validation).
-2. **Supplementary Domains**: Cybersecurity and utilities domains use proxy indicators, not real incident data. Scores should be interpreted as relative estimates only.
-3. **Predictive Analysis**: The predictive analysis module (`utils/predictive_analysis.py`) uses `random.uniform()` to generate confidence intervals and simulated historical trends. These are labeled as modeled estimates, not empirical forecasts.
-4. **Health Impact Factor**: Based on available Census demographic proxies (elderly percentage, poverty rate), not direct epidemiological outcomes data.
-5. **Linear SVI Adjustments**: Multiplier-based SVI adjustments assume linear relationships between vulnerability and risk, which may oversimplify complex interactions.
+| Band | Score range |
+|------|-------------|
+| Very Low | 0.00 - 0.20 |
+| Low | 0.20 - 0.40 |
+| Medium | 0.40 - 0.60 |
+| High | 0.60 - 0.80 |
+| Very High | 0.80 - 1.00 |
 
-### 6.3 Geographic Resolution
+Non-numeric or negative input returns "unavailable".
 
-- Most risk data is at county level. Census tract-level NRI data is aggregated to counties.
-- Tribal jurisdictions may have unique risk patterns not fully captured by county-level data.
-- Urban/rural differences within counties are only partially captured through SVI and population density.
+## 5. Sendai Framework Alignment
 
-## 7. Data Validation
+| Sendai Priority | INFORM mapping |
+|-----------------|----------------|
+| Priority 1 (Understanding risk) | Hazard and Exposure + Vulnerability pillars |
+| Priority 2 (Governance) | Coping Capacity pillar |
+| Priority 3 (Investment in DRR) | Coping Capacity / institutional_capacity |
+| Priority 4 (Preparedness) | Coping Capacity / emergency_response |
 
-- Automated outlier detection and capping (SVI adjustment multipliers capped)
-- Cross-validation between NOAA Storm Events and OpenFEMA disaster declarations
-- Scheduler-managed data freshness with configurable cache expiration
-- Fallback data sources for critical APIs (WI DNR primary, USACE NID fallback for dams)
-- Risk scores clamped to [0.0, 1.0] range
+## 6. Action Plan Output
 
-## 8. Version History
+`GET /action-plan/<jurisdiction_id>` renders a bilingual RTL
+preparedness action plan, reusing `_run_pillars()` and calling
+`utils/action_plan_content.get_action_domains()`. Output: 11
+INFORM-component domains sorted by score; each domain has a 3-tier
+timeline (0-3 months, 3-12 months, 1-3 years) in Arabic and English,
+mapped to UN Cluster lead, Libyan government counterpart, and Sendai
+priority. Template: `templates/action_plan_libya.html`.
 
-- v2.6.0 (March 2026): Thread-safety fixes, concurrency capacity increase, methodology documentation reconciled with implementation.
-- v2.5.0 (February 2026): Real CDC/ATSDR SVI 2022 data for all 72 WI counties. Dam failure and VBD as separate PHRAT domains. EVR framework for natural hazards.
-- v1.1.0 (April 2025): Coverage expanded to all 95 WI public health jurisdictions.
-- v1.0.0 (March 2025): Initial release.
+## 7. Known Limitations
+
+1. **HeiGIT regional proxy.** Hospital, primary healthcare, and
+   education access values are produced at ADM1 (22 districts) and
+   propagated to all 148 municipalities. Tiles flagged with the
+   `proxy` source kind.
+2. **WHO GHO Libya staleness.** Direct WHO GHO returns 2008-2018
+   vintage data for Libya; the WHO Libya HDX dataset is now the
+   primary source as of April 2026.
+3. **Direct IDMC API blocked.** IDMC's direct API returns 403 from
+   most cloud IPs; the OCHA HDX mirror is used instead.
+4. **OpenAQ coverage.** No Libya stations confirmed as of April 2026.
+   The connector remains registered for future activation.
+5. **Armed-clashes domain omitted.** See section 2.4. Risk scores for
+   municipalities with high political-violence exposure may
+   under-state composite risk.
+6. **42 municipalities flagged needs_verification.** Identifier
+   stability and population estimates pending Libyan government
+   confirmation.
+
+## 8. Test Coverage
+
+`tests/test_inform.py` validates the INFORM pipeline at three levels:
+
+1. The cube-root composition that combines the three pillars
+   (`_compute_inform_score`)
+2. The 0-1 banding helper used by the action plan
+   (`_inform_classify`)
+3. One full national-level dashboard score end-to-end through
+   `_run_pillars` with synthetic connector data
+
+See `tests/README.md` for the full suite description.
 
 ## 9. References
 
-1. FEMA National Risk Index (NRI) - Wisconsin Census Tract Data
-2. NOAA NCEI Storm Events Database
-3. OpenFEMA APIs: Disaster Declarations Summaries v2, NFIP Redacted Claims v2, HMA Projects v4
-4. US Census Bureau American Community Survey (ACS 5-Year Estimates)
-5. CDC/ATSDR Social Vulnerability Index 2022
-6. WI DNR Dam Safety Database (ArcGIS FeatureServer)
-7. USACE National Inventory of Dams (NID ArcGIS FeatureServer)
-8. EPA AirNow API
-9. NOAA/NWS Heat Forecast API
-10. Wisconsin DHS Respiratory Illness Surveillance
-11. WI DHS Environmental Public Health Tracking (EPHT) - Lyme/WNV
-12. Gun Violence Archive 2023
-13. NCES School Safety and Climate Survey (SSOCS) 2019-2020
-14. CDC PHEP Capability Standards
-15. WICCI/NOAA Climate Projections
+1. INFORM Risk Index - JRC / IASC.
+   https://drmkc.jrc.ec.europa.eu/inform-index
+2. Sendai Framework for Disaster Risk Reduction 2015-2030 - UNDRR.
+   https://www.undrr.org/implementing-sendai-framework
+3. OCHA Humanitarian Data Exchange. https://data.humdata.org
+4. WHO Global Health Observatory. https://www.who.int/data/gho
+5. EM-DAT International Disaster Database. https://www.emdat.be
+6. IDMC Internal Displacement Database.
+   https://www.internal-displacement.org
+7. HeiGIT Healthcare Accessibility Analysis.
+8. World Bank Open Data. https://data.worldbank.org
+9. OpenAQ Open Air Quality Data. https://openaq.org
