@@ -11,6 +11,7 @@ These routes handle the main pages:
 import logging
 import os
 from datetime import datetime
+from urllib.parse import urlsplit
 from flask import (Blueprint, render_template, redirect, url_for,
                    request, session, flash, jsonify)
 
@@ -108,14 +109,47 @@ _ALLOWED_POST_LOGIN_PATHS = {
 }
 
 
+_ALLOWED_POST_LOGIN_PREFIXES = (
+    '/dashboard/', '/methodology/', '/data-sources/', '/about/',
+)
+
+
 def _resolve_post_login_path(raw: str) -> str:
-    """Map an arbitrary 'next' value to a fixed allowlisted internal path."""
-    if not raw:
+    """Map an arbitrary 'next' value to a fixed allow-listed internal path.
+
+    Hardened against open-redirect tricks (CodeQL py/url-redirection):
+    - Reject anything with a scheme or netloc (``http://evil``, ``//evil``,
+      ``javascript:``, ``data:`` …) by parsing with ``urlsplit``.
+    - Reject anything containing a backslash, since some browsers normalise
+      ``\\`` to ``/`` and would treat ``/\\evil.com`` as protocol-relative.
+    - Reject anything containing whitespace or other ASCII control chars,
+      which some browsers strip before following the redirect.
+    - Require the resulting path to start with exactly one ``/``.
+    Then, in addition, the path must match the small allow-list of internal
+    pages or one of the known internal prefixes; everything else collapses
+    to ``/``. Query strings and fragments on the input are dropped.
+    """
+    if not raw or not isinstance(raw, str):
         return '/'
-    candidate = raw.split('?', 1)[0].split('#', 1)[0]
+
+    if '\\' in raw or any(ch.isspace() or ord(ch) < 0x20 for ch in raw):
+        return '/'
+
+    try:
+        parts = urlsplit(raw)
+    except ValueError:
+        return '/'
+
+    if parts.scheme or parts.netloc:
+        return '/'
+
+    candidate = parts.path or '/'
+    if not candidate.startswith('/') or candidate.startswith('//'):
+        return '/'
+
     if candidate in _ALLOWED_POST_LOGIN_PATHS:
         return candidate
-    for prefix in ('/dashboard/', '/methodology/', '/data-sources/', '/about/'):
+    for prefix in _ALLOWED_POST_LOGIN_PREFIXES:
         if candidate.startswith(prefix):
             return candidate
     return '/'
