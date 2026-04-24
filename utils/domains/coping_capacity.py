@@ -20,6 +20,8 @@ Alignment with Sendai Framework:
   Priority 4 (Preparedness):  → response_time_gap, data_availability_gap
 
 Data sources:
+  - HeiGIT:     District-level hospital and primary healthcare access gaps
+                (only signal with real subnational variation across Libya)
   - WHO GHO:    Healthcare density, health system coverage
   - World Bank: Poverty headcount, GDP per capita, healthcare expenditure
   - IDMC/IOM:   Displacement-adjusted service access
@@ -154,9 +156,41 @@ class CopingCapacityDomain(BaseDomain):
         """
         Score the lack of accessible healthcare.
         High score = poor healthcare access (distance, scarcity, quality).
+
+        Precedence:
+          1. HeiGIT subnational hospital and/or primary care access gaps
+             (the only signal in the pipeline with real district variation,
+             so when present it drives the score and lets per-municipality
+             headline pillar values actually differ).
+          2. WHO universal health coverage index inverse.
+          3. World Bank health expenditure pct of GDP and/or WHO hospital
+             beds per 1000 (averaged when both present).
+          4. Documented 0.50 proxy when nothing is available.
         """
+        heigit = data.get('heigit', {})
         who = data.get('who_gho', {})
         worldbank = data.get('worldbank', {})
+
+        heigit_scores = []
+        hosp_gap_pct = heigit.get('hospital_access_gap_pct')
+        if hosp_gap_pct is not None:
+            try:
+                heigit_scores.append(
+                    max(0.0, min(1.0, float(hosp_gap_pct) / 100.0))
+                )
+            except (TypeError, ValueError):
+                pass
+        primary_gap_pct = heigit.get('primary_care_access_gap_pct')
+        if primary_gap_pct is not None:
+            try:
+                heigit_scores.append(
+                    max(0.0, min(1.0, float(primary_gap_pct) / 100.0))
+                )
+            except (TypeError, ValueError):
+                pass
+        if heigit_scores:
+            score = sum(heigit_scores) / len(heigit_scores)
+            return round(score, 4), False
 
         uchi = who.get('universal_health_coverage_index', None)
         if uchi is not None:

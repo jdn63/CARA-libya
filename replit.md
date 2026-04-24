@@ -71,7 +71,7 @@ Pillar 3 (Lack of Coping Capacity): emergency response time, data availability, 
 
 Automated (APScheduler, no credentials required) — weekly 168h job:
 - OCHA HDX (data.humdata.org/api/3/) — IOM DTM displacement, OCHA 3W presence, UNHCR Libya — cache: data/cache/hdx/
-- HeiGIT Accessibility (hot.storage.heigit.org) — hospital, primary healthcare, education access by district (22 ADM1 units, propagated to all 148 municipalities as documented proxy) — cache: data/cache/heigit/ — INFORM: Coping Capacity / healthcare_access_gap
+- HeiGIT Accessibility (hot.storage.heigit.org) — hospital, primary healthcare, education access by district (22 ADM1 units, propagated to all 148 municipalities as documented proxy) — cache: data/cache/heigit/ — INFORM: Coping Capacity / healthcare_access_gap (hospital_access_gap_pct and primary_care_access_gap_pct take precedence over WHO UHC / beds / health expenditure so per-municipality scores actually differ); Vulnerability / health_unawareness (education_access_gap_pct blended in alongside vaccination and literacy as a literacy proxy)
 - IDMC via OCHA HDX (replaces direct IDMC API which returns 403) — annual conflict IDPs, IDP stock, disaster displacement events — cache: data/cache/idmc/ — INFORM: Vulnerability / displacement_vulnerability
 
 Automated — monthly 720h job:

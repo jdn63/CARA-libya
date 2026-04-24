@@ -315,6 +315,33 @@ def test_health_unawareness_missing_data_falls_back_to_proxy():
     assert proxy is True
 
 
+def test_health_unawareness_blends_heigit_education_access_gap():
+    """HeiGIT education_access_gap_pct is averaged in alongside the
+    vaccination and literacy signals, as a literacy proxy with real
+    subnational variation."""
+    v = _vuln()
+    score, proxy = v._health_unawareness({
+        'who_gho':   {'measles_vaccination_coverage': 80},  # 1 - 0.8 = 0.20
+        'worldbank': {'literacy_rate': 70},                  # 1 - 0.7 = 0.30
+        'heigit':    {'education_access_gap_pct': 40.0},     # 0.40
+    })
+    # mean(0.20, 0.30, 0.40) = 0.30
+    assert _approx(score, 0.30)
+    assert proxy is False
+
+
+def test_health_unawareness_heigit_education_alone_drives_score():
+    """When only HeiGIT education access gap is present, it alone drives
+    the score so per-municipality variation reaches the headline pillar
+    instead of collapsing to the 0.35 proxy default."""
+    v = _vuln()
+    score, proxy = v._health_unawareness({
+        'heigit': {'education_access_gap_pct': 65.0},  # 0.65
+    })
+    assert _approx(score, 0.65)
+    assert proxy is False
+
+
 # --- _security_vulnerability -----------------------------------------------
 
 def test_security_vulnerability_real_data_uses_local_incident_rate():
@@ -417,6 +444,56 @@ def test_healthcare_access_gap_missing_data_falls_back_to_proxy():
     score, proxy = c._healthcare_access_gap({})
     assert _approx(score, 0.50)
     assert proxy is True
+
+
+def test_healthcare_access_gap_uses_heigit_hospital_and_primary_care():
+    """HeiGIT subnational hospital and primary care access gaps are
+    averaged into the score, ahead of UHC / beds / health expenditure."""
+    c = _coping()
+    score, proxy = c._healthcare_access_gap({
+        'heigit': {
+            'hospital_access_gap_pct': 60.0,     # 0.60
+            'primary_care_access_gap_pct': 40.0, # 0.40
+        },
+    })
+    # mean(0.60, 0.40) = 0.50
+    assert _approx(score, 0.50)
+    assert proxy is False
+
+
+def test_healthcare_access_gap_heigit_takes_precedence_over_uhc():
+    """When both HeiGIT and WHO UHC index are present, HeiGIT (the most
+    subnationally-precise signal) wins so per-municipality scores can
+    actually differ instead of collapsing to a single national value."""
+    c = _coping()
+    score, proxy = c._healthcare_access_gap({
+        'heigit':  {'hospital_access_gap_pct': 80.0},          # 0.80
+        'who_gho': {'universal_health_coverage_index': 70},    # would yield 0.30
+    })
+    assert _approx(score, 0.80)
+    assert proxy is False
+
+
+def test_healthcare_access_gap_heigit_primary_care_alone_drives_score():
+    """Primary care access gap alone (no hospital gap) drives the score
+    so a partial HeiGIT signal still beats the national UHC fallback."""
+    c = _coping()
+    score, proxy = c._healthcare_access_gap({
+        'heigit': {'primary_care_access_gap_pct': 35.0},  # 0.35
+    })
+    assert _approx(score, 0.35)
+    assert proxy is False
+
+
+def test_healthcare_access_gap_falls_back_to_uhc_when_no_heigit():
+    """No HeiGIT data -> WHO UHC index inverse remains the next signal,
+    preserving the existing precedence chain."""
+    c = _coping()
+    score, proxy = c._healthcare_access_gap({
+        'who_gho': {'universal_health_coverage_index': 70},  # 1 - 0.70 = 0.30
+    })
+    assert _approx(score, 0.30)
+    assert proxy is False
 
 
 # --- _poverty_vulnerability ------------------------------------------------
