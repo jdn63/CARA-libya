@@ -90,6 +90,55 @@ class JurisdictionManager:
         j = self.get_by_id(jurisdiction_id)
         return int(j.get('population', 0)) if j else 0
 
+    def national_population_deduped(self) -> int:
+        """Return Libya's deduplicated national population.
+
+        This is the SINGLE canonical accessor for any national-level rollup.
+        It returns ``_metadata.national_total_deduped`` from
+        ``data/libya_municipalities.json``, which is the sum of populations
+        across entries flagged ``population_in_national_total=True`` (i.e.
+        excluding the Tripoli/Benghazi/Susah/Tobruk muhalla overlays whose
+        parent baladiya population is already counted in the verified OCHA
+        set).
+
+        DO NOT compute a national total by naively summing
+        ``m['population'] for m in jm.get_all()`` — that double-counts the
+        sub-baladiya overlays and inflates the figure by ~17%. If this
+        helper returns 0 (e.g. metadata missing), callers should fall back
+        to ``national_population_deduped_computed()`` rather than the naive
+        sum.
+
+        Returns:
+            int: deduplicated national population, or 0 if metadata is
+            missing.
+        """
+        raw = self._get_municipalities_raw()
+        if raw:
+            md = raw.get('_metadata', {})
+            value = md.get('national_total_deduped')
+            if isinstance(value, (int, float)) and value > 0:
+                return int(value)
+        return self.national_population_deduped_computed()
+
+    def national_population_deduped_computed(self) -> int:
+        """Recompute the deduplicated national population from entries.
+
+        Sums ``population`` only over entries where
+        ``population_in_national_total`` is True. Prefer
+        :meth:`national_population_deduped` (which reads the pinned
+        ``_metadata.national_total_deduped`` value) for dashboard rollups;
+        this fallback exists for the rare case where the metadata field is
+        missing.
+        """
+        total = 0
+        for m in self.get_all():
+            if m.get('population_in_national_total', True):
+                try:
+                    total += int(m.get('population', 0) or 0)
+                except (ValueError, TypeError):
+                    continue
+        return total
+
     def get_name_ar(self, jurisdiction_id: str) -> str:
         """Return the Arabic name for a municipality."""
         j = self.get_by_id(jurisdiction_id)

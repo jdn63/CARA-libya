@@ -1541,7 +1541,7 @@ def _build_action_plan_context(jurisdiction_id: str):
             'name_ar': 'ليبيا — التقييم الوطني',
             'name_en': 'Libya — National Assessment',
             'level': 1,
-            'population': 6931000,
+            'population': jm.national_population_deduped(),
             'region': '',
         }
     else:
@@ -1636,7 +1636,7 @@ def dashboard(jurisdiction_id):
                 'name_ar': 'ليبيا — التقييم الوطني',
                 'name_en': 'Libya — National Assessment',
                 'level': 1,
-                'population': 6931000,
+                'population': jm.national_population_deduped(),
                 'region': '',
                 'district': '',
             }
