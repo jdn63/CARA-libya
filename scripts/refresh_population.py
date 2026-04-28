@@ -171,12 +171,13 @@ ALL_RESOURCES = [OCHA_HNO_RESOURCE, IOM_DTM_R45_RESOURCE, IOM_MIGRANTS_R59_RESOU
 # ---------------------------------------------------------------------------
 
 MANUAL_ALIAS: Dict[str, Optional[str]] = {
-    # --- Tripoli mantika (LY0211): 5 of 6 OCHA baladiyas covered ---
+    # --- Tripoli mantika (LY0211): all 6 OCHA baladiyas covered ---
     "LY-001": "LY021104",  # Tripoli Center -> Tripoli baladiya
     "LY-002": "LY021105",  # Abu Salim -> Abusliem
     "LY-003": "LY021102",  # Tajoura -> Tajoura
     "LY-005": "LY021103",  # Ain Zara -> Ain Zara
     "LY-008": "LY021101",  # Suq al-Jumua -> Suq Aljumaa
+    "LY-107": "LY021106",  # Hai Alandalus (added 2026 to close OCHA HNO gap)
     # Sub-zones (admin-4 muhalla within Tripoli baladiya):
     "LY-009": None, "LY-010": None, "LY-011": None,
     "LY-012": None, "LY-013": None, "LY-014": None,
@@ -187,12 +188,17 @@ MANUAL_ALIAS: Dict[str, Optional[str]] = {
     "LY-007": "LY021205",  # Al-Sawani -> Swani Bin Adam
     "LY-015": "LY021207",  # Al-Aziziyah -> Al Aziziya
     "LY-026": "LY021208",  # Warshafanah -> Al Maya (Warshafanah area)
+    "LY-108": "LY021201",  # Sidi Assayeh (added 2026)
+    "LY-109": "LY021202",  # Suq Alkhamees (added 2026)
+    "LY-110": "LY021204",  # Espeaa (added 2026)
 
     # --- Azzawya mantika (LY0213) + cross-mantika ---
     "LY-016": "LY021209",  # Al-Zahra -> Azzahra
     "LY-017": "LY021302",  # Surman -> Surman
     "LY-018": "LY021004",  # Qarabuli -> Garabolli (Almargeb)
     "LY-025": "LY021301",  # Zawiya -> Azzawya
+    "LY-111": "LY021303",  # Gharb Azzawya (added 2026)
+    "LY-112": "LY021304",  # Janoub Azzawya (added 2026)
 
     # --- Zwara mantika (LY0215) ---
     "LY-020": "LY021502",  # Sabratah -> Sabratha
@@ -206,11 +212,13 @@ MANUAL_ALIAS: Dict[str, Optional[str]] = {
     "LY-029": "LY021001",  # Al-Khums -> Alkhums
     "LY-030": "LY021005",  # Tarhuna -> Tarhuna
     "LY-031": "LY021002",  # Msallata -> Msallata
+    "LY-113": "LY021003",  # Qasr Akhyar (added 2026)
 
     # --- Misrata mantika (LY0214) ---
     "LY-033": "LY021402",  # Zliten -> Zliten
     "LY-034": "LY021401",  # Misrata -> Misrata
     "LY-035": "LY021404",  # Bani Walid -> Bani Waleed
+    "LY-114": "LY021403",  # Abu Qurayn (added 2026)
 
     # --- Sirt mantika (LY0208) ---
     "LY-039": "LY020803",  # Sirte -> Sirt
@@ -224,46 +232,87 @@ MANUAL_ALIAS: Dict[str, Optional[str]] = {
     "LY-046": "LY021602",  # Zintan -> Azzintan
     "LY-048": "LY021608",  # Al-Rajban -> Arrajban
     "LY-049": "LY021604",  # Al-Qal'a -> Al Qalaa
+    "LY-097": "LY021613",  # Al-Shwayrif -> Ashshwayrif (was estimate, 2026 promote)
+    "LY-115": "LY021601",  # Nesma (added 2026)
+    "LY-116": "LY021603",  # Alasabaa (added 2026)
+    "LY-117": "LY021607",  # Kikkla (added 2026)
+    "LY-118": "LY021610",  # Arrhaibat (added 2026)
+    "LY-119": "LY021611",  # Arrayayna (added 2026)
+    "LY-120": "LY021612",  # Ashshgega (added 2026)
+    "LY-121": "LY021614",  # Thaher Aljabal (added 2026)
 
     # --- Nalut mantika (LY0209) ---
     "LY-050": "LY020905",  # Nalut -> Nalut
     "LY-051": "LY020901",  # Ghadames -> Ghadamis
     "LY-052": "LY020907",  # Darj -> Daraj
+    "LY-122": "LY020902",  # Alharaba (added 2026)
+    "LY-123": "LY020903",  # Kabaw (added 2026)
+    "LY-124": "LY020904",  # Alhawamid (added 2026)
+    "LY-125": "LY020906",  # Wazin (added 2026)
+    "LY-126": "LY020908",  # Baten Aljabal (added 2026)
 
     # --- Benghazi mantika (LY0103) ---
     "LY-053": "LY010304",  # Benghazi Center -> Benghazi (whole baladiya)
     "LY-065": "LY010303",  # Soluq -> Suloug
+    "LY-064": "LY010302",  # Tokra -> Toukra (was estimate, 2026 promote)
+    "LY-127": "LY010305",  # Gemienis (added 2026)
     # Sub-zones of Benghazi (admin-4 muhalla):
     "LY-054": None, "LY-055": None, "LY-056": None, "LY-057": None,
     "LY-058": None, "LY-059": None, "LY-060": None, "LY-061": None,
     "LY-062": None,
 
-    # --- Al Jabal Al Akhdar / Derna corridor ---
+    # --- Almarj mantika (LY0102) ---
+    "LY-128": "LY010201",  # Jardas Alabeed (added 2026)
+    "LY-129": "LY010203",  # Assahel (added 2026)
+
+    # --- Al Jabal Al Akhdar mantika (LY0106) / Derna corridor ---
     "LY-068": None,        # Susah - not a separate baladiya in OCHA HNO
     "LY-080": "LY010105",  # Librag -> Labriq
+    "LY-069": "LY010601",  # Shahat -> Shahhat (was estimate, 2026 promote)
+
+    # --- Derna mantika (LY0101) ---
+    "LY-130": "LY010101",  # Umm arrazam (added 2026)
+    "LY-131": "LY010104",  # Alqayqab (added 2026)
 
     # --- Tobruk mantika (LY0104) ---
     "LY-075": None,        # Musaid - border crossing zone
     "LY-076": None,        # Omar al-Mukhtar - sub-zone
+    "LY-132": "LY010401",  # Emsaed (added 2026)
+    "LY-133": "LY010402",  # Bir Alashhab (added 2026)
 
     # --- Ejdabia mantika (LY0105) ---
     "LY-078": "LY010506",  # Al-Burayqah -> Albrayga
     "LY-082": "LY010503",  # Awjila -> Aujala
+    "LY-077": "LY010504",  # Ajdabiya -> Ejdabia (was estimate, 2026 promote)
+    "LY-083": "LY010505",  # Maradah -> Marada (was estimate, 2026 promote)
     "LY-079": None,        # Al-Waygah - small
     "LY-085": None,        # Rabyana - small
     "LY-088": None,        # Al-Baraq - small
+    "LY-134": "LY010501",  # Ejkherra (added 2026)
+
+    # --- Alkufra mantika (LY0107) ---
+    "LY-086": "LY010702",  # Tazerbu -> Tazirbu (was estimate, 2026 promote)
 
     # --- Wadi Ashshati mantika (LY0318) ---
     "LY-095": "LY031801",  # Brak al-Shati -> Brak
     "LY-103": "LY031802",  # Idri -> Edri
+    "LY-135": "LY031803",  # Algurdha Ashshati (added 2026)
+
+    # --- Sebha mantika (LY0319) ---
+    "LY-087": "LY031901",  # Sabha -> Sebha (was estimate, 2026 promote)
+    "LY-136": "LY031902",  # Albawanees (added 2026)
 
     # --- Murzuq mantika (LY0322) ---
     "LY-099": "LY032202",  # Qatrun -> Algatroun
+    "LY-100": "LY032203",  # Traghan -> Taraghin (was estimate, 2026 promote)
     "LY-104": None,        # Al-Qirdah - small
     "LY-096": None,        # Umm al-Aranib - small
+    "LY-137": "LY032201",  # Alsharguiya (added 2026)
+    "LY-138": "LY032205",  # Wadi Etba (added 2026)
 
     # --- Ubari mantika (LY0320) ---
     "LY-090": "LY032001",  # Bent Bay -> Bint Bayya
+    "LY-139": "LY032002",  # Alghrayfa (added 2026)
 
     # --- Other small unmatched (no OCHA HNO equivalent) ---
     "LY-019": None, "LY-028": None, "LY-032": None, "LY-036": None,
@@ -540,16 +589,17 @@ def _apply_updates(
     md["current_count"] = n_total
     md["data_gap_note"] = (
         f"This file contains {n_total} entries: {n_verified} verified against "
-        f"OCHA HNO 2021 baladiyas, {n_pending} small villages outside HNO scope "
-        f"with workshop estimates pending verification, and {n_subzone} "
-        f"admin-4 sub-baladiya overlays (Tripoli and Benghazi muhalla zones, "
-        f"plus Susah and the Musaid/Omar al-Mukhtar Tobruk corridor) that are "
-        f"flagged population_in_national_total=False to prevent double-counting "
-        f"their parent baladiya. To reach Libya's 148-baladiya target, "
-        f"approximately {max(148 - (n_verified + n_pending), 0)} additional "
-        f"baladiyas — primarily from the 41 OCHA HNO baladiyas not yet matched "
-        f"and unsplit metropolitan units in Misrata — still need to be added "
-        f"from official Libyan government administrative records (High National "
+        f"OCHA HNO 2021 baladiyas (full coverage of all 100 OCHA HNO units), "
+        f"{n_pending} small villages outside HNO scope with workshop estimates "
+        f"pending verification, and {n_subzone} admin-4 sub-baladiya overlays "
+        f"(Tripoli and Benghazi muhalla zones, plus Susah and the "
+        f"Musaid/Omar al-Mukhtar Tobruk corridor) that are flagged "
+        f"population_in_national_total=False to prevent double-counting their "
+        f"parent baladiya. To reach Libya's 148-baladiya target, approximately "
+        f"{max(148 - (n_verified + n_pending), 0)} additional baladiyas — "
+        f"primarily unsplit metropolitan units in Misrata and small "
+        f"villages/oases outside OCHA HNO scope — still need to be added from "
+        f"official Libyan government administrative records (High National "
         f"Elections Commission or Ministry of Local Government municipal "
         f"registry)."
     )
@@ -594,7 +644,8 @@ def _apply_updates(
         "coverage": (
             f"OCHA HNO 2021 covers 100 of Libya's 148 baladiyas. This file has "
             f"{n_total} entries: {n_verified} 'verified_ocha' (population from "
-            f"OCHA HNO 2021, population_in_national_total=True), "
+            f"OCHA HNO 2021, population_in_national_total=True — full coverage "
+            f"of all 100 OCHA HNO units), "
             f"{n_pending} 'estimated_pending_verification' (small villages "
             f"outside HNO scope, population_in_national_total=True), and "
             f"{n_subzone} 'sub_baladiya_estimate' (admin-4 muhalla overlays "
@@ -603,8 +654,8 @@ def _apply_updates(
             f"Deduplicated national total over the {n_verified + n_pending} "
             f"counted entries = {national_deduped:,} "
             f"({100 * national_deduped / UN_WPP_2024_LIBYA:.1f}% of UN WPP 2024); "
-            f"the gap to UN WPP reflects the ~41 OCHA HNO baladiyas not yet "
-            f"in this file."
+            f"residual difference from UN WPP reflects the small-village "
+            f"workshop estimates that fall outside OCHA HNO scope."
         ),
     }
 

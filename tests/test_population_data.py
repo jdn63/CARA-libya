@@ -188,14 +188,14 @@ def test_naive_sum_double_counts_sub_baladiya_overlays():
 
 def test_deduped_national_total_within_range_of_un_wpp_2024():
     """The deduplicated sum (excluding sub-baladiya overlays) must land
-    within 80-105% of UN WPP 2024.
+    within 95-105% of UN WPP 2024.
 
-    OCHA HNO 2021 covers 100 of Libya's 148 baladiyas; only 59 are matched
-    in this file, with 29 small villages providing workshop estimates. So
-    the deduped figure is expected to fall a few percent BELOW UN WPP
-    (currently ~89%) — the missing ~10% reflects the 41 unmatched OCHA
-    baladiyas that still need to be added. The 105% upper bound catches
-    any future regression that re-introduces overlay double-counting.
+    All 100 OCHA HNO 2021 baladiyas are now mapped in this file (Apr 2026,
+    after Task #24 added the remaining 41), so the deduped figure should
+    sit very close to OCHA's 7.39M total plus the small villages that
+    fall outside HNO scope. The 105% upper bound catches any future
+    regression that re-introduces overlay double-counting; the 95% lower
+    bound catches accidental drop of OCHA-verified entries.
     """
     data = _load()
     deduped = sum(
@@ -203,9 +203,9 @@ def test_deduped_national_total_within_range_of_un_wpp_2024():
         if m.get("population_in_national_total", True)
     )
     pct = 100 * deduped / UN_WPP_2024_LIBYA
-    assert 80 <= pct <= 105, (
+    assert 95 <= pct <= 105, (
         f"Deduped national total {deduped:,} is {pct:.1f}% of UN WPP 2024 "
-        f"({UN_WPP_2024_LIBYA:,}); expected 80-105%"
+        f"({UN_WPP_2024_LIBYA:,}); expected 95-105%"
     )
 
 
@@ -317,18 +317,18 @@ def test_data_gap_note_reflects_current_count():
 
 
 def test_majority_of_entries_are_ocha_verified():
-    """A solid majority of the 106 entries (>= 55) should be OCHA-verified.
+    """All 100 OCHA HNO 2021 baladiyas should be OCHA-verified (>= 95).
 
-    The current coverage is 59 (Apr 2026): the OCHA HNO 2021 file has 100
-    baladiyas, but 18 of our entries are sub-baladiya muhalla zones in
-    Tripoli/Benghazi and 29 are small villages outside HNO scope. The 55
-    floor leaves headroom for one or two future re-classifications without
-    triggering a false-positive regression.
+    After Task #24 (Apr 2026) the file covers all 100 OCHA HNO baladiyas
+    via the verified_ocha set; the remaining ~39 entries are sub-baladiya
+    muhalla overlays in Tripoli/Benghazi and small villages outside HNO
+    scope. The 95 floor leaves headroom for a couple of future
+    re-classifications without triggering a false-positive regression.
     """
     data = _load()
     n = sum(1 for m in data["municipalities"]
             if m["population_status"] == "verified_ocha")
-    assert n >= 55, f"Only {n} entries are OCHA-verified; expected >= 55"
+    assert n >= 95, f"Only {n} entries are OCHA-verified; expected >= 95"
 
 
 def test_no_two_entries_share_an_ocha_pcode():
@@ -341,6 +341,29 @@ def test_no_two_entries_share_an_ocha_pcode():
             pcode_to_ids.setdefault(pc, []).append(m["id"])
     dups = {pc: ids for pc, ids in pcode_to_ids.items() if len(ids) > 1}
     assert not dups, f"Duplicate OCHA PCode mappings: {dups}"
+
+
+def test_all_100_ocha_hno_pcodes_are_covered():
+    """The verified_ocha set should hold exactly 100 unique OCHA PCodes,
+    one per OCHA HNO 2021 baladiya. This invariant guards against a
+    regression that drops or accidentally aliases an OCHA baladiya away
+    from the file (the gap that Task #24 closed).
+    """
+    data = _load()
+    pcodes = {
+        m["population_ocha_pcode"]
+        for m in data["municipalities"]
+        if m.get("population_status") == "verified_ocha"
+        and m.get("population_ocha_pcode")
+    }
+    assert len(pcodes) == 100, (
+        f"Expected exactly 100 unique OCHA PCodes across verified_ocha "
+        f"entries (full OCHA HNO 2021 coverage); got {len(pcodes)}"
+    )
+    for pc in pcodes:
+        assert pc.startswith("LY") and len(pc) == 8, (
+            f"Malformed OCHA PCode in verified set: {pc!r}"
+        )
 
 
 # ---------------------------------------------------------------------------
