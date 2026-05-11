@@ -33,7 +33,7 @@ weasyprint>=68.0
 beautifulsoup4>=4.13.3
 census>=0.8.23
 requests>=2.33.0
-urllib3>=2.6.3
+urllib3>=2.7.0
 
 # Configuration
 pyyaml
